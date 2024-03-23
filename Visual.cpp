@@ -3,7 +3,7 @@
 // RED, GREEN, YELLOW, BLUE
 const string TEXT_COLOR[4] = {"\x1B[31m", "\x1B[32m", "\x1B[33;1m", "\x1B[34m"};
 
-string GAME_LOGO[7] = {
+const string GAME_LOGO[7] = {
 // 0
 R"(
 
@@ -126,7 +126,8 @@ R"(
 };
 
 
-const string MAIN_MENU = 
+const string Visual[5] = {
+    // MAIN_MENU
     R"(
 			    	                                  ,'\
 			    	    _.----.        ____         ,'  _\   ___    ___     ____
@@ -141,7 +142,8 @@ const string MAIN_MENU =
 			    	        \_.-'       |__|    `-._ |              '-.|     '-.| |   |
 			    	                                `'                            '-._|
 													            
-			    	                  THE MATCHING GAME by TCM and NHMT                                                                                                                                                                                                                                                          
+						A MATCHING GAME BY 
+						TRAN CONG MINH & NGUYEN HOANG MINH TAM
 
    ⠀⠀⠀⠀⠀⢠⠋⠁⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                                                             
    ⠀⠀⠀⠀⠀⡆⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                                                       ⠸⣷⣦⠤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣠⣤⠀⠀⠀
@@ -159,23 +161,25 @@ const string MAIN_MENU =
    ⡇⠈⡆⠀⠀⠱⡀⠀⠀⠀⡇⠀⠀⠀⢠⠁⠀⠀⠈⢀⠇⠀⠀⠀⠀⠀⠀⠀                          -------------------                             ⢶⣗⠧⡀⢳⠀⠀⠀⠀⢸⣀⣸⠀⠀⠀⢀⡜⠀⣸⢤⣶
    ⠘⡄⢀⠀⠀⠀⠱⡀⠀⠀⠁⠀⠀⡠⠁⠀⠀⢰⠀⡜⠀⠀⠀⠀⠀⠀⠀⠀                                                                          ⠈⠻⣿⣦⣈⣧⡀⠀⠀⢸⣿⣿⠀⠀⢀⣼⡀⣨⣿⡿⠁
    ⠀⠈⠉⠉⠉⠀⠐⠛⠶⠒⠣⠦⠤⠗⠒⠒⠒⠚⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀                                                                            ⠈⠻⠿⠿⠓⠄⠤⠘⠉⠙⠤⢀⠾⠿⣿⠟⠋
-    )";
+    )",
 
-const string PLAY_GAME = 
+    // PLAY_GAME 
     R"(
-                                                      ,'\
-                        _.----.        ____         ,'  _\   ___    ___     ____
-                    _,-'       `.     |    |  /`.   \,-'    |   \  /   |   |    \  |`.
-                    \      __    \    '-.  | /   `.  ___    |    \/    |   '-.   \ |  |
-                     \.    \ \   |  __  |  |/    ,','_  `.  |          | __  |    \|  |
-                       \    \/   /,' _`.|      ,' / / / /   |          ,' _`.|     |  |
-                        \     ,-'/  /   \    ,'   | \/ / ,`.|         /  /   \  |     |
-                         \    \ |   \_/  |   `-.  \    `'  /|  |    ||   \_/  | |\    |
-                          \    \ \      /       `-.`.___,-' |  |\  /| \      /  | |   |
-                           \    \ `.__,'|  |`-._    `|      |__| \/ |  `.__,'|  | |   |
-                            \_.-'       |__|    `-._ |              '-.|     '-.| |   |
-                                                    `'                            '-._|            
-                                      THE MATCHING GAME by TCM and NHMT                                                                                                                                                                                                                                                          
+                                                                  ,'\
+                                    _.----.        ____         ,'  _\   ___    ___     ____
+                                _,-'       `.     |    |  /`.   \,-'    |   \  /   |   |    \  |`.
+                                \      __    \    '-.  | /   `.  ___    |    \/    |   '-.   \ |  |
+                                 \.    \ \   |  __  |  |/    ,','_  `.  |          | __  |    \|  |
+                                   \    \/   /,' _`.|      ,' / / / /   |          ,' _`.|     |  |
+                                    \     ,-'/  /   \    ,'   | \/ / ,`.|         /  /   \  |     |
+                                     \    \ |   \_/  |   `-.  \    `'  /|  |    ||   \_/  | |\    |
+                                      \    \ \      /       `-.`.___,-' |  |\  /| \      /  | |   |
+                                       \    \ `.__,'|  |`-._    `|      |__| \/ |  `.__,'|  | |   |
+                                        \_.-'       |__|    `-._ |              '-.|     '-.| |   |
+                                                                `'                            '-._|            
+
+						A MATCHING GAME BY 
+						TRAN CONG MINH & NGUYEN HOANG MINH TAM
 
    ⠀⠀⠀⠀⠀⢠⠋⠁⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                                                             
    ⠀⠀⠀⠀⠀⡆⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                                                       ⠸⣷⣦⠤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣠⣤⠀⠀⠀
@@ -193,24 +197,25 @@ const string PLAY_GAME =
    ⡇⠈⡆⠀⠀⠱⡀⠀⠀⠀⡇⠀⠀⠀⢠⠁⠀⠀⠈⢀⠇⠀⠀⠀⠀⠀⠀⠀                                                                          ⢶⣗⠧⡀⢳⠀⠀⠀⠀⢸⣀⣸⠀⠀⠀⢀⡜⠀⣸⢤⣶
    ⠘⡄⢀⠀⠀⠀⠱⡀⠀⠀⠁⠀⠀⡠⠁⠀⠀⢰⠀⡜⠀⠀⠀⠀⠀⠀⠀⠀                                                                          ⠈⠻⣿⣦⣈⣧⡀⠀⠀⢸⣿⣿⠀⠀⢀⣼⡀⣨⣿⡿⠁
    ⠀⠈⠉⠉⠉⠀⠐⠛⠶⠒⠣⠦⠤⠗⠒⠒⠒⠚⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀                                                                            ⠈⠻⠿⠿⠓⠄⠤⠘⠉⠙⠤⢀⠾⠿⣿⠟⠋
-    )";
+    )",
 
-
-const string GAME_MODE = 
+    //GAME_MODE
     R"(
-                                                      ,'\
-                        _.----.        ____         ,'  _\   ___    ___     ____
-                    _,-'       `.     |    |  /`.   \,-'    |   \  /   |   |    \  |`.
-                    \      __    \    '-.  | /   `.  ___    |    \/    |   '-.   \ |  |
-                     \.    \ \   |  __  |  |/    ,','_  `.  |          | __  |    \|  |
-                       \    \/   /,' _`.|      ,' / / / /   |          ,' _`.|     |  |
-                        \     ,-'/  /   \    ,'   | \/ / ,`.|         /  /   \  |     |
-                         \    \ |   \_/  |   `-.  \    `'  /|  |    ||   \_/  | |\    |
-                          \    \ \      /       `-.`.___,-' |  |\  /| \      /  | |   |
-                           \    \ `.__,'|  |`-._    `|      |__| \/ |  `.__,'|  | |   |
-                            \_.-'       |__|    `-._ |              '-.|     '-.| |   |
-                                                    `'                            '-._|            
-                                      THE MATCHING GAME by TCM and NHMT                                                                                                                                                                                                                                                          
+                                                                  ,'\
+                                    _.----.        ____         ,'  _\   ___    ___     ____
+                                _,-'       `.     |    |  /`.   \,-'    |   \  /   |   |    \  |`.
+                                \      __    \    '-.  | /   `.  ___    |    \/    |   '-.   \ |  |
+                                 \.    \ \   |  __  |  |/    ,','_  `.  |          | __  |    \|  |
+                                   \    \/   /,' _`.|      ,' / / / /   |          ,' _`.|     |  |
+                                    \     ,-'/  /   \    ,'   | \/ / ,`.|         /  /   \  |     |
+                                     \    \ |   \_/  |   `-.  \    `'  /|  |    ||   \_/  | |\    |
+                                      \    \ \      /       `-.`.___,-' |  |\  /| \      /  | |   |
+                                       \    \ `.__,'|  |`-._    `|      |__| \/ |  `.__,'|  | |   |
+                                        \_.-'       |__|    `-._ |              '-.|     '-.| |   |
+                                                                `'                            '-._|            
+
+						A MATCHING GAME BY 
+						TRAN CONG MINH & NGUYEN HOANG MINH TAM
 
    ⠀⠀⠀⠀⠀⢠⠋⠁⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                                                             
    ⠀⠀⠀⠀⠀⡆⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                                                       ⠸⣷⣦⠤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣠⣤⠀⠀⠀
@@ -228,9 +233,13 @@ const string GAME_MODE =
    ⡇⠈⡆⠀⠀⠱⡀⠀⠀⠀⡇⠀⠀⠀⢠⠁⠀⠀⠈⢀⠇⠀⠀⠀⠀⠀⠀⠀                                                                          ⢶⣗⠧⡀⢳⠀⠀⠀⠀⢸⣀⣸⠀⠀⠀⢀⡜⠀⣸⢤⣶
    ⠘⡄⢀⠀⠀⠀⠱⡀⠀⠀⠁⠀⠀⡠⠁⠀⠀⢰⠀⡜⠀⠀⠀⠀⠀⠀⠀⠀                                                                          ⠈⠻⣿⣦⣈⣧⡀⠀⠀⢸⣿⣿⠀⠀⢀⣼⡀⣨⣿⡿⠁
    ⠀⠈⠉⠉⠉⠀⠐⠛⠶⠒⠣⠦⠤⠗⠒⠒⠒⠚⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀                                                                            ⠈⠻⠿⠿⠓⠄⠤⠘⠉⠙⠤⢀⠾⠿⣿⠟⠋
-    )";
+    )",
 
+    "",
 
+    ""
+
+};
 
 void hideCursor() {
     HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE); // get Handle of the output console
@@ -241,7 +250,7 @@ void hideCursor() {
 	SetConsoleCursorInfo(console, &cursorInfo); // apply the changes
 }
 
-void visual::printLogo() {
+void printLogo() {
     HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE); // get Handle of the output console
     COORD cursorPosition; // store the position of the cursor
 	hideCursor();
@@ -255,7 +264,7 @@ void visual::printLogo() {
             cout << TEXT_COLOR[time % 4];
             cout << GAME_LOGO[time];
             Sleep(200);
-            if (!_kbhit()) {
+            if (_kbhit()) {
                 flag = false;
                 break;
             }
@@ -270,30 +279,28 @@ void visual::printLogo() {
 	for (int time = 0; time < 4; ++time)
 		for (int color = 0; color < 4; ++color) {
 		cout << TEXT_COLOR[color];
-		cout << MAIN_MENU;
+		cout << Visual[MAIN_MENU];
 		Sleep(100);
 		system("cls");
 		}
-    cout << TEXT_BLACK; // set BLACK color (default)
-    cout << MAIN_MENU;
 }
 
-void visual::printPlayGame() {
+void printPlayGame() {
     cout << TEXT_BLACK;
-    cout << PLAY_GAME;
+    cout << Visual[PLAY_GAME];
 }
 
-void visual::printGameMode() {
+void printGameMode() {
     cout << TEXT_BLACK;
-    cout << GAME_MODE;
+    cout << Visual[GAME_MODE];
 }
 
-void visual::printLeaderBoard() {
+void printLeaderBoard() {
     cout << TEXT_BLACK;
-    cout << LEADERBOARD;
+    // cout << Visual[LEADERBOARD];
 }
 
-void visual::printHelp() {
+void printHelp() {
     cout << TEXT_BLACK;
-    cout << LEADERBOARD;
+    // cout << Visual[HELP];
 }
