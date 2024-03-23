@@ -11,6 +11,7 @@ board::board() {
 board::board(int difficult) {
     ROW = sizeROW[difficult];
     COL = sizeCOL[difficult];
+    suggestPair = array<int, 4>{};
 
     //Add a boundary of the initial board
     //Allowed an efficient and clear implementation
@@ -38,57 +39,6 @@ board::~board() {
     }
     delete [] grid;
     delete [] flood;
-}
-
-//Load a saved board
-bool board::readSaveFile(string pathSaveFile) {
-    ifstream inp;
-    inp.open(pathSaveFile.c_str());
-    
-    //Failed to open saved game 
-    if (!inp.is_open()) {
-        return false;
-    }
-
-    //Create a buffer to read the size of board, current timeCheck, all character and relative information of each cell
-    //The extra size used to check the valid of input as well
-    int maxSize = sizeROW[2] * sizeCOL[2] * 4 + 3 + 1;
-    int* buffer = new int[maxSize]{}; 
-    int __size = 0;
-    while(true) {
-        int x;
-        inp >> x;
-        if (x == 0) 
-            break;
-
-        buffer[__size] = x;
-        __size++;
-        if (__size == maxSize)
-            break;
-    }
-
-    //Check valid size of board
-    int curRow = buffer[0], curCol = buffer[1], curTimeCheck = buffer[2];
-    bool found = false;
-    for (int difficult = 0; difficult < 3; difficult++) 
-        if (curRow == sizeROW[difficult] && curCol == sizeCOL[difficult]) 
-            found = true;
-    if (!found)
-        return false;
-    
-    //Check amount of integer read
-    if (__size != maxSize - 1) 
-        return false;
-    
-    //Check valid information of each cell
-    bool valid = true;
-    for (int i = 3; i < __size; i += 4) {
-        if (buffer[i] != (int)'$' && (buffer[i] < (int)'A' || (int)'Z' < buffer[i])) valid = false;
-        if (buffer[i + 1] > curTimeCheck) valid = false;
-    }
-
-    //Return the valid of this saved game
-    return valid;
 }
 
 //Initialize board
@@ -121,7 +71,7 @@ void board::initializeBoard() {
     //And finally shuffle them until we can guarantee a valid move exist
     do {
         shuffleBoard();
-    } while(!automatic_check());
+    } while(!automaticCheck());
 }
 
 //Shuffle the board when needed (no valid move left or player want to do it)
@@ -231,8 +181,11 @@ bool board::checkMatch(pair<int, int> startCell, pair<int, int> endCell, bool ma
                         //otherwise, we know that a valid move exist (so we can check if the board has some valid moves or not)
                         if (grid[newR][newC] == '$')
                             curQ.push({newR, newC, dir});
-                        else
+                        else {
                             *found = true;
+                            //A valid move exist
+                            suggestPair = {r1, c1, newR, newC};
+                        }
                     }
 
                     //Reach a non-deleted cell
@@ -250,6 +203,19 @@ bool board::checkMatch(pair<int, int> startCell, pair<int, int> endCell, bool ma
     return (flood[r2][c2][0] == timeCheck);
 }
 
+//Vector of cells represent the path between two cells
+vector<pair<int, int>> board::getPath(pair<int, int> startCell, pair<int, int> endCell) {
+    int curR = endCell.first;
+    int curC = endCell.second;
+    vector<pair<int, int>> result;
+    do
+    {
+        result.emplace_back(curR, curC);
+        tie(curR, curC) = make_tuple(flood[curR][curC][1], flood[curR][curC][2]);
+    } while (curR != -1 && curC != -1);
+    return result;
+}
+
 //Remove(delete) a cell from the board
 void board::deleteCell(pair<int, int> cell) {
     grid[cell.first][cell.second] = '$';
@@ -262,8 +228,9 @@ void board::deleteMatch(pair<int, int> startCell, pair<int, int> endCell) {
 }
 
 //Check the existence of a valid move
-bool board::automatic_check() {
+bool board::automaticCheck() {
     bool found = false;
+    suggestPair = {-1, -1, -1, -1};
 
     //Start from each non-deleted cell
     for (int r = 1; r <= ROW; r++) {
@@ -275,6 +242,7 @@ bool board::automatic_check() {
                         if (grid[other_r][other_c] != '$') {
                             //Exist a valid path between these two
                             if (checkMatch(make_pair(r, c), make_pair(other_r, other_c), false, &found)) {
+                                assert(found);
                                 return true;
                             }
                             //or from the start cell to some other cells
@@ -289,7 +257,14 @@ bool board::automatic_check() {
     }
 
     //No valid move exist
+    assert(suggestPair[0] == -1);
     return false;
+}
+
+//Store possible move while execute the automaticCheck()
+//And return array of -1 if no valid move exists
+array<int, 4> board::suggestMove() {
+    return suggestPair;
 }
 
 //To save the board to a text file
@@ -298,24 +273,113 @@ void board::importBoard() {
     ofstream out;
     out.open("board.txt");
 
-    //Size of the board and data of each cell
-    out << ROW << ' ' << COL << ' ' << timeCheck << ' ';
-    for (int r = 1; r <= ROW; r++) 
-        for (int c = 1; c <= COL; c++) 
-            out << grid[r][c] << ' ' << flood[r][c][0] << ' ' << flood[r][c][1] << ' ' << flood[r][c][2];
+    //Size of the board, curent timeCheck and data of each cell
+    out << ROW << ' ' << COL << ' ' << timeCheck << '\n';
+    for (int r = 1; r <= ROW; r++) {
+        for (int c = 1; c <= COL; c++) {
+            out << grid[r][c] << ' ' << flood[r][c][0]  << ' ';
+        }
+    }
 
     out.close();
 }
 
-//Vector of cells represent the path between two cells
-vector<pair<int, int>> board::getPath(pair<int, int> startCell, pair<int, int> endCell) {
-    int curR = endCell.first;
-    int curC = endCell.second;
-    vector<pair<int, int>> result;
-    do
-    {
-        result.emplace_back(curR, curC);
-        tie(curR, curC) = make_tuple(flood[curR][curC][1], flood[curR][curC][2]);
-    } while (curR != -1 && curC != -1);
-    return result;
+//Load a saved board
+pair<string*, int> board::readBoard(string pathSaveFile) {
+    ifstream inp;
+    inp.open(pathSaveFile.c_str());
+    
+    //Failed to open saved game 
+    if (!inp.is_open()) {
+        return make_pair((string*)NULL, -1);
+    }
+
+    //Create a buffer to read the size of board, current timeCheck, all character and relative information of each cell
+    //The extra size used to check the valid of input as well
+    int maxSize = sizeROW[2] * sizeCOL[2] * 2 + 3 + 1;
+    string* buffer = new string[maxSize]{}; 
+    int __size = 0;
+    while(true) {
+        string x;
+        inp >> x;
+        if (x.empty()) 
+            break;
+
+        buffer[__size] = x;
+        __size++;
+        if (__size == maxSize)
+            break;
+    }
+
+    auto validNumber = [&](string x) ->bool {
+        for (char digit: x) {
+            if (digit < '0' || digit > '9') {
+                return false;
+            }
+        }
+        return true;
+    };
+
+    //Check valid size of board and timeCheck
+    if (!validNumber(buffer[0]) || !validNumber(buffer[1]) || !validNumber(buffer[2])) {
+        delete [] buffer;
+        return make_pair((string*)NULL, -1);
+    }
+
+    int curRow = stoi(buffer[0]), curCol = stoi(buffer[1]), curTimeCheck = stoi(buffer[2]);
+    bool found = false;
+    for (int difficult = 0; difficult < 3; difficult++) 
+        if (curRow == sizeROW[difficult] && curCol == sizeCOL[difficult]) 
+            found = true;
+    if (!found) {
+        delete [] buffer;
+        return make_pair((string*)NULL, -1);
+    }
+    
+    //Check amount of integer read
+    if (__size != curRow * curCol * 2 + 3) {
+        delete [] buffer;
+        return make_pair((string*)NULL, -1);
+    }
+    
+    // //Check valid information of each cell
+    bool valid = true;
+    for (int i = 3; i < __size; i += 2) {
+        if (buffer[i].size() > 1) valid = false;
+        if (buffer[i][0] != '$' && (buffer[i][0] < 'A' || 'Z' < buffer[i][0])) valid = false;
+        if (!validNumber(buffer[i + 1])) valid = false;
+        else if (stoi(buffer[i + 1]) > curTimeCheck) valid = false;
+    }
+
+    //Return the valid of this saved game
+    if (!valid) {
+        delete [] buffer;
+        return make_pair((string*)NULL, -1);;
+    }
+    else {
+        int diff = EASY * (curRow == sizeROW[EASY]) + MEDIUM * (curRow == sizeROW[MEDIUM]) + HARD * (curRow == sizeROW[HARD]);
+        return make_pair(buffer, diff);
+    }
+}
+
+//Assume that the saved game is valid
+//Load the saved board and its relative information
+void board::loadBoard(pair<string*, int> saveBoard) {
+    int diff = saveBoard.second;
+    string* buffer = saveBoard.first;
+    //Initialize board with given difficult
+    *this = board(diff);
+    
+    //Then read character and last timeCheck of each cell
+    int idBuffer = 3;
+    for (int r = 1; r <= ROW; r++) {
+        for (int c = 1; c <= COL; c++) {
+            grid[r][c] = buffer[idBuffer][0];
+            flood[r][c][0] = stoi(buffer[idBuffer + 1]);
+            idBuffer += 2;
+        }
+    }
+
+    //Deallocate the buffer
+    delete [] buffer;
 }

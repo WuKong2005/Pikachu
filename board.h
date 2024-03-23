@@ -40,19 +40,22 @@ struct board {
     char** grid;
     int timeCheck = 0;
     array<int, 3>** flood;
+    array<int, 4> suggestPair;
 
     board();
     board(int difficult);
     ~board();
 
-    bool readSaveFile(string pathSaveFile);
     void initializeBoard();
     void shuffleBoard();
     bool checkMatch(pair<int, int> startCell, pair<int, int> endCell, bool magic = false, bool* found = NULL);
+    vector<pair<int, int>> getPath(pair<int, int> startCell, pair<int, int> endCell);
     void deleteCell(pair<int, int> cell);
     void deleteMatch(pair<int, int> startCell, pair<int, int> endCell);
-    bool automatic_check();
-
+    bool automaticCheck();
+    array<int, 4> suggestMove();
+    
     void importBoard();
-    vector<pair<int, int>> getPath(pair<int, int> startCell, pair<int, int> endCell);
+    pair<string*, int> readBoard(string pathSaveFile);
+    void loadBoard(pair<string*, int> saveBoard);
 };

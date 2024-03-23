@@ -17,6 +17,9 @@ int const ALPHABET = 26;
 int const dx[] = {1, 0, -1, 0};
 int const dy[] = {0, 1, 0, -1};
 
+int const sizeROW[] = {4, 6, 9};
+int const sizeCOL[] = {6, 9, 16};
+
 int ROW, COL;
 //Uppercase character
 char** grid;
@@ -127,7 +130,7 @@ void printGrid()
         for (int c = 1; c <= COL; c++)
         {
             cout << ' ';
-            cout << setw(2) << (deleted[r][c] ? ' ' : grid[r][c]) << ' ';
+            cout << setw(2) << (grid[r][c] == '$' ? ' ' : grid[r][c]) << ' ';
             cout << "|";
         }
         cout << '\n';
@@ -228,57 +231,176 @@ void importBoard() {
     ofstream out;
     out.open("board.txt");
 
-    out << ROW << ' ' << COL << '\n';
+    out << ROW << ' ' << COL << ' ' << timeCheck << '\n';
     for (int r = 1; r <= ROW; r++) {
         for (int c = 1; c <= COL; c++) {
-            out << grid[r][c] << ' ' << flood[r][c][0] << ' ' << flood[r][c][1] << ' ' << flood[r][c][2] << ' ';
+            out << grid[r][c] << ' ' << flood[r][c][0]  << ' ';
         }
     }
 
     out.close();
 }
 
+string* readBoard(string pathSaveFile) {
+    ifstream inp;
+    inp.open(pathSaveFile.c_str());
+    
+    //Failed to open saved game 
+    if (!inp.is_open()) {
+        return NULL;
+    }
+
+    //Create a buffer to read the size of board, current timeCheck, all character and relative information of each cell
+    //The extra size used to check the valid of input as well
+    int maxSize = sizeROW[2] * sizeCOL[2] * 2 + 3 + 1;
+    string* buffer = new string[maxSize]{}; 
+    int __size = 0;
+    while(true) {
+        string x;
+        inp >> x;
+        if (x.empty()) 
+            break;
+
+        buffer[__size] = x;
+        __size++;
+        if (__size == maxSize)
+            break;
+    }
+
+    cerr << __size << '\n';
+    for (int i = 0; i < __size; i++)
+        cerr << buffer[i] << ' ';
+    cout << '\n';
+
+    auto validNumber = [&](string x) ->bool {
+        for (char digit: x) {
+            if (digit < '0' || digit > '9') {
+                return false;
+            }
+        }
+        return true;
+    };
+
+    //Check valid size of board and timeCheck
+    if (!validNumber(buffer[0]) || !validNumber(buffer[1]) || !validNumber(buffer[2])) {
+        delete [] buffer;
+        return NULL;
+    }
+
+    int curRow = stoi(buffer[0]), curCol = stoi(buffer[1]), curTimeCheck = stoi(buffer[2]);
+    bool found = false;
+    for (int difficult = 0; difficult < 3; difficult++) 
+        if (curRow == sizeROW[difficult] && curCol == sizeCOL[difficult]) 
+            found = true;
+    if (!found) {
+        delete [] buffer;
+        return NULL;
+    }
+    
+    //Check amount of integer read
+    if (__size != curRow * curCol * 2 + 3) {
+        delete [] buffer;
+        return NULL;
+    }
+    
+    // //Check valid information of each cell
+    bool valid = true;
+    for (int i = 3; i < __size; i += 2) {
+        if (buffer[i].size() > 1) valid = false;
+        if (buffer[i][0] != '$' && (buffer[i][0] < 'A' || 'Z' < buffer[i][0])) valid = false;
+        if (!validNumber(buffer[i + 1])) valid = false;
+        else if (stoi(buffer[i + 1]) > curTimeCheck) valid = false;
+    }
+
+    //Return the valid of this saved game
+    if (!valid) {
+        delete [] buffer;
+        return NULL;
+    }
+    else
+        return buffer;
+}
+
+void loadBoard(string* &buffer) {
+    ROW = stoi(buffer[0]);
+    COL = stoi(buffer[1]);
+    timeCheck = stoi(buffer[2]);
+
+    cerr << ROW << ' ' << COL << ' ' << timeCheck << '\n';
+
+    grid = new char*[ROW + 2];
+    flood = new array<int, 3>*[ROW + 2];
+
+    for (int r = 0; r < ROW + 2; r++) 
+    {
+        grid[r] = new char[COL + 2]{};
+        flood[r] = new array<int, 3>[COL + 2]{};    
+    }
+
+    for (int r = 0; r < ROW + 2; r++)
+        grid[r][0] = grid[r][COL + 1] = '$';
+    for (int c = 0; c < COL + 2; c++)
+        grid[0][c] = grid[ROW + 1][c] = '$';
+    
+    int idBuffer = 3;
+    for (int r = 1; r <= ROW; r++) {
+        for (int c = 1; c <= COL; c++) {
+            cout << buffer[idBuffer] << ' ' << buffer[idBuffer + 1] << '\n';
+            grid[r][c] = buffer[idBuffer][0];
+            flood[r][c][0] = stoi(buffer[idBuffer + 1]);
+            idBuffer += 2;
+            cout << grid[r][c] << ' ' << flood[r][c][0] << ' ' << flood[r][c][1] << ' ' << flood[r][c][2] << '\n';
+        }
+    }
+
+    delete [] buffer;
+}
+
 int main()
 {
     srand(time(NULL));
 
-    createGrid();
-
-    initializeGrid();
-
+    string* buffer = readBoard("board.txt");
+    loadBoard(buffer);
     printGrid();
 
-    while(true)
-    {
-        int r1, c1, r2, c2;
-        cin >> r1 >> c1 >> r2 >> c2;
+    // createGrid();
 
-        if (r1 == 0 && r2 == 0 && c1 == 0 && c2 == 0) break;
+    // initializeGrid();
 
-        if (r1 == -1 && r2 == -1 && c1 == -1 && c2 == -1) {
-            importBoard();
-            continue;
-        }
-        if (r1 < 1 || r1 > ROW || r2 < 1 || r2 > ROW) continue;
-        if (c1 < 1 || c1 > COL || c2 < 1 || c2 > COL) continue;
-        bool found = false;
-        if (validMatch(r1, c1, r2, c2)) {
-            deleteMatch(r1, c1, r2, c2);
-            found = true;
-        }
+    // printGrid();
+
+    // while(true)
+    // {
+    //     int r1, c1, r2, c2;
+    //     cin >> r1 >> c1 >> r2 >> c2;
+
+    //     if (r1 == 0 && r2 == 0 && c1 == 0 && c2 == 0) break;
+
+    //     if (r1 == -1 && r2 == -1 && c1 == -1 && c2 == -1) {
+    //         importBoard();
+    //         continue;
+    //     }
+    //     if (r1 < 1 || r1 > ROW || r2 < 1 || r2 > ROW) continue;
+    //     if (c1 < 1 || c1 > COL || c2 < 1 || c2 > COL) continue;
+    //     bool found = false;
+    //     if (validMatch(r1, c1, r2, c2)) {
+    //         deleteMatch(r1, c1, r2, c2);
+    //         found = true;
+    //     }
         
-        //https://student.cs.uwaterloo.ca/~cs452/terminal.html
-        cout << "\033[2J" << "\033[1;1H";
-        printGrid();
-        if (found) {
-            vector<pair<int, int>> path = getPath(r1, c1, r2, c2);
-            cout << "path:\n";
-            for (auto node: path) {
-                cout << node.first << ' ' << node.second << "; ";
-            }
-            cout << '\n';
-        }
-    }
+    //     //https://student.cs.uwaterloo.ca/~cs452/terminal.html
+    //     cout << "\033[2J" << "\033[1;1H";
+    //     printGrid();
+    //     if (found) {
+    //         vector<pair<int, int>> path = getPath(r1, c1, r2, c2);
+    //         cout << "path:\n";
+    //         for (auto node: path) {
+    //             cout << node.first << ' ' << node.second << "; ";
+    //         }
+    //         cout << '\n';
+    //     }
+    // }
 
-    freeResource();
+    // freeResource();
 }
