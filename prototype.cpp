@@ -23,7 +23,6 @@ int const sizeCOL[] = {6, 9, 16};
 int ROW, COL;
 //Uppercase character
 char** grid;
-bool** deleted;
 int frequent[ALPHABET]{};
 int timeCheck = 0;
 array<int, 3>** flood;
@@ -48,20 +47,18 @@ void createGrid()
     COL = 16;
 
     grid = new char*[ROW + 2];
-    deleted = new bool*[ROW + 2];
     flood = new array<int, 3>*[ROW + 2];
 
     for (int r = 0; r < ROW + 2; r++) 
     {
         grid[r] = new char[COL + 2]{};
-        deleted[r] = new bool[COL + 2]{};
         flood[r] = new array<int, 3>[COL + 2]{};    
     }
 
     for (int r = 0; r < ROW + 2; r++)
-        deleted[r][0] = deleted[r][COL + 1] = true;
+        grid[r][0] = grid[r][COL + 1] = '$';
     for (int c = 0; c < COL + 2; c++)
-        deleted[0][c] = deleted[ROW + 1][c] = true;
+        grid[0][c] = grid[ROW + 1][c] = '$';
 }
 
 void initializeGrid()
@@ -177,17 +174,17 @@ bool validMatch(int r1, int c1, int r2, int c2)
                         break;
                     if (flood[newR][newC][0] == timeCheck) 
                         break;
-                    if (!deleted[newR][newC] && grid[newR][newC] != C) 
+                    if (grid[newR][newC] != '$' && grid[newR][newC] != C) 
                         break;
-                    if (deleted[newR][newC] || (!deleted[newR][newC] && grid[newR][newC] == C))
+                    if (grid[newR][newC] == '$' || (grid[newR][newC] != '$' && grid[newR][newC] == C))
                     {
                         flood[newR][newC][0] = timeCheck;
                         flood[newR][newC][1] = r;
                         flood[newR][newC][2] = c;
-                        if (deleted[newR][newC])
+                        if (grid[newR][newC] == '$')
                             curQ.push({newR, newC, dir});
                     }
-                    if (!deleted[newR][newC])
+                    if (grid[newR][newC] != '$')
                         break;
                 }
             }
@@ -200,7 +197,7 @@ bool validMatch(int r1, int c1, int r2, int c2)
 
 void deleteMatch(int r1, int c1, int r2, int c2)
 {
-    deleted[r1][c1] = deleted[r2][c2] = true;
+    grid[r1][c1] = grid[r2][c2] = '$';
 }
 
 vector<pair<int, int>> getPath(int r1, int c1, int r2, int c2) {
@@ -219,11 +216,9 @@ void freeResource()
     for (int r = 0; r < ROW + 2; r++) 
     {
         delete [] grid[r];
-        delete [] deleted[r];
         delete [] flood[r];
     }
     delete [] grid;
-    delete [] deleted;
     delete [] flood;
 }
 
@@ -356,51 +351,69 @@ void loadBoard(string* &buffer) {
     delete [] buffer;
 }
 
+int getTypePath(vector<pair<int, int>> path) {
+    assert(path.size() >= 2);
+    if (path.size() <= 3)
+        return path.size() - 2;
+    else {
+        bool type = (path[1].first == path[2].first);
+        if (type) {
+            //horizontal
+            return 2 + ((path[0].first - path[1].first) * (path[3].first - path[2].first) > 0);
+        }
+        else {
+            //vertical
+            return 2 + ((path[0].second - path[1].second) * (path[3].second - path[2].second) > 0);
+        }
+    }
+}
+
 int main()
 {
     srand(time(NULL));
 
-    string* buffer = readBoard("board.txt");
-    loadBoard(buffer);
-    printGrid();
-
-    // createGrid();
-
-    // initializeGrid();
-
+    // string* buffer = readBoard("board.txt");
+    // loadBoard(buffer);
     // printGrid();
 
-    // while(true)
-    // {
-    //     int r1, c1, r2, c2;
-    //     cin >> r1 >> c1 >> r2 >> c2;
+    createGrid();
 
-    //     if (r1 == 0 && r2 == 0 && c1 == 0 && c2 == 0) break;
+    initializeGrid();
 
-    //     if (r1 == -1 && r2 == -1 && c1 == -1 && c2 == -1) {
-    //         importBoard();
-    //         continue;
-    //     }
-    //     if (r1 < 1 || r1 > ROW || r2 < 1 || r2 > ROW) continue;
-    //     if (c1 < 1 || c1 > COL || c2 < 1 || c2 > COL) continue;
-    //     bool found = false;
-    //     if (validMatch(r1, c1, r2, c2)) {
-    //         deleteMatch(r1, c1, r2, c2);
-    //         found = true;
-    //     }
+    printGrid();
+
+    while(true)
+    {
+        int r1, c1, r2, c2;
+        cin >> r1 >> c1 >> r2 >> c2;
+
+        if (r1 == 0 && r2 == 0 && c1 == 0 && c2 == 0) break;
+
+        if (r1 == -1 && r2 == -1 && c1 == -1 && c2 == -1) {
+            importBoard();
+            continue;
+        }
+        if (r1 < 1 || r1 > ROW || r2 < 1 || r2 > ROW) continue;
+        if (c1 < 1 || c1 > COL || c2 < 1 || c2 > COL) continue;
+        bool found = false;
+        if (validMatch(r1, c1, r2, c2)) {
+            deleteMatch(r1, c1, r2, c2);
+            found = true;
+        }
         
-    //     //https://student.cs.uwaterloo.ca/~cs452/terminal.html
-    //     cout << "\033[2J" << "\033[1;1H";
-    //     printGrid();
-    //     if (found) {
-    //         vector<pair<int, int>> path = getPath(r1, c1, r2, c2);
-    //         cout << "path:\n";
-    //         for (auto node: path) {
-    //             cout << node.first << ' ' << node.second << "; ";
-    //         }
-    //         cout << '\n';
-    //     }
-    // }
+        //https://student.cs.uwaterloo.ca/~cs452/terminal.html
+        cout << "\033[2J" << "\033[1;1H";
+        printGrid();
+        if (found) {
+            vector<pair<int, int>> path = getPath(r1, c1, r2, c2);
+            cout << "path:\n";
+            for (auto node: path) {
+                cout << node.first << ' ' << node.second << "; ";
+            }
+            cout << '\n';
+            cout << "type: " << getTypePath(path) << '\n';
+        }
+    }
 
-    // freeResource();
+    freeResource();
 }

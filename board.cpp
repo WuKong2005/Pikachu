@@ -216,6 +216,30 @@ vector<pair<int, int>> board::getPath(pair<int, int> startCell, pair<int, int> e
     return result;
 }
 
+//Determine the type of path between two cells
+int board::getTypePath(vector<pair<int, int>> path) {
+    assert(path.size() >= 2);
+    //2 cells <=> I matching, 3 cells <=> L matching
+    if (path.size() <= 3)
+        return path.size() - 2;
+    else {
+        //4 cells <=> Z matching or U matching
+        //3 segments and the middle segment is perpendicular to the first and last segment 
+        bool type = (path[1].first == path[2].first);
+        if (type) {
+            //The middle segment is a horizontal segment
+            //The row index of the start cell and last cell are both in one side of the middle segment <=> U matching
+            //otherwise, Z matching
+            return 2 + ((path[0].first - path[1].first) * (path[3].first - path[2].first) > 0);
+        }
+        else {
+            //The middle segment is a horizontal segment
+            //Similar to the horizontal case
+            return 2 + ((path[0].second - path[1].second) * (path[3].second - path[2].second) > 0);
+        }
+    }
+}
+
 //Remove(delete) a cell from the board
 void board::deleteCell(pair<int, int> cell) {
     grid[cell.first][cell.second] = '$';
