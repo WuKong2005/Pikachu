@@ -10,10 +10,10 @@ void initializeProgram() {
 }
 
 int getKeyboardInput () {
-    getKeyboard = _getch(); // store the keyboard input
+    int input = _getch(); // store the keyboard input
 
     // check if the input is arrow key
-    if (getKeyboard == 0 || getKeyboard == 224) {
+    if (input == 0 || input == 224) {
         switch(_getch()) {
             case KEY_UP:
                 return UP;
@@ -27,7 +27,7 @@ int getKeyboardInput () {
                 return -1;
         }
     } else {
-        switch(getKeyboard) {
+        switch(input) {
             case KEY_ESC:
                 return ESC;
             case 'W': case 'w':
