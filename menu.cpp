@@ -1,56 +1,219 @@
 #include "menu.h"
 
-void moveCursor(int visual, int input) {
+void Visual_moveCursor(int visual, int input) {
     switch (input) {
         case ESC:
             return;
         case UP:
-            if (currentCursor.Y != FIRST_BLOCK[MAIN_MENU].Y)
-                currentCursor.Y -= distanceY[visual];
+            if (currentCursor.Y != FIRST_BLOCK[MAIN_MENU].Y) // check if cursor is at the first block
+                currentCursor.Y -= distanceY[visual]; // move cursor UP
             break;
         case DOWN:
-            if (currentCursor.Y != FIRST_BLOCK[MAIN_MENU].Y + (numBlock[visual] - 1) * distanceY[visual])
-                currentCursor.Y += distanceY[visual];
+            if (currentCursor.Y != FIRST_BLOCK[MAIN_MENU].Y + (numBlock[visual] - 1) * distanceY[visual]) // check if cursor is at the last block
+                currentCursor.Y += distanceY[visual]; // move cursor DOWN
             break;
         default:
-            break;
+            return;
     }
-	SetConsoleCursorPosition(console, currentCursor);
+	SetConsoleCursorPosition(console, currentCursor); // Update new position of cursor 
 }
 
-void MAIN_MENU_CONTROL() {
-    cout << TEXT_BLACK; // set BLACK color (default)
-    cout << Visual[MAIN_MENU];
 
-    setCursor(FIRST_BLOCK[MAIN_MENU]);
-    cout << ">>>";
+void MAIN_MENU_CONTROL() {
+    printMainMenu();
+
+    printAtCursor(arrow, FIRST_BLOCK[MAIN_MENU]);
 
     while (true) {
         int input = getKeyboardInput();
-        setCursor(currentCursor);
-        cout << "   ";
+
+        removeArrow();
+
         if (input == ESC) {
             system("cls");
             break;
         }
         else if (input == ENTER) {
             system("cls");
-            int pos = (currentCursor.Y - FIRST_BLOCK[MAIN_MENU].Y) / distanceY[MAIN_MENU];
-            switch (pos) {
-                case 0:
-                    return PLAY_GAME_CONTROL();
-                default:
+            // determine which block is chosen by player
+            int posBlock = (currentCursor.Y - FIRST_BLOCK[MAIN_MENU].Y) / distanceY[MAIN_MENU];
+            COORD preCursor; // store the previous coordinate of cursor
+            switch (posBlock) {
+                case 0: // PLAY_GAME
+                    PLAY_GAME_CONTROL();
+
+                    // Return MAIN_MENU after escape PLAY_GAME
+                    cout << Visual[MAIN_MENU];
+                    // Set up the cursor in MAIN_MENU
+                    preCursor.X = FIRST_BLOCK[MAIN_MENU].X;
+                    preCursor.Y = FIRST_BLOCK[MAIN_MENU].Y;
+                    printAtCursor(arrow, preCursor);
+                    break;
+                case 1: // LEADERBOARD
+                    LEADERBOARD_CONTROL();
+
+                    // Return MAIN_MENU after escape LEADERBOARD
+                    cout << Visual[MAIN_MENU];
+                    // Set up the cursor in MAIN_MENU
+                    preCursor.X = FIRST_BLOCK[MAIN_MENU].X;
+                    preCursor.Y = FIRST_BLOCK[MAIN_MENU].Y + distanceY[MAIN_MENU];
+                    printAtCursor(arrow, preCursor);
+                    break;
+                case 2: // HELP
+
+                    return;
+                    // break;
+                default: // EXIT
                     return;
             }
         }
-        moveCursor(MAIN_MENU, input);
-        cout << ">>>";
+        // if input is UP or DOWN, move the Cursor and print newArrow
+        else {
+            Visual_moveCursor(MAIN_MENU, input);
+            cout << arrow;
+        }
     }
 }
 
 void PLAY_GAME_CONTROL() {
-    cout << Visual[PLAY_GAME];
+    printPlayGame();
+
+    printAtCursor(arrow, FIRST_BLOCK[PLAY_GAME]);
+
+    while (true) {
+        int input = getKeyboardInput();
+        
+        removeArrow();
+
+        if (input == ESC) {
+            system("cls");
+            break;
+        }
+        else if (input == ENTER) {
+            system("cls");
+            // determine which block is chosen by player
+            int posBlock = (currentCursor.Y - FIRST_BLOCK[PLAY_GAME].Y) / distanceY[PLAY_GAME];
+            COORD preCursor; // store the previous coordinate of cursor
+            switch (posBlock) {
+                case 0: // NEW GAME --> choose the GAME_MODE (EASY -> MEDIUM --> HARD)
+                    GAME_MODE_CONTROL();
+
+                    // return PLAY_GAME after escape GAME_MODE
+                    cout << Visual[PLAY_GAME];
+                    // Set up the cursor in PLAY_GAME
+                    preCursor.X = FIRST_BLOCK[PLAY_GAME].X;
+                    preCursor.Y = FIRST_BLOCK[PLAY_GAME].Y;
+                    printAtCursor(arrow, preCursor);
+                    break;
+                
+                case 1: // LOAD GAME --> choose to load the game have saved before
+                    LOAD_GAME_CONTROL();
+
+                    // return PLAY_GAME after escape LOAD_GAME
+                    cout << Visual[PLAY_GAME];
+                     // Set up the cursor in PLAY_GAME
+                    preCursor.X = FIRST_BLOCK[PLAY_GAME].X;
+                    preCursor.Y = FIRST_BLOCK[PLAY_GAME].Y + distanceY[PLAY_GAME];
+                    printAtCursor(arrow, preCursor);
+                    break;
+
+                default: // GO BACK
+                    return;
+            }
+        }
+        // if input is UP or DOWN, move the Cursor and print newArrow
+        else {
+            Visual_moveCursor(PLAY_GAME, input);
+            cout << arrow;
+        }
+    }
 }
 
 void GAME_MODE_CONTROL() {
+    printGameMode();
+
+    printAtCursor(arrow, FIRST_BLOCK[GAME_MODE]);
+
+    while (true) {
+        int input = getKeyboardInput();
+        
+        removeArrow();
+
+        if (input == ESC) {
+            system("cls");
+            break;
+        }
+        else if (input == ENTER) {
+            system("cls");
+            // determine which block is chosen by player
+            int posBlock = (currentCursor.Y - FIRST_BLOCK[GAME_MODE].Y) / distanceY[GAME_MODE];
+            switch (posBlock) {
+                case 0: // EASY
+
+                    return;
+                    // break;
+                case 1: // MEDIUM
+
+                    return;
+                    // break;
+                case 2: // HARD
+
+                    return;
+                    // break;
+                default: // GO BACK
+                    return;
+            }
+        }
+        // if input is UP or DOWN, move the Cursor and print newArrow
+        else {
+            Visual_moveCursor(GAME_MODE, input);
+            cout << arrow;
+        }
+    }
+}
+
+void LOAD_GAME_CONTROL() {
+    printLoadGame();
+
+    printAtCursor(arrow, FIRST_BLOCK[LOAD_GAME]);
+
+    while (true) {
+        int input = getKeyboardInput();
+        
+        removeArrow();
+
+        if (input == ESC) {
+            system("cls");
+            break;
+        }
+        else if (input == ENTER) {
+            system("cls");
+            int posBlock = (currentCursor.Y - FIRST_BLOCK[LOAD_GAME].Y) / distanceY[LOAD_GAME];
+            switch (posBlock) {
+                case 0: // SAVE FILE 1
+
+                    return;
+                    // break;
+                case 1: // SAVE FILE 2
+
+                    return;
+                    // break;
+                case 2: // SAVE FILE 3
+
+                    return;
+                    // break;
+                default: // GO BACK
+                    return;
+            }
+        }
+        // if input is UP or DOWN, move the Cursor and print newArrow
+        else {
+            Visual_moveCursor(LOAD_GAME, input);
+            cout << arrow;
+        }
+    }
+}
+
+void LEADERBOARD_CONTROL() {
+    printLeaderboard();
 }

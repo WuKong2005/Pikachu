@@ -19,19 +19,24 @@ enum frontend {
   MAIN_MENU,
   PLAY_GAME,
   GAME_MODE,
+  LOAD_GAME,
   LEADERBOARD,
   HELP
 };
 
-const string Visual[5];
-
+const string Visual[6];
 
 
 // hide the Cursor in Console
 void hideCursor();
 
+// intro game
 void printLogo();
+
+// print Visual
+void printMainMenu();
 void printPlayGame();
 void printGameMode();
-void printLeaderBoard();
+void printLoadGame();
+void printLeaderboard();
 void printHelp();

@@ -1,7 +1,9 @@
 #include "controller.h"
 
 int getKeyboardInput () {
-    getKeyboard = _getch();
+    getKeyboard = _getch(); // store the keyboard input
+
+    // check if the input is arrow key
     if (getKeyboard == 0 || getKeyboard == 224) {
         switch(getKeyboard) {
             case KEY_UP:
@@ -35,15 +37,15 @@ int getKeyboardInput () {
     }
 }
 
-
 void removeArrow() {
     SetConsoleCursorPosition(console, currentCursor);
     cout << "   ";
 }
 
-void setCursor(COORD newCursor) {
-    currentCursor.X = newCursor.X;
-	currentCursor.Y = newCursor.Y;
+void printAtCursor(string content, COORD cursor, string color = TEXT_BLACK) {
+    currentCursor.X = cursor.X;
+	currentCursor.Y = cursor.Y;
     SetConsoleCursorPosition(console, currentCursor);
+    cout << color;
+    cout << content;
 }
-
