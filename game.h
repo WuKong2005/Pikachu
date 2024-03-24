@@ -3,10 +3,26 @@
 #include "menu.h"
 #include "Visual.h"
 #include "controller.h" 
+#include "board.h"
 
 using namespace std;
 
-HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
-COORD currentCursor = {0, 0};
-int getKeyboard;
+struct game {
+    board map;
+    char** background;
+    pair<int, int> curSelect;
+    pair<int, int> choosenCell;
+    int numLeft;
+    bool isPlaying;
+
+    game();
+    ~game();
+    game(int difficult);
+    game(string pathSaveFile);
+
+    void select();
+    void deSelect();
+    
+
+};
 

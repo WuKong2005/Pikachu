@@ -35,6 +35,15 @@ enum DIFFICULT {
     HARD,
 };
 
+//Type of matching
+enum MATCHING {
+    I_MATCHING,
+    L_MATCHING,
+    Z_MATCHING,
+    U_MATCHING,
+    MAGIC_MATCHING
+};
+
 struct board {
     int ROW, COL;
     char** grid;
@@ -50,6 +59,7 @@ struct board {
     void shuffleBoard();
     bool checkMatch(pair<int, int> startCell, pair<int, int> endCell, bool magic = false, bool* found = NULL);
     vector<pair<int, int>> getPath(pair<int, int> startCell, pair<int, int> endCell);
+    int getTypePath(vector<pair<int, int>> path);
     void deleteCell(pair<int, int> cell);
     void deleteMatch(pair<int, int> startCell, pair<int, int> endCell);
     bool automaticCheck();

@@ -219,6 +219,10 @@ vector<pair<int, int>> board::getPath(pair<int, int> startCell, pair<int, int> e
 //Determine the type of path between two cells
 int board::getTypePath(vector<pair<int, int>> path) {
     assert(path.size() >= 2);
+    //5 cells <=> MAGIC MATCHING
+    if (path.size() == 5) {
+        return MAGIC_MATCHING;
+    }
     //2 cells <=> I matching, 3 cells <=> L matching
     if (path.size() <= 3)
         return path.size() - 2;
@@ -233,7 +237,7 @@ int board::getTypePath(vector<pair<int, int>> path) {
             return 2 + ((path[0].first - path[1].first) * (path[3].first - path[2].first) > 0);
         }
         else {
-            //The middle segment is a horizontal segment
+            //The middle segment is a vertical segment
             //Similar to the horizontal case
             return 2 + ((path[0].second - path[1].second) * (path[3].second - path[2].second) > 0);
         }

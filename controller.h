@@ -14,6 +14,13 @@ enum move {
     ENTER
 };
 
+enum special_input {
+    GET_HINT,
+    TOGGLE_MUSIC,
+    SAVE_GAME,
+    MAGIC_MOVE
+};
+
 // Ascii code 
 const int KEY_UP = 72;
 const int KEY_DOWN = 80;
@@ -21,6 +28,10 @@ const int KEY_LEFT = 75;
 const int KEY_RIGHT = 77;
 const int KEY_ESC = 27;
 const int KEY_ENTER = 13;
+
+HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+COORD currentCursor = {0, 0};
+char getKeyboard;
 
 // process and determine which type of input of user (UP, DOWN, LEFT, RIGHT, ESC)
 int getKeyboardInput();
