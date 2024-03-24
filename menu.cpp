@@ -209,4 +209,18 @@ void LOAD_GAME_CONTROL() {
 
 void LEADERBOARD_CONTROL() {
     printLeaderboard();
+
+    ifstream fin;
+
+    // print the LEADER_BOARD from easy -> medium -> hard
+    for (int difficulty = easy; difficulty <= hard; ++difficulty) {
+        fin.open(fileName[difficulty].c_str());
+
+        if (!fin.is_open()) {
+            system("cls");
+            return;
+        }
+
+        currentCursor.X;
+    }
 }

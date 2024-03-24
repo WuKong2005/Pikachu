@@ -2,6 +2,7 @@
 
 #include "Visual.h"
 #include "controller.h"
+#include <fstream>
 
 // Coordinate of first block of each Visual
 const COORD FIRST_BLOCK[4] = {
@@ -26,6 +27,44 @@ const int numBlock[4] = {
     4, // GAME_MODE
     4 // LOAD_GAME
 };
+
+// enumerate the difficulty (use for row of LEADERBOARD)
+enum difficulty {
+    easy,
+    medium,
+    hard
+};
+
+// enumerate the information (use for column of LEADERBOARD)
+enum information {
+    username,
+    time,
+    score,
+    date
+};
+
+// row of no.1 of each difficulty in LEADERBOARD
+const int row_Difficulty[3] = {
+    8, // easy
+    14, // medium
+    20 // hard
+};
+
+const string fileName[3] = {
+    "easy.txt", // easy
+    "medium.txt", // medium
+    "hard.txt" // hard
+};
+
+// column of information in LEADERBOARD
+const int column_Infomation[4] {
+    41, // username
+    82, // time
+    99, // score
+    111 // date
+};
+
+
 
 // move the Arrow according to keyboardInput (UP, DOWN, ESC)
 void Visual_moveArrow(int visual, int input);
