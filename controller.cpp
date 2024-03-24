@@ -5,7 +5,7 @@ int getKeyboardInput () {
 
     // check if the input is arrow key
     if (getKeyboard == 0 || getKeyboard == 224) {
-        switch(getKeyboard) {
+        switch(_getch()) {
             case KEY_UP:
                 return UP;
             case KEY_DOWN:

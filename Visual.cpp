@@ -333,7 +333,7 @@ void printLogo() {
             break;
     }
 
-	SetConsoleOutputCP(65001); // set the Font of console to UNICODE
+	// SetConsoleOutputCP(65001); // set the Font of console to UNICODE
 
 	for (int time = 0; time < 4; ++time)
 		for (int color = 0; color < 4; ++color) {

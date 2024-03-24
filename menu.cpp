@@ -1,6 +1,6 @@
 #include "menu.h"
 
-void Visual_moveCursor(int visual, int input) {
+void Visual_moveArrow(int visual, int input) {
     switch (input) {
         case ESC:
             return;
@@ -16,6 +16,7 @@ void Visual_moveCursor(int visual, int input) {
             return;
     }
 	SetConsoleCursorPosition(console, currentCursor); // Update new position of cursor 
+    cout << arrow;
 }
 
 
@@ -68,10 +69,8 @@ void MAIN_MENU_CONTROL() {
             }
         }
         // if input is UP or DOWN, move the Cursor and print newArrow
-        else {
-            Visual_moveCursor(MAIN_MENU, input);
-            cout << arrow;
-        }
+        else
+            Visual_moveArrow(MAIN_MENU, input);
     }
 }
 
@@ -122,10 +121,8 @@ void PLAY_GAME_CONTROL() {
             }
         }
         // if input is UP or DOWN, move the Cursor and print newArrow
-        else {
-            Visual_moveCursor(PLAY_GAME, input);
-            cout << arrow;
-        }
+        else
+            Visual_moveArrow(PLAY_GAME, input);
     }
 }
 
@@ -165,10 +162,8 @@ void GAME_MODE_CONTROL() {
             }
         }
         // if input is UP or DOWN, move the Cursor and print newArrow
-        else {
-            Visual_moveCursor(GAME_MODE, input);
-            cout << arrow;
-        }
+        else 
+            Visual_moveArrow(GAME_MODE, input);
     }
 }
 
@@ -207,10 +202,8 @@ void LOAD_GAME_CONTROL() {
             }
         }
         // if input is UP or DOWN, move the Cursor and print newArrow
-        else {
-            Visual_moveCursor(LOAD_GAME, input);
-            cout << arrow;
-        }
+        else
+            Visual_moveArrow(LOAD_GAME, input);
     }
 }
 
