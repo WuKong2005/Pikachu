@@ -42,10 +42,9 @@ void removeArrow() {
     cout << "   ";
 }
 
-void printAtCursor(string content, COORD cursor, string color = TEXT_BLACK) {
+void printAtCursor(string content, COORD cursor) {
     currentCursor.X = cursor.X;
 	currentCursor.Y = cursor.Y;
     SetConsoleCursorPosition(console, currentCursor);
-    cout << color;
     cout << content;
 }

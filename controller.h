@@ -43,4 +43,4 @@ void removeArrow();
 const string arrow = ">>>";
 
 // setup, update the currentCursor to newCursor and print content
-void printAtCursor(string content, COORD cursor, string color = TEXT_BLACK);
+void printAtCursor(string content, COORD cursor);
