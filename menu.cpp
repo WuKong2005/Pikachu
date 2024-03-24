@@ -13,7 +13,7 @@ void Visual_moveArrow(int visual, int input) {
                 currentCursor.Y += distanceY[visual]; // move cursor DOWN
             break;
         default:
-            return;
+            break;
     }
 	SetConsoleCursorPosition(console, currentCursor); // Update new position of cursor 
     cout << arrow;
@@ -60,9 +60,15 @@ void MAIN_MENU_CONTROL() {
                     printAtCursor(arrow, preCursor);
                     break;
                 case 2: // HELP
+                    HELP_CONTROL();
 
-                    return;
-                    // break;
+                    // Return MAIN_MENU after escape HELP
+                    cout << Visual[MAIN_MENU];
+                    // Set up the cursor in MAIN_MENU
+                    preCursor.X = FIRST_BLOCK[MAIN_MENU].X;
+                    preCursor.Y = FIRST_BLOCK[MAIN_MENU].Y + 2 * distanceY[MAIN_MENU];
+                    printAtCursor(arrow, preCursor);
+                    break;
                 default: // EXIT
                     return;
             }
@@ -224,6 +230,7 @@ void LEADERBOARD_CONTROL() {
             return;
         }
 
+        // read information form file and print to console
         while (getline(fin, buffer, ';')) {
             currentCursor.X = column_Leaderboard[Username];
             printAtCursor(buffer, currentCursor);
@@ -246,9 +253,17 @@ void LEADERBOARD_CONTROL() {
         fin.close();
     }
 
-    while (!_kbhit()) {
-        int buffer = _getch();
-        system("cls");
-        return;
-    }
+    // wait for user to press any key to escape
+    int buffer = _getch();
+    system("cls");
+}
+
+void HELP_CONTROL() {
+    COORD curCursor = {0, 4};
+    SetConsoleCursorPosition(console, curCursor);
+    printHelp();
+
+    // wait for user to press any key to escape
+    int buffer = _getch();
+    system("cls");
 }

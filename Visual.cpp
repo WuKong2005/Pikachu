@@ -78,5 +78,5 @@ void printLeaderboard() {
 
 void printHelp() {
     cout << TEXT_BLACK;
-    // cout << Visual[HELP];
+    cout << Visual[HELP];
 }

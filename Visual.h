@@ -341,5 +341,31 @@ const string Visual[6] = {
 	 -------------------- ----- ---------------------------------------- --------------- --------------- ----------------------------
 	)",
 
-	""
+	// HELP
+	R"(
+		 ----------------------------------------------------------------------------------------------------------
+		|                  |          UP:   W, w, up arrow                     LEFT:  A, a, left arrow             |
+		|      MOVES:      |                                                                                       |
+		|                  |          DOWN: S, s, down arrow                   RIGHT: D, d, right arrow            |
+		----------------------------------------------------------------------------------------------------------
+		|                  |   - The Matching Game (also known as the Pikachu Puzzle Game) includes a board of     |
+		|                  |   mutiple cells, each of which presents a figure.                                     |
+		|                  |                                                                                       |
+		|      RULES:      |   - The player's task is to finds and matches all pairs of cell that contain the same |
+		|                  |   figure and connect each other in some particular pattern (I, L, U, Z).              |
+		|                  |                                                                                       |
+		|                  |   - A legal match will make the two cells disappear. And the game ends when all the   |
+		|                  |   matching pairs are found (the board is empty).                                      |
+		----------------------------------------------------------------------------------------------------------
+		|                  |                                                                                       |
+		|     SCORING:     |                                                                                       |
+		|                  |                                                                                       |
+		----------------------------------------------------------------------------------------------------------
+		|                  |                - Tran Cong Minh - 23127007 - 23CLC05 - HCMUS                          |
+		|    DEVELOPERS    |                                                                                       |
+		|                  |                - Nguyen Hoang Minh Tam - 23127017 - 23CLC05 - HCMUS                   |
+		----------------------------------------------------------------------------------------------------------
+
+							PRESS ANY KEY TO GO BACK ! 
+    )"
 };
