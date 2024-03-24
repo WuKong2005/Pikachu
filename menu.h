@@ -64,8 +64,6 @@ const int column_Leaderboard[4] {
     113 // Date
 };
 
-
-
 // move the Arrow according to keyboardInput (UP, DOWN, ESC)
 void Visual_moveArrow(int visual, int input);
 

@@ -1,7 +1,13 @@
 #pragma once
 
-#include "header.h"
+#include <iostream>
+#include <string>
+#include <cstring>
+#include <windows.h>
+#include <vector>
 #include <conio.h>
+
+using namespace std;
 
 // COLOR
 enum COLOR {

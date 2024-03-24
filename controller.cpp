@@ -1,5 +1,14 @@
 #include "controller.h"
 
+char getKeyboard;
+
+HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+COORD currentCursor = {0, 0};
+
+void initializeProgram() {
+    
+}
+
 int getKeyboardInput () {
     getKeyboard = _getch(); // store the keyboard input
 

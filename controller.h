@@ -2,7 +2,7 @@
 
 #include <windows.h>
 #include <conio.h>
-#include "game.h"
+#include "visual.h"
 
 // enumerate the type of move in menu
 enum move {
@@ -29,9 +29,10 @@ const int KEY_RIGHT = 77;
 const int KEY_ESC = 27;
 const int KEY_ENTER = 13;
 
-HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
-COORD currentCursor = {0, 0};
-char getKeyboard;
+extern HANDLE console;
+extern COORD currentCursor;
+
+void initializeProgram();
 
 // process and determine which type of input of user (UP, DOWN, LEFT, RIGHT, ESC)
 int getKeyboardInput();

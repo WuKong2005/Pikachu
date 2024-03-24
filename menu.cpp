@@ -19,7 +19,6 @@ void Visual_moveArrow(int visual, int input) {
     cout << arrow;
 }
 
-
 void MAIN_MENU_CONTROL() {
     printMainMenu();
 
