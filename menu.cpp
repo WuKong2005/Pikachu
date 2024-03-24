@@ -214,13 +214,42 @@ void LEADERBOARD_CONTROL() {
 
     // print the LEADER_BOARD from easy -> medium -> hard
     for (int difficulty = easy; difficulty <= hard; ++difficulty) {
+        currentCursor.Y = row_Leaderboard[difficulty];
+
         fin.open(fileName[difficulty].c_str());
+        
+        string buffer;
 
         if (!fin.is_open()) {
             system("cls");
             return;
         }
 
-        currentCursor.X;
+        while (getline(fin, buffer, ';')) {
+            currentCursor.X = column_Leaderboard[Username];
+            printAtCursor(buffer, currentCursor);
+
+            getline(fin, buffer, ';');
+            currentCursor.X = column_Leaderboard[Time];
+            printAtCursor(buffer, currentCursor);
+
+            getline(fin, buffer, ';');
+            currentCursor.X = column_Leaderboard[Score];
+            printAtCursor(buffer, currentCursor);
+
+            getline(fin, buffer);
+            currentCursor.X = column_Leaderboard[Date];
+            printAtCursor(buffer, currentCursor);
+
+            currentCursor.Y++;
+        }
+
+        fin.close();
+    }
+
+    while (!_kbhit()) {
+        int buffer = _getch();
+        system("cls");
+        return;
     }
 }

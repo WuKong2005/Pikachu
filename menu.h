@@ -37,14 +37,14 @@ enum difficulty {
 
 // enumerate the information (use for column of LEADERBOARD)
 enum information {
-    username,
-    time,
-    score,
-    date
+    Username,
+    Time,
+    Score,
+    Date
 };
 
 // row of no.1 of each difficulty in LEADERBOARD
-const int row_Difficulty[3] = {
+const int row_Leaderboard[3] = {
     8, // easy
     14, // medium
     20 // hard
@@ -57,11 +57,11 @@ const string fileName[3] = {
 };
 
 // column of information in LEADERBOARD
-const int column_Infomation[4] {
-    41, // username
-    82, // time
-    99, // score
-    111 // date
+const int column_Leaderboard[4] {
+    41, // Username
+    82, // Time
+    99, // Score
+    111 // Date
 };
 
 
