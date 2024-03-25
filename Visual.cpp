@@ -80,3 +80,24 @@ void printHelp() {
     cout << TEXT_BLACK;
     cout << Visual[HELP];
 }
+
+void printEnterUsername() {
+    cout << TEXT_BLACK;
+    string username = 
+    R"(
+                    
+                    
+                    
+                    
+                    
+                    PLEASE ENTER YOUR USERNAME (AT LEAST 5 AND AT MOST 30 CHARACTERS)
+
+                                   --------------------------------
+                        USERNAME: |                                |
+                                   -------------------------------- 
+
+                                IF YOU WANNA GO BACK, PRESS ESC KEY
+    )";
+    
+    cout << username;
+}

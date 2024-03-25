@@ -44,7 +44,7 @@ void printGameMode();
 void printLoadGame();
 void printLeaderboard();
 void printHelp();
-
+void printEnterUsername();
 
 // FRONTEND
 const string GAME_LOGO[7] = {

@@ -149,19 +149,38 @@ void GAME_MODE_CONTROL() {
             system("cls");
             // determine which block is chosen by player
             int posBlock = (currentCursor.Y - FIRST_BLOCK[GAME_MODE].Y) / distanceY[GAME_MODE];
+            COORD preCursor; // store the previous coordinate of cursor
             switch (posBlock) {
                 case 0: // EASY
+                    USERNAME_CONTROL();
 
-                    return;
-                    // break;
+                    // return GAME_MODE after escape USERNAME
+                    cout << Visual[GAME_MODE];
+                    // Set up the cursor in PLAY_GAME
+                    preCursor.X = FIRST_BLOCK[GAME_MODE].X;
+                    preCursor.Y = FIRST_BLOCK[GAME_MODE].Y;
+                    printAtCursor(arrow, preCursor);
+                    break;
                 case 1: // MEDIUM
+                    USERNAME_CONTROL();
 
-                    return;
-                    // break;
+                    // return GAME_MODE after escape USERNAME
+                    cout << Visual[GAME_MODE];
+                    // Set up the cursor in PLAY_GAME
+                    preCursor.X = FIRST_BLOCK[GAME_MODE].X;
+                    preCursor.Y = FIRST_BLOCK[GAME_MODE].Y + distanceY[GAME_MODE];
+                    printAtCursor(arrow, preCursor);
+                    break;
                 case 2: // HARD
+                    USERNAME_CONTROL();
 
-                    return;
-                    // break;
+                    // return GAME_MODE after escape USERNAME
+                    cout << Visual[GAME_MODE];
+                    // Set up the cursor in PLAY_GAME
+                    preCursor.X = FIRST_BLOCK[GAME_MODE].X;
+                    preCursor.Y = FIRST_BLOCK[GAME_MODE].Y + 2 * distanceY[GAME_MODE];
+                    printAtCursor(arrow, preCursor);
+                    break;
                 default: // GO BACK
                     return;
             }
@@ -266,4 +285,50 @@ void HELP_CONTROL() {
     // wait for user to press any key to escape
     int buffer = _getch();
     system("cls");
+}
+
+string USERNAME_CONTROL() {
+    printEnterUsername();
+
+    string User = "";
+    int numChar = 0;
+
+    currentCursor = {36, 9}; // Coordinate of block USERNAME
+
+    while (true) {
+        char input = _getch();
+
+        if (input == KEY_ESC) {
+            system("cls");
+            return "";
+        }
+            
+        if (isprint(input)) {
+            if (numChar > 29)
+                continue;
+            numChar++;
+            SetConsoleCursorPosition(console, currentCursor);
+            cout << input;
+            User += input;
+            currentCursor.X++;
+        }
+        else if (input == KEY_BACKSPACE) {
+            if (numChar == 0)
+                continue;
+            numChar--;
+            currentCursor.X--;
+            SetConsoleCursorPosition(console, currentCursor);
+            cout << " ";
+            User.pop_back();
+        }
+        else if (input = KEY_ENTER) {
+            if (numChar < 5)
+                continue;
+            
+            // game starting
+            break;
+        }
+    }
+
+    return User;
 }

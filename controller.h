@@ -28,6 +28,7 @@ const int KEY_LEFT = 75;
 const int KEY_RIGHT = 77;
 const int KEY_ESC = 27;
 const int KEY_ENTER = 13;
+const int KEY_BACKSPACE = 8;
 
 extern HANDLE console;
 extern COORD currentCursor;
