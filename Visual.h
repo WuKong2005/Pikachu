@@ -9,6 +9,9 @@
 
 using namespace std;
 
+// Arrow
+const string arrow = ">>>";
+
 // COLOR
 enum COLOR {
   RED,
@@ -25,12 +28,15 @@ enum frontend {
   PLAY_GAME,
   GAME_MODE,
   LOAD_GAME,
+  USERNAME,
   LEADERBOARD,
   HELP
 };
 
 // hide the Cursor in Console
 void hideCursor();
+
+void showCursor();
 
 // intro game
 void printLogo();
@@ -42,7 +48,7 @@ void printGameMode();
 void printLoadGame();
 void printLeaderboard();
 void printHelp();
-void printEnterUsername();
+void printUsername();
 
 // FRONTEND
 const string GAME_LOGO[7] = {
@@ -169,7 +175,7 @@ R"(
 
 
 // stored the visual
-const string Visual[6] = {
+const string Visual[7] = {
     // MAIN_MENU
     R"(
 			    	                                  ,'\
@@ -244,18 +250,18 @@ const string Visual[6] = {
 
     //GAME_MODE
     R"(
-			    	                                          ,'\
-			    	            _.----.        ____         ,'  _\   ___    ___     ____
-			    	        _,-'       `.     |    |  /`.   \,-'    |   \  /   |   |    \  |`.
-			    	        \      __    \    '-.  | /   `.  ___    |    \/    |   '-.   \ |  |
-			    	         \.    \ \   |  __  |  |/    ,','_  `.  |          | __  |    \|  |
-			    	           \    \/   /,' _`.|      ,' / / / /   |          ,' _`.|     |  |
-			    	            \     ,-'/  /   \    ,'   | \/ / ,`.|         /  /   \  |     |
-			    	             \    \ |   \_/  |   `-.  \    `'  /|  |    ||   \_/  | |\    |
-			    	              \    \ \      /       `-.`.___,-' |  |\  /| \      /  | |   |
-			    	               \    \ `.__,'|  |`-._    `|      |__| \/ |  `.__,'|  | |   |
-			    	                \_.-'       |__|    `-._ |              '-.|     '-.| |   |
-			    	                                        `'                            '-._|
+			    	                                  ,'\
+			    	    _.----.        ____         ,'  _\   ___    ___     ____
+			    	_,-'       `.     |    |  /`.   \,-'    |   \  /   |   |    \  |`.
+			    	\      __    \    '-.  | /   `.  ___    |    \/    |   '-.   \ |  |
+			    	 \.    \ \   |  __  |  |/    ,','_  `.  |          | __  |    \|  |
+			    	   \    \/   /,' _`.|      ,' / / / /   |          ,' _`.|     |  |
+			    	    \     ,-'/  /   \    ,'   | \/ / ,`.|         /  /   \  |     |
+			    	     \    \ |   \_/  |   `-.  \    `'  /|  |    ||   \_/  | |\    |
+			    	      \    \ \      /       `-.`.___,-' |  |\  /| \      /  | |   |
+			    	       \    \ `.__,'|  |`-._    `|      |__| \/ |  `.__,'|  | |   |
+			    	        \_.-'       |__|    `-._ |              '-.|     '-.| |   |
+			    	                                `'                            '-._|
     
 						A MATCHING GAME BY 
 						TRAN CONG MINH & NGUYEN HOANG MINH TAM
@@ -312,6 +318,22 @@ const string Visual[6] = {
    ⡇⠈⡆⠀⠀⠱⡀⠀⠀⠀⡇⠀⠀⠀⢠⠁⠀⠀⠈⢀⠇⠀⠀⠀⠀⠀⠀⠀                          -------------------                             ⢶⣗⠧⡀⢳⠀⠀⠀⠀⢸⣀⣸⠀⠀⠀⢀⡜⠀⣸⢤⣶
    ⠘⡄⢀⠀⠀⠀⠱⡀⠀⠀⠁⠀⠀⡠⠁⠀⠀⢰⠀⡜⠀⠀⠀⠀⠀⠀⠀⠀                                                                          ⠈⠻⣿⣦⣈⣧⡀⠀⠀⢸⣿⣿⠀⠀⢀⣼⡀⣨⣿⡿⠁
    ⠀⠈⠉⠉⠉⠀⠐⠛⠶⠒⠣⠦⠤⠗⠒⠒⠒⠚⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀                                                                            ⠈⠻⠿⠿⠓⠄⠤⠘⠉⠙⠤⢀⠾⠿⣿⠟⠋
+    )",
+
+	// USERNAME
+    R"(
+                    
+                    
+                    
+                    
+                    
+                    PLEASE ENTER YOUR USERNAME (AT LEAST 5 AND AT MOST 30 CHARACTERS)
+
+                                   --------------------------------
+                        USERNAME: |                                |
+                                   -------------------------------- 
+
+                                IF YOU WANNA GO BACK, PRESS ESC KEY
     )",
 
 	// LEADERBOARD

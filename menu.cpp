@@ -1,34 +1,16 @@
 #include "menu.h"
 
-void Visual_moveArrow(int visual, int input) {
-    switch (input) {
-        case ESC:
-            return;
-        case UP:
-            if (currentCursor.Y != FIRST_BLOCK[MAIN_MENU].Y) // check if cursor is at the first block
-                currentCursor.Y -= distanceY[visual]; // move cursor UP
-            break;
-        case DOWN:
-            if (currentCursor.Y != FIRST_BLOCK[MAIN_MENU].Y + (numBlock[visual] - 1) * distanceY[visual]) // check if cursor is at the last block
-                currentCursor.Y += distanceY[visual]; // move cursor DOWN
-            break;
-        default:
-            break;
-    }
-	SetConsoleCursorPosition(console, currentCursor); // Update new position of cursor 
-    cout << arrow;
-}
-
 void MAIN_MENU_CONTROL() {
     printMainMenu();
 
-    printAtCursor(arrow, FIRST_BLOCK[MAIN_MENU]);
+    printAtCursor(arrow, FIRST_BLOCK[MAIN_MENU]); // set arrow point to first block (default)
 
     while (true) {
-        int input = getKeyboardInput();
+        int input = checkNavigationKey();
 
         removeArrow();
 
+        // check user's input
         if (input == ESC) {
             system("cls");
             break;
@@ -36,44 +18,48 @@ void MAIN_MENU_CONTROL() {
         else if (input == ENTER) {
             system("cls");
             // determine which block is chosen by player
-            int posBlock = (currentCursor.Y - FIRST_BLOCK[MAIN_MENU].Y) / distanceY[MAIN_MENU];
+            int posBlock = (currentCursor.Y - FIRST_BLOCK[MAIN_MENU].Y) / distanceBlock[MAIN_MENU];
             COORD preCursor; // store the previous coordinate of cursor
+
             switch (posBlock) {
                 case 0: // PLAY_GAME
                     PLAY_GAME_CONTROL();
 
                     // Return MAIN_MENU after escape PLAY_GAME
                     cout << Visual[MAIN_MENU];
-                    // Set up the cursor in MAIN_MENU
+                    // Set up the cursor in MAIN_MENU - block PLAY_GAME
                     preCursor.X = FIRST_BLOCK[MAIN_MENU].X;
                     preCursor.Y = FIRST_BLOCK[MAIN_MENU].Y;
                     printAtCursor(arrow, preCursor);
                     break;
+
                 case 1: // LEADERBOARD
                     LEADERBOARD_CONTROL();
 
                     // Return MAIN_MENU after escape LEADERBOARD
                     cout << Visual[MAIN_MENU];
-                    // Set up the cursor in MAIN_MENU
+                    // Set up the cursor in MAIN_MENU - BLOCK LEADERBOARD
                     preCursor.X = FIRST_BLOCK[MAIN_MENU].X;
-                    preCursor.Y = FIRST_BLOCK[MAIN_MENU].Y + distanceY[MAIN_MENU];
+                    preCursor.Y = FIRST_BLOCK[MAIN_MENU].Y + distanceBlock[MAIN_MENU];
                     printAtCursor(arrow, preCursor);
                     break;
+
                 case 2: // HELP
                     HELP_CONTROL();
 
                     // Return MAIN_MENU after escape HELP
                     cout << Visual[MAIN_MENU];
-                    // Set up the cursor in MAIN_MENU
+                    // Set up the cursor in MAIN_MENU - BLOCK HELP
                     preCursor.X = FIRST_BLOCK[MAIN_MENU].X;
-                    preCursor.Y = FIRST_BLOCK[MAIN_MENU].Y + 2 * distanceY[MAIN_MENU];
+                    preCursor.Y = FIRST_BLOCK[MAIN_MENU].Y + 2 * distanceBlock[MAIN_MENU];
                     printAtCursor(arrow, preCursor);
                     break;
+
                 default: // EXIT
                     return;
             }
         }
-        // if input is UP or DOWN, move the Cursor and print newArrow
+        // move the Cursor and print newArrow
         else
             Visual_moveArrow(MAIN_MENU, input);
     }
@@ -82,10 +68,10 @@ void MAIN_MENU_CONTROL() {
 void PLAY_GAME_CONTROL() {
     printPlayGame();
 
-    printAtCursor(arrow, FIRST_BLOCK[PLAY_GAME]);
+    printAtCursor(arrow, FIRST_BLOCK[PLAY_GAME]); // set arrow point to first block (default)
 
     while (true) {
-        int input = getKeyboardInput();
+        int input = checkNavigationKey();
         
         removeArrow();
 
@@ -96,15 +82,16 @@ void PLAY_GAME_CONTROL() {
         else if (input == ENTER) {
             system("cls");
             // determine which block is chosen by player
-            int posBlock = (currentCursor.Y - FIRST_BLOCK[PLAY_GAME].Y) / distanceY[PLAY_GAME];
+            int posBlock = (currentCursor.Y - FIRST_BLOCK[PLAY_GAME].Y) / distanceBlock[PLAY_GAME];
             COORD preCursor; // store the previous coordinate of cursor
+
             switch (posBlock) {
                 case 0: // NEW GAME --> choose the GAME_MODE (EASY -> MEDIUM --> HARD)
                     GAME_MODE_CONTROL();
 
                     // return PLAY_GAME after escape GAME_MODE
                     cout << Visual[PLAY_GAME];
-                    // Set up the cursor in PLAY_GAME
+                    // Set up the cursor in PLAY_GAME - block NEW_GAME
                     preCursor.X = FIRST_BLOCK[PLAY_GAME].X;
                     preCursor.Y = FIRST_BLOCK[PLAY_GAME].Y;
                     printAtCursor(arrow, preCursor);
@@ -115,9 +102,9 @@ void PLAY_GAME_CONTROL() {
 
                     // return PLAY_GAME after escape LOAD_GAME
                     cout << Visual[PLAY_GAME];
-                     // Set up the cursor in PLAY_GAME
+                     // Set up the cursor in PLAY_GAME - block LOAD_GAME
                     preCursor.X = FIRST_BLOCK[PLAY_GAME].X;
-                    preCursor.Y = FIRST_BLOCK[PLAY_GAME].Y + distanceY[PLAY_GAME];
+                    preCursor.Y = FIRST_BLOCK[PLAY_GAME].Y + distanceBlock[PLAY_GAME];
                     printAtCursor(arrow, preCursor);
                     break;
 
@@ -125,7 +112,7 @@ void PLAY_GAME_CONTROL() {
                     return;
             }
         }
-        // if input is UP or DOWN, move the Cursor and print newArrow
+        // move the Cursor and print newArrow
         else
             Visual_moveArrow(PLAY_GAME, input);
     }
@@ -134,10 +121,10 @@ void PLAY_GAME_CONTROL() {
 void GAME_MODE_CONTROL() {
     printGameMode();
 
-    printAtCursor(arrow, FIRST_BLOCK[GAME_MODE]);
+    printAtCursor(arrow, FIRST_BLOCK[GAME_MODE]); // set arrow point to first block (default)
 
     while (true) {
-        int input = getKeyboardInput();
+        int input = checkNavigationKey();
         
         removeArrow();
 
@@ -148,8 +135,9 @@ void GAME_MODE_CONTROL() {
         else if (input == ENTER) {
             system("cls");
             // determine which block is chosen by player
-            int posBlock = (currentCursor.Y - FIRST_BLOCK[GAME_MODE].Y) / distanceY[GAME_MODE];
+            int posBlock = (currentCursor.Y - FIRST_BLOCK[GAME_MODE].Y) / distanceBlock[GAME_MODE];
             COORD preCursor; // store the previous coordinate of cursor
+
             switch (posBlock) {
                 case 0: // EASY
                 {
@@ -160,7 +148,7 @@ void GAME_MODE_CONTROL() {
 
                     // return GAME_MODE after escape USERNAME
                     cout << Visual[GAME_MODE];
-                    // Set up the cursor in PLAY_GAME
+                    // Set up the cursor in PLAY_GAME - block EASY
                     preCursor.X = FIRST_BLOCK[GAME_MODE].X;
                     preCursor.Y = FIRST_BLOCK[GAME_MODE].Y;
                     printAtCursor(arrow, preCursor);
@@ -172,9 +160,9 @@ void GAME_MODE_CONTROL() {
 
                     // return GAME_MODE after escape USERNAME
                     cout << Visual[GAME_MODE];
-                    // Set up the cursor in PLAY_GAME
+                    // Set up the cursor in PLAY_GAME - block MEDIUM
                     preCursor.X = FIRST_BLOCK[GAME_MODE].X;
-                    preCursor.Y = FIRST_BLOCK[GAME_MODE].Y + distanceY[GAME_MODE];
+                    preCursor.Y = FIRST_BLOCK[GAME_MODE].Y + distanceBlock[GAME_MODE];
                     printAtCursor(arrow, preCursor);
                     break;
                 }
@@ -185,9 +173,9 @@ void GAME_MODE_CONTROL() {
 
                     // return GAME_MODE after escape USERNAME
                     cout << Visual[GAME_MODE];
-                    // Set up the cursor in PLAY_GAME
+                    // Set up the cursor in PLAY_GAME - block HARD
                     preCursor.X = FIRST_BLOCK[GAME_MODE].X;
-                    preCursor.Y = FIRST_BLOCK[GAME_MODE].Y + 2 * distanceY[GAME_MODE];
+                    preCursor.Y = FIRST_BLOCK[GAME_MODE].Y + 2 * distanceBlock[GAME_MODE];
                     printAtCursor(arrow, preCursor);
                     break;
                 }
@@ -195,7 +183,7 @@ void GAME_MODE_CONTROL() {
                     return;
             }
         }
-        // if input is UP or DOWN, move the Cursor and print newArrow
+        // move the Cursor and print newArrow
         else 
             Visual_moveArrow(GAME_MODE, input);
     }
@@ -204,10 +192,10 @@ void GAME_MODE_CONTROL() {
 void LOAD_GAME_CONTROL() {
     printLoadGame();
 
-    printAtCursor(arrow, FIRST_BLOCK[LOAD_GAME]);
-
+    printAtCursor(arrow, FIRST_BLOCK[LOAD_GAME]); // set arrow point to first block (default)
+ 
     while (true) {
-        int input = getKeyboardInput();
+        int input = checkNavigationKey();
         
         removeArrow();
 
@@ -217,7 +205,7 @@ void LOAD_GAME_CONTROL() {
         }
         else if (input == ENTER) {
             system("cls");
-            int posBlock = (currentCursor.Y - FIRST_BLOCK[LOAD_GAME].Y) / distanceY[LOAD_GAME];
+            int posBlock = (currentCursor.Y - FIRST_BLOCK[LOAD_GAME].Y) / distanceBlock[LOAD_GAME];
             switch (posBlock) {
                 case 0: // SAVE FILE 1
 
@@ -298,49 +286,52 @@ void HELP_CONTROL() {
 }
 
 string USERNAME_CONTROL() {
-    printEnterUsername();
+    // get console and some cursor information
+    HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD currentCursor = FIRST_BLOCK[USERNAME];
+    COORD warningBlock = {29, 15};
 
-    string User = "";
-    int numChar = 0;
+    printUsername();
 
-    currentCursor = {36, 9}; // Coordinate of block USERNAME
+    string User = ""; // stored the USERNAME
 
+    SetConsoleCursorPosition(console, currentCursor);
+    showCursor();
+
+    // get user input and check valid
     while (true) {
-        char input = _getch();
+        getline(cin, User);
+        
+        // Check valid and warning
+        if (User.length() < 5) {
+            SetConsoleCursorPosition(console, warningBlock);
+            cout << TEXT_COLOR[RED];
+            cout << "THE LENGTH OF USERNAME IS LESS THAN 5 CHARACTERS !!!";
 
-        if (input == KEY_ESC) {
-            system("cls");
-            return "";
-        }
-            
-        if (isprint(input)) {
-            if (numChar > 29)
+            // wait for user to press any key to redo (or ESC)
+            while (!_kbhit())
                 continue;
             else if (input == ';') 
                 continue;
-            numChar++;
-            SetConsoleCursorPosition(console, currentCursor);
-            cout << input;
-            User += input;
-            currentCursor.X++;
         }
-        else if (input == KEY_BACKSPACE) {
-            if (numChar == 0)
+        if (User.length() > 30) {
+            SetConsoleCursorPosition(console, warningBlock);
+            cout << TEXT_COLOR[RED];
+            cout << "THE LENGTH OF USERNAME IS OVER THAN 30 CHARACTERS !!!";
+
+            // wait for user to press any key to redo (or ESC)
+            while (!_kbhit())
                 continue;
-            numChar--;
-            currentCursor.X--;
-            SetConsoleCursorPosition(console, currentCursor);
-            cout << " ";
-            User.pop_back();
         }
-        else if (input = KEY_ENTER) {
-            if (numChar < 5)
-                continue;
-            
-            // game starting
-            break;
-        }
+
+        break;
     }
+
+    hideCursor();
+
+    system("cls");
+
+    // start game
 
     return User;
 }

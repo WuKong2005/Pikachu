@@ -7,7 +7,7 @@ void initializeProgram() {
     SetConsoleOutputCP(65001);
 }
 
-int getKeyboardInput () {
+int checkNavigationKey () {
     int input = _getch(); // store the keyboard input
 
     // check if the input is arrow key
@@ -22,9 +22,9 @@ int getKeyboardInput () {
             case KEY_RIGHT:
                 return RIGHT;
             default:
-                return -1;
+                return -1; 
         }
-    } else {
+    } else { // if input is W, A, S, D or ENTER
         switch(input) {
             case KEY_ESC:
                 return ESC;
@@ -49,9 +49,31 @@ void removeArrow() {
     cout << "   ";
 }
 
+void Visual_moveArrow(int visual, int input) {
+    switch (input) {
+        case ESC:
+            return;
+        case UP:
+            if (currentCursor.Y != FIRST_BLOCK[MAIN_MENU].Y) // check if cursor is at the first block
+                currentCursor.Y -= distanceBlock[visual]; // move cursor UP
+            break;
+        case DOWN:
+            if (currentCursor.Y != FIRST_BLOCK[MAIN_MENU].Y + (numBlock[visual] - 1) * distanceBlock[visual]) // check if cursor is at the last block
+                currentCursor.Y += distanceBlock[visual]; // move cursor DOWN
+            break;
+        default:
+            break;
+    }
+    // Update new position of cursor and print arrow
+	SetConsoleCursorPosition(console, currentCursor); 
+    cout << arrow;
+}
+
 void printAtCursor(string content, COORD cursor, string textColor) {
+    // setup the surrentCursor to cursor
     currentCursor.X = cursor.X;
 	currentCursor.Y = cursor.Y;
     SetConsoleCursorPosition(console, currentCursor);
+    // print content
     cout << textColor << content;
 }

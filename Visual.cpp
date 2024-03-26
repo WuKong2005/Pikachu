@@ -9,6 +9,15 @@ void hideCursor() {
 	SetConsoleCursorInfo(console, &cursorInfo); // apply the changes
 }
 
+void showCursor() {
+    HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE); // get Handle of the output console
+	CONSOLE_CURSOR_INFO cursorInfo; // get the infomation of the cursor
+	GetConsoleCursorInfo(console, &cursorInfo);
+	cursorInfo.bVisible = true; // show the cursor
+	cursorInfo.dwSize = 1; // set the cursor size to 1
+	SetConsoleCursorInfo(console, &cursorInfo); // apply the changes
+}
+
 void printLogo() {
     HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE); // get Handle of the output console
     COORD cursorPosition; // store the position of the cursor
@@ -16,26 +25,27 @@ void printLogo() {
 
     // while player not enter any thing from keyboard
     while (true) {
-        bool flag = true;
+        bool flag = true; // check if user input any thing
+        // print Animation
         for (int time = 0; time < 7; ++time) {
             cursorPosition = {0, 0};
             SetConsoleCursorPosition(console, cursorPosition);
             cout << TEXT_COLOR[time % 4];
             cout << GAME_LOGO[time];
             Sleep(200);
+            // check if user input any thing
             if (_kbhit()) {
                 int buffer = _getch();
                 flag = false;
                 break;
             }
         }
-        system("cls");
+        system("cls"); // clear the screen
         if (flag == false)
             break;
     }
 
-	// SetConsoleOutputCP(65001); // set the Font of console to UNICODE
-
+    // Animation
 	for (int time = 0; time < 4; ++time)
 		for (int color = 0; color < 4; ++color) {
 		cout << TEXT_COLOR[color];
@@ -81,23 +91,7 @@ void printHelp() {
     cout << Visual[HELP];
 }
 
-void printEnterUsername() {
+void printUsername() {
     cout << TEXT_BLACK;
-    string username = 
-    R"(
-                    
-                    
-                    
-                    
-                    
-                    PLEASE ENTER YOUR USERNAME (AT LEAST 5 AND AT MOST 30 CHARACTERS)
-
-                                   --------------------------------
-                        USERNAME: |                                |
-                                   -------------------------------- 
-
-                                IF YOU WANNA GO BACK, PRESS ESC KEY
-    )";
-    
-    cout << username;
+    cout << Visual[USERNAME];
 }
