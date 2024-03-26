@@ -152,7 +152,11 @@ void GAME_MODE_CONTROL() {
             COORD preCursor; // store the previous coordinate of cursor
             switch (posBlock) {
                 case 0: // EASY
-                    USERNAME_CONTROL();
+                {
+                    string playerName = USERNAME_CONTROL();
+                    //game start
+                        
+                    //
 
                     // return GAME_MODE after escape USERNAME
                     cout << Visual[GAME_MODE];
@@ -161,8 +165,10 @@ void GAME_MODE_CONTROL() {
                     preCursor.Y = FIRST_BLOCK[GAME_MODE].Y;
                     printAtCursor(arrow, preCursor);
                     break;
+                }
                 case 1: // MEDIUM
-                    USERNAME_CONTROL();
+                {
+                    string playerName = USERNAME_CONTROL(); //transfer of control bypasses initialization of: variable "playerName" (declared at line 167) ???
 
                     // return GAME_MODE after escape USERNAME
                     cout << Visual[GAME_MODE];
@@ -171,8 +177,11 @@ void GAME_MODE_CONTROL() {
                     preCursor.Y = FIRST_BLOCK[GAME_MODE].Y + distanceY[GAME_MODE];
                     printAtCursor(arrow, preCursor);
                     break;
+                }
+                    
                 case 2: // HARD
-                    USERNAME_CONTROL();
+                {
+                    string playerName = USERNAME_CONTROL();
 
                     // return GAME_MODE after escape USERNAME
                     cout << Visual[GAME_MODE];
@@ -181,6 +190,7 @@ void GAME_MODE_CONTROL() {
                     preCursor.Y = FIRST_BLOCK[GAME_MODE].Y + 2 * distanceY[GAME_MODE];
                     printAtCursor(arrow, preCursor);
                     break;
+                }
                 default: // GO BACK
                     return;
             }
@@ -305,6 +315,8 @@ string USERNAME_CONTROL() {
             
         if (isprint(input)) {
             if (numChar > 29)
+                continue;
+            else if (input == ';') 
                 continue;
             numChar++;
             SetConsoleCursorPosition(console, currentCursor);

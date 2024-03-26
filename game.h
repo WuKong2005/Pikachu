@@ -10,8 +10,7 @@ using namespace std;
 struct game {
     board map;
     char** background;
-    pair<int, int> curSelect;
-    pair<int, int> choosenCell;
+    pair<int, int> currentSelect;
     int numLeft;
     bool isPlaying;
 
@@ -21,8 +20,8 @@ struct game {
     game(string pathSaveFile);
 
     void select();
-    void deSelect();
-    
 
+    void startGame();
+    void finishGame();
 };
 

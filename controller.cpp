@@ -4,7 +4,7 @@ HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 COORD currentCursor = {0, 0};
 
 void initializeProgram() {
-    
+    SetConsoleOutputCP(65001);
 }
 
 int getKeyboardInput () {
@@ -49,9 +49,9 @@ void removeArrow() {
     cout << "   ";
 }
 
-void printAtCursor(string content, COORD cursor) {
+void printAtCursor(string content, COORD cursor, string textColor) {
     currentCursor.X = cursor.X;
 	currentCursor.Y = cursor.Y;
     SetConsoleCursorPosition(console, currentCursor);
-    cout << content;
+    cout << textColor << content;
 }

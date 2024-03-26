@@ -19,7 +19,6 @@ enum COLOR {
 const string TEXT_BLACK = "\x1B[0m";
 const string TEXT_COLOR[4] = {"\x1B[31m", "\x1B[32m", "\x1B[33;1m", "\x1B[34m"};
 
-
 // enumerate the frontend
 enum frontend {
   MAIN_MENU,
@@ -29,7 +28,6 @@ enum frontend {
   LEADERBOARD,
   HELP
 };
-
 
 // hide the Cursor in Console
 void hideCursor();

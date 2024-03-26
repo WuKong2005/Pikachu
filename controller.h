@@ -2,7 +2,7 @@
 
 #include <windows.h>
 #include <conio.h>
-#include "visual.h"
+#include "Visual.h"
 
 // enumerate the type of move in menu
 enum move {
@@ -45,4 +45,4 @@ void removeArrow();
 const string arrow = ">>>";
 
 // setup, update the currentCursor to newCursor and print content
-void printAtCursor(string content, COORD cursor);
+void printAtCursor(string content, COORD cursor, string textColor = TEXT_BLACK);

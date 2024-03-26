@@ -2,6 +2,7 @@
 
 #include "Visual.h"
 #include "controller.h"
+#include "game.h"
 #include <fstream>
 
 // Coordinate of first block of each Visual
