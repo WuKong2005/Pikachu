@@ -100,42 +100,116 @@ void printLoadGame() {
     printFrameBlock(LOAD_GAME);
 }
 
+
+/*
+    this function just using some animation to print LEADERBOARD and
+    using some "magic numbers" - which is the coordinate of some special position
+    or Ascii code of some extra characters
+*/
 void printLeaderboard() {
     HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleOutputCP(437);
-    cout << TEXT_BLACK;
+
+    COORD cursor = {8, 0};
+    SetConsoleCursorPosition(console, cursor);
+    cout << TEXT_COLOR[GREEN];
 	cout << 
 	R"(					
                                                     THESE ARE THE TOP 5 PLAYERS WITH HIGHEST SCORE
 							
                                                             PRESS ANY KEY TO GO BACK !
 	)";
-    cout << Visual[LEADERBOARD];
 
-    int lengthSide = 128;
-    string firstSideFrame, middleSideFrame, lastSideFrame, contentLine;
+    cout << TEXT_BLACK << Visual[LEADERBOARD];
 
-    firstSideFrame = firstSideFrame + char(201);
-    firstSideFrame.append(lengthSide, char(205));
-    firstSideFrame = firstSideFrame + char(187);
+     cursor = {8, 5}; // initialized with the coordinate of upper left corner of board
+    SetConsoleCursorPosition(console, cursor);
+    int lengthSide = 130;
+    int widthSide = 19;
+
+// Animation draw the LEARDBOARD
+    // draw borders
+    for (int col = 0; col < lengthSide; ++col) {
+        if (col == 0)
+            cout << char(218);
+        else if (col == 21 || col == 27 || col == 68 || col == 84 || col == 100)
+            cout << char(194);
+        else if (col == lengthSide - 1)
+            cout << char(191);
+        else
+            cout << char(196);
+        Sleep(1);
+    }
+    cursor.X += lengthSide - 1;
+    cursor.Y ++;
+    SetConsoleCursorPosition(console, cursor);
     
-    middleSideFrame = middleSideFrame + char(204);
-    middleSideFrame.append(lengthSide, char(205));
-    middleSideFrame = middleSideFrame + char(185);
+    for (int row = 0; row < widthSide; ++row) {
+        if (row == 1 || row == 7 || row == 13)
+            cout << char(180);
+        else
+            cout << char(179);
+        cursor.Y++;
+        SetConsoleCursorPosition(console, cursor);
+        Sleep(1);
+    }
 
-    lastSideFrame = lastSideFrame + char(200);
-    lastSideFrame.append(lengthSide, char(205));
-    lastSideFrame = lastSideFrame + char(188);
+    for (int col = lengthSide - 1; col >= 0; --col) {
+        if (col == 0)
+            cout << char(192);
+        else if (col == 21 || col == 27 || col == 68 || col == 84 || col == 100)
+            cout << char(193);
+        else if (col == lengthSide - 1)
+            cout << char(217);
+        else
+            cout << char(196);
 
-    COORD upperLeftCorner = {8, 5};
-    SetConsoleCursorPosition(console, upperLeftCorner);
+        cursor.X--;
+        SetConsoleCursorPosition(console, cursor);
+        Sleep(1);
+    }
 
-    cout << firstSideFrame;
+    cursor.X++;
+    for (int row = widthSide - 1; row >= 0; --row) {
+        cursor.Y--;
+        SetConsoleCursorPosition(console, cursor);
 
-    upperLeftCorner.Y += 2;
-    SetConsoleCursorPosition(console, upperLeftCorner);
-    cout << middleSideFrame;
+        if (row == 1 || row == 7 || row == 13)
+            cout << char(195);
+        else
+            cout << char(179);
+        
+        Sleep(1);
+    }
 
+// print the entire of board
+    int specialCol[] = {21, 27, 68, 84, 100};
+    int specialRow[] = {2, 8, 14};
+
+    for (int row = 0; row < 3; ++row) {
+        short newRow = 5 + specialRow[row];
+        cursor = {9, newRow};
+        SetConsoleCursorPosition(console, cursor);
+        string content;
+        content.append(lengthSide - 2, char(196));
+        cout << content;
+    }
+
+    for (int col = 0; col < 5; ++col) {
+        short newCol = 8 + specialCol[col];
+        cursor = {newCol, 6};
+        SetConsoleCursorPosition(console, cursor);
+        for (int row = 0; row < widthSide; ++row) {
+            if (row == 1 || row == 7 || row == 13)
+                cout << char(197);
+            else
+                cout << char(179);
+            cursor.Y++;
+            SetConsoleCursorPosition(console, cursor);
+        }
+    }
+
+    cout << TEXT_BLACK;
     SetConsoleOutputCP(65001);
 }
 
@@ -150,6 +224,11 @@ void printUsername() {
     printFrameBlock(USERNAME);
 }
 
+
+/*
+    this function use to print the frame of block Visual (MAIN_MENU, ...)
+    and using some "magic numbers" - which is the Ascii code of some extra characters
+*/
 void printFrameBlock(int Visual) {
     HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleOutputCP(437);
