@@ -4,6 +4,7 @@
 #include <conio.h>
 #include "Visual.h"
 #include "menu.h"
+#include <string>
 
 // enumerate the type of move in menu
 enum move {
@@ -48,4 +49,4 @@ void Visual_moveArrow(int visual, int input);
 
 
 // update the currentCursor to newCursor and print content
-void printAtCursor(string content, COORD cursor, string textColor = TEXT_BLACK);
+void printAtCursor(string content, COORD cursor);

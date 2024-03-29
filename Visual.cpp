@@ -19,6 +19,8 @@ void showCursor() {
 }
 
 void printLogo() {
+    SetConsoleOutputCP(65001); // set the console code page to print UTF-8 characters
+
     HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE); // get Handle of the output console
     COORD cursorPosition; // store the position of the cursor
 	hideCursor();
@@ -49,33 +51,38 @@ void printLogo() {
 	for (int time = 0; time < 4; ++time)
 		for (int color = 0; color < 4; ++color) {
 		cout << TEXT_COLOR[color];
-		cout << Visual[MAIN_MENU];
+		printMainMenu();
 		Sleep(100);
 		system("cls");
 		}
 }
 
 void printMainMenu() {
-    cout << TEXT_BLACK;
     cout << Visual[MAIN_MENU];
+    printFrameBlock(MAIN_MENU);
 }
 
 void printPlayGame() {
     cout << TEXT_BLACK;
     cout << Visual[PLAY_GAME];
+    printFrameBlock(PLAY_GAME);
 }
 
 void printGameMode() {
     cout << TEXT_BLACK;
     cout << Visual[GAME_MODE];
+    printFrameBlock(GAME_MODE);
 }
 
 void printLoadGame() {
 	cout << TEXT_BLACK;
 	cout << Visual[LOAD_GAME];
+    printFrameBlock(LOAD_GAME);
 }
 
 void printLeaderboard() {
+    HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleOutputCP(437);
     cout << TEXT_BLACK;
 	cout << 
 	R"(					
@@ -84,6 +91,32 @@ void printLeaderboard() {
                                                             PRESS ANY KEY TO GO BACK !
 	)";
     cout << Visual[LEADERBOARD];
+
+    int lengthSide = 128;
+    string firstSideFrame, middleSideFrame, lastSideFrame, contentLine;
+
+    firstSideFrame = firstSideFrame + char(201);
+    firstSideFrame.append(lengthSide, char(205));
+    firstSideFrame = firstSideFrame + char(187);
+    
+    middleSideFrame = middleSideFrame + char(204);
+    middleSideFrame.append(lengthSide, char(205));
+    middleSideFrame = middleSideFrame + char(185);
+
+    lastSideFrame = lastSideFrame + char(200);
+    lastSideFrame.append(lengthSide, char(205));
+    lastSideFrame = lastSideFrame + char(188);
+
+    COORD upperLeftCorner = {8, 5};
+    SetConsoleCursorPosition(console, upperLeftCorner);
+
+    cout << firstSideFrame;
+
+    upperLeftCorner.Y += 2;
+    SetConsoleCursorPosition(console, upperLeftCorner);
+    cout << middleSideFrame;
+
+    SetConsoleOutputCP(65001);
 }
 
 void printHelp() {
@@ -94,4 +127,37 @@ void printHelp() {
 void printUsername() {
     cout << TEXT_BLACK;
     cout << Visual[USERNAME];
+    printFrameBlock(USERNAME);
+}
+
+void printFrameBlock(int Visual) {
+    HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleOutputCP(437);
+    for (int numblock = 0; numblock < numBlock[Visual]; ++numblock) {
+        COORD currentCursor = FIRST_BLOCK[Visual];
+        currentCursor.Y += numblock * distanceBlock[Visual];
+
+        SetConsoleCursorPosition(console, currentCursor);
+        string sideFrame;
+        sideFrame.assign(lengthBlock[Visual], char(205));
+        cout << char(201);
+        cout << sideFrame;
+        cout << char(187);
+
+        currentCursor.Y++;
+        SetConsoleCursorPosition(console, currentCursor);
+        cout << char(186);
+
+        currentCursor.X += lengthBlock[Visual] + 1;
+        SetConsoleCursorPosition(console, currentCursor);
+        cout << char(186);
+
+        currentCursor.X -= lengthBlock[Visual] + 1;
+        currentCursor.Y++;
+        SetConsoleCursorPosition(console, currentCursor);
+        cout << char(200);
+        cout << sideFrame;
+        cout << char(188);
+    }
+    SetConsoleOutputCP(65001);
 }

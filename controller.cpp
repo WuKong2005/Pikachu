@@ -54,11 +54,11 @@ void Visual_moveArrow(int visual, int input) {
         case ESC:
             return;
         case UP:
-            if (currentCursor.Y != FIRST_BLOCK[MAIN_MENU].Y) // check if cursor is at the first block
+            if (currentCursor.Y != ARROW_POS_FIRST_BLOCK[MAIN_MENU].Y) // check if cursor is at the first block
                 currentCursor.Y -= distanceBlock[visual]; // move cursor UP
             break;
         case DOWN:
-            if (currentCursor.Y != FIRST_BLOCK[MAIN_MENU].Y + (numBlock[visual] - 1) * distanceBlock[visual]) // check if cursor is at the last block
+            if (currentCursor.Y != ARROW_POS_FIRST_BLOCK[MAIN_MENU].Y + (numBlock[visual] - 1) * distanceBlock[visual]) // check if cursor is at the last block
                 currentCursor.Y += distanceBlock[visual]; // move cursor DOWN
             break;
         default:
@@ -69,11 +69,11 @@ void Visual_moveArrow(int visual, int input) {
     cout << arrow;
 }
 
-void printAtCursor(string content, COORD cursor, string textColor) {
+void printAtCursor(string content, COORD cursor) {
     // setup the surrentCursor to cursor
     currentCursor.X = cursor.X;
 	currentCursor.Y = cursor.Y;
     SetConsoleCursorPosition(console, currentCursor);
     // print content
-    cout << textColor << content;
+    cout << content;
 }

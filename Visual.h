@@ -2,15 +2,12 @@
 
 #include <iostream>
 #include <string>
-#include <cstring>
 #include <windows.h>
 #include <vector>
 #include <conio.h>
 
 using namespace std;
 
-// Arrow
-const string arrow = ">>>";
 
 // COLOR
 enum COLOR {
@@ -33,6 +30,41 @@ enum frontend {
   HELP
 };
 
+// coordinate of the first block (upper left corner) of each Visual
+const COORD FIRST_BLOCK[5] {
+	{56, 19}, // MAIN_MENU
+	{56, 19}, // PLAY_GAME
+	{56, 19}, // GAME_MODE
+	{56, 19}, // LOAD_GAME
+	{34, 8} // USERNAME
+};
+
+// distance between each block of each Visual
+const int distanceBlock[4] = {
+    3, // MAIN_MENU
+    4, // PLAY_GAME
+    3, // GAME_MODE
+    3 // LOAD_GAME
+};
+
+// number of block of each Visual
+const int numBlock[5] = {
+    4, // MAIN_MENU
+    3, // PLAY_GAME
+    4, // GAME_MODE
+    4, // LOAD_GAME
+	1 // USERNAME
+};
+
+const int lengthBlock[5] = {
+	19, // MAIN_MENU
+	19, // PLAY_GAME
+	19, // GAME_MODE
+	19, // LOAD_GAME
+	32 // USERNAME
+};
+const int widthBlock = 3;
+
 // hide the Cursor in Console
 void hideCursor();
 
@@ -49,6 +81,7 @@ void printLoadGame();
 void printLeaderboard();
 void printHelp();
 void printUsername();
+void printFrameBlock(int Visual);
 
 // FRONTEND
 const string GAME_LOGO[7] = {
@@ -339,7 +372,7 @@ const string Visual[7] = {
 	// LEADERBOARD
     R"(
 	 -------------------- ----- ---------------------------------------- --------------- --------------- ----------------------------
-	|     DIFFICULTY     | NO. |                USERNAME                |    TIME(s)    |     SCORE     |            DATE            |
+	|     DIFFICULTY     | NO. |                USERNAME                |     SCORE     |    TIME(S)    |            DATE            |
 	 -------------------- ----- ---------------------------------------- --------------- --------------- ----------------------------
 	|                    |  1  |                                        |               |               |                            | 
 	|                    |  2  |                                        |               |               |                            |
