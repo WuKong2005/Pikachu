@@ -4,6 +4,8 @@
 #include <conio.h>
 #include "Visual.h"
 #include "menu.h"
+
+using namespace std;
 #include <string>
 
 // enumerate the type of move in menu
@@ -39,14 +41,12 @@ extern COORD currentCursor;
 void initializeProgram();
 
 // process and determine which type of input of user (UP, DOWN, LEFT, RIGHT, ESC)
-int checkNavigationKey();
+int getInputKey();
 
 // delete the current Arrow
 void removeArrow();
 
-// move the Arrow according to keyboardInput (UP, DOWN, ESC)
-void Visual_moveArrow(int visual, int input);
-
-
 // update the currentCursor to newCursor and print content
-void printAtCursor(string content, COORD cursor);
+void printAtCursor(string content, COORD cursor, string textColor = "\x1B[0m");
+
+void clearScreen();

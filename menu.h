@@ -7,6 +7,8 @@
 #include <windows.h>
 #include <iostream>
 
+using namespace std;
+
 // Arrow
 const string arrow = ">>>";
 

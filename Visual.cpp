@@ -1,5 +1,25 @@
 #include "Visual.h"
 
+void Visual_moveArrow(int visual, int input) {
+    switch (input) {
+        case ESC:
+            return;
+        case UP:
+            if (currentCursor.Y != FIRST_BLOCK[MAIN_MENU].Y) // check if cursor is at the first block
+                currentCursor.Y -= distanceBlock[visual]; // move cursor UP
+            break;
+        case DOWN:
+            if (currentCursor.Y != FIRST_BLOCK[MAIN_MENU].Y + (numBlock[visual] - 1) * distanceBlock[visual]) // check if cursor is at the last block
+                currentCursor.Y += distanceBlock[visual]; // move cursor DOWN
+            break;
+        default:
+            break;
+    }
+    // Update new position of cursor and print arrow
+	SetConsoleCursorPosition(console, currentCursor); 
+    cout << arrow;
+}
+
 void hideCursor() {
     HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE); // get Handle of the output console
 	CONSOLE_CURSOR_INFO cursorInfo; // get the infomation of the cursor

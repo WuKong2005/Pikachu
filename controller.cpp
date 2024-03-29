@@ -7,7 +7,7 @@ void initializeProgram() {
     SetConsoleOutputCP(65001);
 }
 
-int checkNavigationKey () {
+int getInputKey() {
     int input = _getch(); // store the keyboard input
 
     // check if the input is arrow key
@@ -49,26 +49,6 @@ void removeArrow() {
     cout << "   ";
 }
 
-void Visual_moveArrow(int visual, int input) {
-    switch (input) {
-        case ESC:
-            return;
-        case UP:
-            if (currentCursor.Y != ARROW_POS_FIRST_BLOCK[MAIN_MENU].Y) // check if cursor is at the first block
-                currentCursor.Y -= distanceBlock[visual]; // move cursor UP
-            break;
-        case DOWN:
-            if (currentCursor.Y != ARROW_POS_FIRST_BLOCK[MAIN_MENU].Y + (numBlock[visual] - 1) * distanceBlock[visual]) // check if cursor is at the last block
-                currentCursor.Y += distanceBlock[visual]; // move cursor DOWN
-            break;
-        default:
-            break;
-    }
-    // Update new position of cursor and print arrow
-	SetConsoleCursorPosition(console, currentCursor); 
-    cout << arrow;
-}
-
 void printAtCursor(string content, COORD cursor) {
     // setup the surrentCursor to cursor
     currentCursor.X = cursor.X;
@@ -76,4 +56,8 @@ void printAtCursor(string content, COORD cursor) {
     SetConsoleCursorPosition(console, currentCursor);
     // print content
     cout << content;
+}
+
+void clearScreen() {
+    system("cls");
 }
