@@ -28,12 +28,23 @@ int const ALPHABET = 26;
 int const sizeROW[] = {4, 6, 9};
 int const sizeCOL[] = {6, 9, 16};
 
+COORD upperLeftCorner = {1, 1};
+
 //Gamemode
 enum DIFFICULT {
     EASY,
     MEDIUM,
     HARD,
 };
+
+enum corner {
+    UPPER_LEFT,
+    UPPER_RIGHT,
+    LOWER_LEFT,
+    LOWER_RIGHT
+}
+
+const int frame[] = {218, 191, 192, 217};
 
 //Type of matching
 enum MATCHING {

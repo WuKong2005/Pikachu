@@ -4,9 +4,12 @@
 
 int main() {
     // initializeProgram();
-    SetConsoleOutputCP(65001);
-    printLogo();
-    MAIN_MENU_CONTROL();
+    // SetConsoleOutputCP(65001);
+    SetConsoleOutputCP(437);
+    game g;
+    g.drawCell({1,1}, EASY);
+    // printLogo();
+    // MAIN_MENU_CONTROL();
 
     // cerr << "startgame\n";
     
@@ -14,6 +17,7 @@ int main() {
     // // cerr << "finish create\n";
     // system("pause");
     // newGame.startGame();
+    system("pause");
 
     return 0;
 }

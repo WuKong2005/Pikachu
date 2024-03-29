@@ -46,6 +46,9 @@ int getInputKey();
 // delete the current Arrow
 void removeArrow();
 
+//
+void setCursor(short x, short y);
+
 // update the currentCursor to newCursor and print content
 void printAtCursor(string content, COORD cursor, string textColor = "\x1B[0m");
 

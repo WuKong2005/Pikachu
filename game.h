@@ -8,8 +8,8 @@
 
 using namespace std;
 
-int const WIDTH_CELL = 7;
-int const HEIGHT_CELL = 3;
+int const WIDTH_CELL = 9;
+int const HEIGHT_CELL = 5;
 
 struct game {
     board map;
@@ -28,7 +28,7 @@ struct game {
 
     void drawInterface(); //Draw everything 
     void drawBoard(); //Draw the board and its boundary
-    void drawCell(pair<int, int> cell); //Draw each cell from the board
+    void drawCell(pair<int, int> cell, char key); //Draw each cell from the board
     void drawGuide(); //Draw text box of guide, help, etc
 
     void drawPath(pair<int, int> startCell, pair<int, int> endCell, vector<pair<int, int>> path); //Draw the path between 2 cells

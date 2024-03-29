@@ -49,6 +49,11 @@ void removeArrow() {
     cout << "   ";
 }
 
+void setCursor(short x, short y) {
+    COORD cursor = {x, y};
+    SetConsoleCursorPosition(console, cursor);
+}
+
 void printAtCursor(string content, COORD cursor) {
     // setup the surrentCursor to cursor
     currentCursor.X = cursor.X;

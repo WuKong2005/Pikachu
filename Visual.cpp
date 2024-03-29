@@ -260,3 +260,23 @@ void printFrameBlock(int Visual) {
     }
     SetConsoleOutputCP(65001);
 }
+
+void drawCell(int difficult, COORD position, char key) {
+    SetConsoleCursorPosition(console, position);
+    string side;
+    side.append(sizeCell[difficult] - 2, char(196));
+    string middle;
+    middle.append(1, char(179));
+    middle.append(sizeCell[difficult], ' ');
+    middle.append(1, char(179));
+
+    cout << char(218) << side << char(191);
+    for (int row = 1; row <= sizeCell[difficult] - 2; ++row)
+        cout << middle;
+    cout << char(192) << side << char(217);
+
+    position.X += position.X / 2;
+    position.Y += position.Y / 2;
+    SetConsoleCursorPosition(console, position);
+    cout << key;
+}

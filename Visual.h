@@ -87,6 +87,9 @@ void printHelp();
 void printUsername();
 void printFrameBlock(int Visual);
 
+// draw cell of board
+void drawCell(int difficult);
+
 // FRONTEND
 const string GAME_LOGO[7] = {
 // 0
