@@ -32,13 +32,19 @@ board::board(int difficult) {
 
 //Deallocate dynamically memory used
 board::~board() {
+    if (grid == NULL && flood == NULL)
+        return;
     for (int r = 0; r < ROW + 2; r++) 
     {
         delete [] grid[r];
         delete [] flood[r];
+        grid[r] = NULL;
+        flood[r] = NULL;
     }
     delete [] grid;
     delete [] flood;
+    grid = NULL;
+    flood = NULL;
 }
 
 //Initialize board
@@ -68,7 +74,7 @@ void board::initializeBoard() {
         }
     }
 
-    //And finally shuffle them until we can guarantee a valid move exist
+    // And finally shuffle them until we can guarantee a valid move exist
     do {
         shuffleBoard();
     } while(!automaticCheck());
@@ -110,6 +116,10 @@ void board::shuffleBoard() {
 
     //Deallocate that temporary array
     delete [] arrayCell;
+}
+
+char board::getChar(pair<int, int> cell) {
+    return grid[cell.first][cell.second];
 }
 
 //Check valid move from the player, started from startCell and ended at endCell

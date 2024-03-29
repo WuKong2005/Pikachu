@@ -7,6 +7,8 @@
 #include <windows.h>
 #include <iostream>
 
+using namespace std;
+
 // Coordinate of first block of each Visual
 const COORD FIRST_BLOCK[5] = {
     {52, 20}, // MAIN_MENU

@@ -57,11 +57,16 @@ struct board {
 
     void initializeBoard();
     void shuffleBoard();
+
+    char getChar(pair<int, int> cell);
+
     bool checkMatch(pair<int, int> startCell, pair<int, int> endCell, bool magic = false, bool* found = NULL);
     vector<pair<int, int>> getPath(pair<int, int> startCell, pair<int, int> endCell);
     int getTypePath(vector<pair<int, int>> path);
+
     void deleteCell(pair<int, int> cell);
     void deleteMatch(pair<int, int> startCell, pair<int, int> endCell);
+
     bool automaticCheck();
     array<int, 4> suggestMove();
     
