@@ -6,7 +6,7 @@ void MAIN_MENU_CONTROL() {
     printAtCursor(arrow, FIRST_BLOCK[MAIN_MENU]); // set arrow point to first block (default)
 
     while (true) {
-        int input = checkNavigationKey();
+        int input = getInputKey();
 
         removeArrow();
 
@@ -71,7 +71,7 @@ void PLAY_GAME_CONTROL() {
     printAtCursor(arrow, FIRST_BLOCK[PLAY_GAME]); // set arrow point to first block (default)
 
     while (true) {
-        int input = checkNavigationKey();
+        int input = getInputKey();
         
         removeArrow();
 
@@ -124,7 +124,7 @@ void GAME_MODE_CONTROL() {
     printAtCursor(arrow, FIRST_BLOCK[GAME_MODE]); // set arrow point to first block (default)
 
     while (true) {
-        int input = checkNavigationKey();
+        int input = getInputKey();
         
         removeArrow();
 
@@ -195,7 +195,7 @@ void LOAD_GAME_CONTROL() {
     printAtCursor(arrow, FIRST_BLOCK[LOAD_GAME]); // set arrow point to first block (default)
  
     while (true) {
-        int input = checkNavigationKey();
+        int input = getInputKey();
         
         removeArrow();
 
@@ -300,7 +300,10 @@ string USERNAME_CONTROL() {
 
     // get user input and check valid
     while (true) {
-        getline(cin, User);
+        getline(cin, User, '\n');
+
+        // else if (input == ';') 
+        //         continue;
         
         // Check valid and warning
         if (User.length() < 5) {
@@ -310,8 +313,6 @@ string USERNAME_CONTROL() {
 
             // wait for user to press any key to redo (or ESC)
             while (!_kbhit())
-                continue;
-            else if (input == ';') 
                 continue;
         }
         if (User.length() > 30) {

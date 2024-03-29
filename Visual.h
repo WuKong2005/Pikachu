@@ -6,6 +6,7 @@
 #include <windows.h>
 #include <vector>
 #include <conio.h>
+#include "controller.h"
 
 using namespace std;
 
@@ -32,6 +33,9 @@ enum frontend {
   LEADERBOARD,
   HELP
 };
+
+// move the Arrow according to keyboardInput (UP, DOWN, ESC)
+void Visual_moveArrow(int visual, int input);
 
 // hide the Cursor in Console
 void hideCursor();
