@@ -2,8 +2,10 @@
 
 #include <windows.h>
 #include <conio.h>
-#include "Visual.h"
-#include "menu.h"
+#include <iostream>
+#include <vector>
+#include <string>
+#pragma comment(lib, "Winmm.lib")
 
 using namespace std;
 
@@ -22,6 +24,21 @@ enum special_input {
     TOGGLE_MUSIC,
     SAVE_GAME,
     MAGIC_MOVE
+};
+
+enum SOUND_EFFECT {
+    MENU,
+    EASY_MODE,
+    MEDIUM_MODE,
+    HARD_MODE,
+    EXTRA_MODE,
+    MOVE_IN_MENU,
+    MOVE_INGAME,
+    ERROR_MOVE,
+    VALID_MOVE,
+    INVALID_MOVE,
+    WIN,
+    LOSE
 };
 
 // Ascii code of some navigation key 
@@ -49,3 +66,5 @@ void removeArrow();
 void printAtCursor(string content, COORD cursor, string textColor = "\x1B[0m");
 
 void clearScreen();
+
+void playSound(int type, bool stop = false, bool loop = true);

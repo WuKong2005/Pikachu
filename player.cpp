@@ -38,6 +38,16 @@ void player::newPlayer(string __name) {
     resultGame = record();
 }
 
+void player::saveGame(board map) {
+    ofstream out;
+    out.open("savegame.txt");
+
+    out << name << ' ';
+    
+
+    out.close();
+}
+
 string player::playerInfo() {
     return name + ';' + to_string(resultGame.timeUsed) + ';' + to_string(resultGame.score) + ';' + resultGame.getTimeFinished();
 }

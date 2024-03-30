@@ -61,3 +61,27 @@ void printAtCursor(string content, COORD cursor, string textColor) {
 void clearScreen() {
     system("cls");
 }
+
+void playSound(int type, bool stop, bool loop) {
+	static vector<wstring> soundFile{L"bgm/menu.mp3", L"bgm/easy.mp3", L"bgm/medium.mp3", L"bgm/hard.mp3", L"bgm/extra.mp3", L"sfx/moveMenu.wav", L"sfx/moveIngame.wav" , L"sfx/error.wav", L"sfx/valid.wav", L"sfx/invalid.wav", L"sfx/win.wav", L"sfx/lose.wav"};
+    if (type <= EXTRA_MODE) {
+        wstring command;
+        if (!stop) {
+            command += LR"(play ")" + soundFile[type] + LR"(")";
+            if (loop) {
+                command += LR"( repeat)";
+            }
+        }
+        else {
+            command += LR"(stop ")" + soundFile[type] + LR"(")";
+        }
+        mciSendStringW(command.c_str(), 0, 0, 0);
+        // cerr << wcscmp(command.c_str(), L"play \"bgm/menu.mp3\" repeat") << '\n';
+        // wcerr << command.c_str() << '\n';
+        // wcerr << L"play \"bgm/menu.mp3\" repeat" << '\n';
+        // mciSendStringW(L"play \"bgm/menu.mp3\" repeat", 0, 0, 0);
+    }
+    else {
+        PlaySoundW(soundFile[type].c_str(), NULL, SND_FILENAME | SND_ASYNC);
+    }
+}

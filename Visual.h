@@ -7,6 +7,7 @@
 #include <vector>
 #include <conio.h>
 #include "controller.h"
+#include "menu.h"
 
 using namespace std;
 

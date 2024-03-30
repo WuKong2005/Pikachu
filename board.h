@@ -48,12 +48,13 @@ struct board {
     int ROW, COL;
     char** grid;
     int timeCheck = 0;
-    array<int, 3>** flood;
+    array<int, 3>*** flood;
     array<int, 4> suggestPair;
 
     board();
     board(int difficult);
     ~board();
+    void createBoard(int difficult);
 
     void initializeBoard();
     void shuffleBoard();

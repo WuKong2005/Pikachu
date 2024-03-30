@@ -32,7 +32,7 @@ struct game {
     void drawCell(pair<int, int> cell);
     void drawGuide();
 
-    void drawPath(pair<int, int> startCell, pair<int, int> endCell);
+    void drawPath(pair<int, int> startCell, pair<int, int> endCell, vector<pair<int, int>> path);
     void drawLine(pair<int, int> startCell, pair<int, int> endCell);
     void drawVerticalLine(int r, int c1, int c2);
     void drawHorizontalLine(int c, int r1, int r2);
