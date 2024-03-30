@@ -166,6 +166,7 @@ bool board::checkMatch(pair<int, int> startCell, pair<int, int> endCell, bool ma
             int curC = prevQ.front()[1];
             int curType = prevQ.front()[2];
             int curD = prevQ.front()[3];
+
             prevQ.pop();
 
             //Iterate all possible moves

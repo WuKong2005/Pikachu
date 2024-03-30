@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <string>
-#include <cstring>
 #include <windows.h>
 #include <vector>
 #include <conio.h>
@@ -11,18 +10,49 @@
 
 using namespace std;
 
-// Arrow
-const string arrow = ">>>";
 
 // COLOR
 enum COLOR {
   RED,
   GREEN,
   YELLOW,
-  BLUE
+  BLUE,
+  CYAN,
+  WHITE,
+  BRIGHT_RED,
+  BRIGHT_GREEN,
+  BRIGHT_YELLOW,
+  BRIGHT_BLUE,
+  BLACK
 };
+
 const string TEXT_BLACK = "\x1B[0m";
-const string TEXT_COLOR[4] = {"\x1B[31m", "\x1B[32m", "\x1B[33;1m", "\x1B[34m"};
+const string TEXT_COLOR[10] = {
+	"\x1B[31m",
+	"\x1B[32m", 
+	"\x1B[33;1m", 
+	"\x1B[34m", 
+	"\x1B[36m",
+	"\x1B[37m", 
+	"\x1B[91m", 
+	"\x1B[92m", 
+	"\x1B[93;1m", 
+	"\x1B[94m"
+};
+
+const string BACKGROUND_COLOR[11] = {
+	"\x1B[41m", 
+	"\x1B[42m", 
+	"\x1B[43;1m", 
+	"\x1B[44m", 
+	"\x1B[46m",
+	"\x1B[47m", 
+	"\x1B[101m", 
+	"\x1B[102m", 
+	"\x1B[103;1m", 
+	"\x1B[104m"
+	"\x1B[40m"
+};
 
 // enumerate the frontend
 enum frontend {
@@ -37,6 +67,41 @@ enum frontend {
 
 // move the Arrow according to keyboardInput (UP, DOWN, ESC)
 void Visual_moveArrow(int visual, int input);
+
+// coordinate of the first block (upper left corner) of each Visual
+const COORD FIRST_BLOCK[5] {
+	{56, 19}, // MAIN_MENU
+	{56, 19}, // PLAY_GAME
+	{56, 19}, // GAME_MODE
+	{56, 19}, // LOAD_GAME
+	{34, 8} // USERNAME
+};
+
+// distance between each block of each Visual
+const int distanceBlock[4] = {
+    3, // MAIN_MENU
+    4, // PLAY_GAME
+    3, // GAME_MODE
+    3 // LOAD_GAME
+};
+
+// number of block of each Visual
+const int numBlock[5] = {
+    4, // MAIN_MENU
+    3, // PLAY_GAME
+    4, // GAME_MODE
+    4, // LOAD_GAME
+	1 // USERNAME
+};
+
+const int lengthBlock[5] = {
+	19, // MAIN_MENU
+	19, // PLAY_GAME
+	19, // GAME_MODE
+	19, // LOAD_GAME
+	32 // USERNAME
+};
+const int widthBlock = 3;
 
 // hide the Cursor in Console
 void hideCursor();
@@ -54,6 +119,7 @@ void printLoadGame();
 void printLeaderboard();
 void printHelp();
 void printUsername();
+void printFrameBlock(int Visual);
 
 // FRONTEND
 const string GAME_LOGO[7] = {
@@ -343,27 +409,27 @@ const string Visual[7] = {
 
 	// LEADERBOARD
     R"(
-	 -------------------- ----- ---------------------------------------- --------------- --------------- ----------------------------
-	|     DIFFICULTY     | NO. |                USERNAME                |    TIME(s)    |     SCORE     |            DATE            |
-	 -------------------- ----- ---------------------------------------- --------------- --------------- ----------------------------
-	|                    |  1  |                                        |               |               |                            | 
-	|                    |  2  |                                        |               |               |                            |
-	|        EASY        |  3  |                                        |               |               |                            |
-	|                    |  4  |                                        |               |               |                            |
-	|                    |  5  |                                        |               |               |                            |
-	 -------------------- ----- ---------------------------------------- --------------- --------------- ----------------------------
-	|                    |  1  |                                        |               |               |                            |
-	|                    |  2  |                                        |               |               |                            |
-	|       MEDIUM       |  3  |                                        |               |               |                            |
-	|                    |  4  |                                        |               |               |                            |
-	|                    |  5  |                                        |               |               |                            |
-	 -------------------- ----- ---------------------------------------- --------------- --------------- ----------------------------
-	|                    |  1  |                                        |               |               |                            |
-	|                    |  2  |                                        |               |               |                            |
-	|        HARD        |  3  |                                        |               |               |                            |
-	|                    |  4  |                                        |               |               |                            |
-	|                    |  5  |                                        |               |               |                            |
-	 -------------------- ----- ---------------------------------------- --------------- --------------- ----------------------------
+	                                                                                                                                 
+	      DIFFICULTY       NO.                  USERNAME                      SCORE          TIME(S)                 DATE             
+	                                                                                                                             
+	                        1                                                                                                          
+	                        2                                                                                                         
+	         EASY           3                                                                                                         
+	                        4                                                                                                         
+	                        5                                                                                                         
+	                                                                                                                              
+	                        1                                                                                                         
+	                        2                                                                                                         
+	        MEDIUM          3                                                                                                         
+	                        4                                                                                                         
+	                        5                                                                                                         
+	                                                                                                                              
+	                        1                                                                                                         
+	                        2                                                                                                         
+	         HARD           3                                                                                                         
+	                        4                                                                                                         
+	                        5                                                                                                         
+	                                                                                                                              
 	)",
 
 	// HELP

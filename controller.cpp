@@ -49,13 +49,18 @@ void removeArrow() {
     cout << "   ";
 }
 
+void setCursor(short x, short y) {
+    COORD cursor = {x, y};
+    SetConsoleCursorPosition(console, cursor);
+}
+
 void printAtCursor(string content, COORD cursor, string textColor) {
     // setup the surrentCursor to cursor
     currentCursor.X = cursor.X;
 	currentCursor.Y = cursor.Y;
     SetConsoleCursorPosition(console, currentCursor);
     // print content
-    cout << textColor << content;
+    cout << content;
 }
 
 void clearScreen() {

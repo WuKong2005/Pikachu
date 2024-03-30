@@ -9,29 +9,16 @@
 
 using namespace std;
 
-// Coordinate of first block of each Visual
-const COORD FIRST_BLOCK[5] = {
+// Arrow
+const string arrow = ">>>";
+
+// Coordinate of the arrow points to the first block of each Visual
+const COORD ARROW_POS_FIRST_BLOCK[5] = {
     {52, 20}, // MAIN_MENU
     {52, 20}, // PLAY_GAME
     {52, 20}, // GAME_MODE
     {52, 20}, // LOAD_GAME
     {36, 9} // USERNAME
-};
-
-// distance between each block of each Visual
-const int distanceBlock[4] = {
-    3, // MAIN_MENU
-    4, // PLAY_GAME
-    3, // GAME_MODE
-    3 // LOAD_GAME
-};
-
-// number of block of each Visual
-const int numBlock[4] = {
-    4, // MAIN_MENU
-    3, // PLAY_GAME
-    4, // GAME_MODE
-    4 // LOAD_GAME
 };
 
 // enumerate the difficulty (use for row of LEADERBOARD)
@@ -44,12 +31,12 @@ enum difficulty {
 // enumerate the information (use for column of LEADERBOARD)
 enum information {
     Username,
-    Time,
     Score,
+    Time,
     Date
 };
 
-// row of no.1 of each difficulty in LEADERBOARD
+// coordinate of first row of each difficulty in LEADERBOARD
 const int row_Leaderboard[3] = {
     8, // easy
     14, // medium
@@ -64,7 +51,7 @@ const int column_Leaderboard[4] {
     113 // Date
 };
 
-// file name which is stored data of LEADERBOARD
+// filename which is stored data of LEADERBOARD
 const string fileName[3] = {
     "easy.txt", // easy
     "medium.txt", // medium

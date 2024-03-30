@@ -13,6 +13,7 @@
 #include <array>
 #include <assert.h>
 #include <numeric>
+#include <tuple>
 
 using namespace std;
 
@@ -25,8 +26,9 @@ int const ALPHABET = 26;
 
 //Size of board based on difficult the player choosed
 //Easy; Medium; Hard - Easy peasy; Medium is premium; Things may be hard, but I'm harder
-int const sizeROW[] = {4, 6, 9};
-int const sizeCOL[] = {6, 9, 16};
+int const sizeROW[] = {4, 6, 8};
+int const sizeCOL[] = {6, 9, 12};
+
 
 //Gamemode
 enum DIFFICULT {
@@ -34,6 +36,17 @@ enum DIFFICULT {
     MEDIUM,
     HARD,
 };
+
+// type of corner
+enum corner {
+    UPPER_LEFT,
+    UPPER_RIGHT,
+    LOWER_LEFT,
+    LOWER_RIGHT
+};
+
+// ascii code of 4-corners
+const int frame[4] = {201, 187, 200, 188};
 
 //Type of matching
 enum MATCHING {
