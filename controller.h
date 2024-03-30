@@ -25,6 +25,7 @@ enum special_input {
     MAGIC_MOVE
 };
 
+
 // Ascii code of some navigation key 
 const int KEY_UP = 72;
 const int KEY_DOWN = 80;

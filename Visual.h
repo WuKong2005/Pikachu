@@ -15,10 +15,43 @@ enum COLOR {
   RED,
   GREEN,
   YELLOW,
-  BLUE
+  BLUE,
+  CYAN,
+  WHITE,
+  BRIGHT_RED,
+  BRIGHT_GREEN,
+  BRIGHT_YELLOW,
+  BRIGHT_BLUE,
+  BLACK
 };
+
 const string TEXT_BLACK = "\x1B[0m";
-const string TEXT_COLOR[4] = {"\x1B[31m", "\x1B[32m", "\x1B[33;1m", "\x1B[34m"};
+const string TEXT_COLOR[10] = {
+	"\x1B[31m",
+	"\x1B[32m", 
+	"\x1B[33;1m", 
+	"\x1B[34m", 
+	"\x1B[36m",
+	"\x1B[37m", 
+	"\x1B[91m", 
+	"\x1B[92m", 
+	"\x1B[93;1m", 
+	"\x1B[94m"
+};
+
+const string BACKGROUND_COLOR[11] = {
+	"\x1B[41m", 
+	"\x1B[42m", 
+	"\x1B[43;1m", 
+	"\x1B[44m", 
+	"\x1B[46m",
+	"\x1B[47m", 
+	"\x1B[101m", 
+	"\x1B[102m", 
+	"\x1B[103;1m", 
+	"\x1B[104m"
+	"\x1B[40m"
+};
 
 // enumerate the frontend
 enum frontend {

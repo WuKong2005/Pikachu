@@ -14,7 +14,7 @@ game::game(int difficult) {
     numLeft = map.ROW * map.COL;
     isPlaying = true;
     diff = difficult;
-    upperLeftCorner = {9, 5};
+    upperLeftCorner = {7, 4};
 }
 
 void game::drawInterface() {
@@ -23,9 +23,10 @@ void game::drawInterface() {
 
 void game::drawBoard() {
     SetConsoleCursorPosition(console, upperLeftCorner);
-    
-    int WidthBorder = 5 * 2 + (WIDTH_CELL - 1) * sizeCOL[diff];
-    int HeightBorder = 3 * 2 + (HEIGHT_CELL - 1) * sizeROW[diff];
+
+// Animation draw the frame of board
+    int WidthBorder = BUFFER_WIDTH_CELL * 2 + (WIDTH_CELL - 1) * sizeCOL[diff] + 1;
+    int HeightBorder = BUFFER_HEIGHT_CELL * 2 + (HEIGHT_CELL -1) * sizeROW[diff] + 1;
 
     for (int col = 0; col < WidthBorder; ++col) {
         if (col == 0)
@@ -47,37 +48,40 @@ void game::drawBoard() {
 
     for (int col = WidthBorder - 1; col >= 0; --col) {
         if (col == 0)
-            cout << char(frame[LOWER_RIGHT]);
-        else if (col == WidthBorder - 1)
             cout << char(frame[LOWER_LEFT]);
+        else if (col == WidthBorder - 1)
+            cout << char(frame[LOWER_RIGHT]);
         else
             cout << char(205);
 
-        setCursor(upperLeftCorner.X + col, upperLeftCorner.Y + HeightBorder - 1);
+        setCursor(upperLeftCorner.X + col - 1, upperLeftCorner.Y + HeightBorder - 1);
         Sleep(1);
     }
 
-    for (int row = HeightBorder - 1; row > 0; --row) {
+    for (int row = HeightBorder - 2; row > 0; --row) {
         setCursor(upperLeftCorner.X, upperLeftCorner.Y + row);
-        if (row == HeightBorder - 1)
-            cout << char(frame[LOWER_LEFT]);
-        else
-            cout << char(186);
-        Sleep(1);
+        cout << char(186);
+        Sleep(10);
     }
 
+// draw board
     for (int row = 1; row <= map.ROW; ++row)
         for (int col = 1; col <= map.COL; ++col)
-            drawCell({row, col}, 'A'); // direction access
+            if (map.grid[row][col] != '$') {
+                drawCell({row, col}, map.grid[row][col]); // direction access
+                Sleep(1);
+            }
 }
 
 void game::drawCell(pair<int, int> cell, char key) {
-    short posX = upperLeftCorner.X + cell.second * (WIDTH_CELL - 1);
-    short posY = upperLeftCorner.Y + cell.first * (HEIGHT_CELL - 1);
+    short posX = upperLeftCorner.X + (cell.second - 1) * (WIDTH_CELL - 1) + BUFFER_WIDTH_CELL;
+    short posY = upperLeftCorner.Y + (cell.first - 1) * (HEIGHT_CELL - 1) + BUFFER_HEIGHT_CELL;
     COORD position = {posX, posY};
     SetConsoleCursorPosition(console, position);
     string side;
     side.append(WIDTH_CELL - 2, char(196));
+    
+    cout << TEXT_COLOR[BRIGHT_BLUE];
 
     setCursor(position.X + 1, position.Y);
     cout << side;
@@ -120,19 +124,88 @@ void game::drawTurningPoint(int type) {
 }
 
 void game::moveCell(int direction) {
-
+    switch (direction) {
+        case UP:
+            unHighlightCell();
+            if (currentCoord.first == 1)
+                currentCoord.first = map.ROW;
+            else
+                currentCoord.first--;
+            break;
+            
+        case DOWN:
+            unHighlightCell();
+            if (currentCoord.first == map.ROW)
+                currentCoord.first = 1;
+            else
+                currentCoord.first++;
+            break;
+        
+        case LEFT:
+            unHighlightCell();
+            if (currentCoord.second == 1)
+                currentCoord.second = map.COL;
+            else
+                currentCoord.second--;
+            break;
+            
+        case RIGHT:
+            unHighlightCell();
+            if (currentCoord.second == map.COL)
+                currentCoord.second = 1;
+            else
+                currentCoord.first++;
+            break;
+        
+        case ENTER:
+            select();
+            return;
+        
+        default:
+            return;
+    }
+    highlightCell(TEXT_COLOR[CYAN]);
 }
 
-void game::highlightCell() {
+void game::highlightCell(string color) {
+    setCursor(upperLeftCorner.X + BUFFER_WIDTH_CELL + currentCoord.second * (WIDTH_CELL - 1) + 1,
+              upperLeftCorner.Y + BUFFER_HEIGHT_CELL + currentCoord.first * (HEIGHT_CELL - 1) + 1);
+    cout << color;
 
+    // if (map.grid[row][col] != '$') // if Cell isn't deleted
+        for (int rowCell = 1; rowCell <= HEIGHT_CELL - 2; ++rowCell) {
+            if (rowCell != HEIGHT_CELL / 2)
+                for (int colCell = 1; colCell <= WIDTH_CELL - 2; ++colCell)
+                    cout << " ";
+            else
+                for (int colCell = 1; colCell <= WIDTH_CELL - 2; ++colCell)
+                    if (colCell != WIDTH_CELL / 2)
+                        cout << " ";
+                    else
+                        cout << TEXT_COLOR[WHITE] << 'A' << color;
+            setCursor(upperLeftCorner.X + BUFFER_WIDTH_CELL + currentCoord.second * (WIDTH_CELL - 1) + 1,
+                      upperLeftCorner.Y + BUFFER_HEIGHT_CELL + currentCoord.first * (HEIGHT_CELL - 1) + 1 + rowCell);
+        }
+    // else; // if Cell is deleted --> draw Background
+    cout << TEXT_BLACK;
 }
 
 void game::unHighlightCell() {
-
+    highlightCell(currentCoord.second, currentCoord.first, BACKGROUND_COLOR[BLACK]);
 }
 
 void game::select() {
-
+    if (currentSelect.first == 0 && currentSelect.second == 0) {
+        currentSelect.first = currentCoord.second;
+        currentSelect.second = currentCoord.first;
+        highlightCell(currentCoord.second, currentCoord.first, BACKGROUND_COLOR[YELLOW]);
+    }
+    else if (currentSelect.first == currentCoord.second && currentSelect.second == currentCoord.first) {
+        unHighlightCell(currentCoord.second, currentCoord.first);
+        currentSelect.first = 0;
+        currentSelect.second = 0;
+    }
+    else;
 } 
 
 void game::getRespond(pair<int, int> nextSelect) {

@@ -9,8 +9,11 @@ int main() {
     // MAIN_MENU_CONTROL();
 
     SetConsoleOutputCP(437);
-    game g(EASY);
+    game g(HARD);
     g.drawBoard();
+    g.highlightCell(1, 1, BACKGROUND_COLOR[RED]);
+    Sleep(2000);
+    g.unHighlightCell(1, 1);
 
     // cerr << "startgame\n";
     

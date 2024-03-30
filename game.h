@@ -10,15 +10,19 @@ using namespace std;
 
 int const WIDTH_CELL = 9;
 int const HEIGHT_CELL = 5;
+int const BUFFER_WIDTH_CELL = 7;
+int const BUFFER_HEIGHT_CELL = 3;
 
 struct game {
     board map;
     string** background;
+    pair<int, int> currentCoord;
     pair<int, int> currentSelect;
     int numLeft;
     bool isPlaying;
     int diff;
     COORD upperLeftCorner;
+    
     //player currentPlayer;
 
     game();
@@ -33,12 +37,12 @@ struct game {
 
     void drawPath(pair<int, int> startCell, pair<int, int> endCell, vector<pair<int, int>> path); //Draw the path between 2 cells
     void drawLine(pair<int, int> startCell, pair<int, int> endCell); //Draw the straight line between 2 cells
-    void drawVerticalLine(int r, int c1, int c2); //Draw a vertical line
-    void drawHorizontalLine(int c, int r1, int r2); //Draw a horizontal line
+    void drawVerticalLine(int col, int row1, int row2); //Draw a vertical line
+    void drawHorizontalLine(int row, int col1, int col2); //Draw a horizontal line
     void drawTurningPoint(int type); //Draw the turning point
 
     void moveCell(int direction); //Move the current cursor in this board in a direction
-    void highlightCell(); //Highlight a cell
+    void highlightCell(string color); //Highlight a cell
     void unHighlightCell(); //Unhighlight a cell
 
     void select(); //Select this cell or unselect it (if it is already selected)
