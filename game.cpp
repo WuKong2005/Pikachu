@@ -14,7 +14,7 @@ game::game(int difficult) {
     numLeft = map.ROW * map.COL;
     isPlaying = true;
     diff = difficult;
-    originBoard = {2, 2};
+    upperLeftCorner = {9, 5};
 }
 
 void game::drawInterface() {
@@ -22,49 +22,60 @@ void game::drawInterface() {
 }
 
 void game::drawBoard() {
+    SetConsoleCursorPosition(console, upperLeftCorner);
+    
+    int WidthBorder = 5 * 2 + (WIDTH_CELL - 1) * sizeCOL[diff];
+    int HeightBorder = 3 * 2 + (HEIGHT_CELL - 1) * sizeROW[diff];
+
+    for (int col = 0; col < WidthBorder; ++col) {
+        if (col == 0)
+            cout << char(frame[UPPER_LEFT]);
+        else if (col == WidthBorder - 1)
+            cout << char(frame[UPPER_RIGHT]);
+        else
+            cout << char(205);
+        Sleep(1);
+    }
+    
+    setCursor(upperLeftCorner.X + WidthBorder - 1, upperLeftCorner.Y + 1);
+    
+    for (int row = 0; row < HeightBorder - 2; ++row) {
+        cout << char(186);
+        setCursor(upperLeftCorner.X + WidthBorder - 1, upperLeftCorner.Y + 2 + row);
+        Sleep(1);
+    }
+
+    for (int col = WidthBorder - 1; col >= 0; --col) {
+        if (col == 0)
+            cout << char(frame[LOWER_RIGHT]);
+        else if (col == WidthBorder - 1)
+            cout << char(frame[LOWER_LEFT]);
+        else
+            cout << char(205);
+
+        setCursor(upperLeftCorner.X + col, upperLeftCorner.Y + HeightBorder - 1);
+        Sleep(1);
+    }
+
+    for (int row = HeightBorder - 1; row > 0; --row) {
+        setCursor(upperLeftCorner.X, upperLeftCorner.Y + row);
+        if (row == HeightBorder - 1)
+            cout << char(frame[LOWER_LEFT]);
+        else
+            cout << char(186);
+        Sleep(1);
+    }
+
     for (int row = 1; row <= map.ROW; ++row)
         for (int col = 1; col <= map.COL; ++col)
-            drawCell({row, col}, map.grid[row][col]); // direction access
-
-    for (int r = 0; r <= map.ROW; ++r) {
-        if (r == 0)
-            for (int c = 0; c <= map.COL; ++c) {
-                setCursor(upperLeftCorner.X + r * (WIDTH_CELL - 1), upperLeftCorner.Y + c * (HEIGHT_CELL - 1));
-                if (c == 0)
-                    cout << char(frame[UPPER_LEFT]);
-                else if (c == map.COL)
-                    cout << char(frame[UPPER_RIGHT]);
-                else
-                    cout << char(194);
-            }
-        else if (r == map.ROW)
-            for (int c = 0; c <= map.COL; ++c) {
-                setCursor(upperLeftCorner.X + r * (WIDTH_CELL - 1), upperLeftCorner.Y + c * (HEIGHT_CELL - 1));
-                if (c == 0)
-                    cout << char(frame[LOWER_LEFT]);
-                else if (c == map.COL)
-                    cout << char(frame[LOWER_RIGHT]);
-                else
-                    cout << char(193);
-            }
-        else
-            for (int c = 0; c <= map.COL; ++c) {
-                setCursor(upperLeftCorner.X + r * (WIDTH_CELL - 1), upperLeftCorner.Y + c * (HEIGHT_CELL - 1));
-                if (c == 0)
-                    cout << char(195);
-                else if (c == map.COL)
-                    cout << char(180);
-                else
-                    cout << char(197);
-            }
-    }
+            drawCell({row, col}, 'A'); // direction access
 }
 
 void game::drawCell(pair<int, int> cell, char key) {
-    short posX = upperLeftCorner.X + cell.second * WIDTH_CELL;
-    short posY = upperLeftCorner.Y + cell.first * HEIGHT_CELL;
+    short posX = upperLeftCorner.X + cell.second * (WIDTH_CELL - 1);
+    short posY = upperLeftCorner.Y + cell.first * (HEIGHT_CELL - 1);
     COORD position = {posX, posY};
-
+    SetConsoleCursorPosition(console, position);
     string side;
     side.append(WIDTH_CELL - 2, char(196));
 

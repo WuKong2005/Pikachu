@@ -13,12 +13,12 @@ int const HEIGHT_CELL = 5;
 
 struct game {
     board map;
-    char** background;
+    string** background;
     pair<int, int> currentSelect;
     int numLeft;
     bool isPlaying;
     int diff;
-    COORD originBoard;
+    COORD upperLeftCorner;
     //player currentPlayer;
 
     game();

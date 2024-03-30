@@ -13,6 +13,7 @@
 #include <array>
 #include <assert.h>
 #include <numeric>
+#include <tuple>
 
 using namespace std;
 
@@ -28,7 +29,6 @@ int const ALPHABET = 26;
 int const sizeROW[] = {4, 6, 9};
 int const sizeCOL[] = {6, 9, 16};
 
-COORD upperLeftCorner = {1, 1};
 
 //Gamemode
 enum DIFFICULT {
@@ -42,9 +42,9 @@ enum corner {
     UPPER_RIGHT,
     LOWER_LEFT,
     LOWER_RIGHT
-}
+};
 
-const int frame[] = {218, 191, 192, 217};
+const int frame[4] = {201, 187, 200, 188};
 
 //Type of matching
 enum MATCHING {

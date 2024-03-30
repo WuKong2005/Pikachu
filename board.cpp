@@ -152,7 +152,9 @@ bool board::checkMatch(pair<int, int> startCell, pair<int, int> endCell, bool ma
             //C++17
             //Dequeue a node from previous layer
             //Each node is a state consists of row index, column index of the cell and vector index used to reach that cell
-            auto &[curR, curC, curD] = prevQ.front();
+            int curR = prevQ.front()[0];
+            int curC = prevQ.front()[1];
+            int curD = prevQ.front()[2];
             prevQ.pop();
 
             //Iterate all possible moves

@@ -54,7 +54,7 @@ void setCursor(short x, short y) {
     SetConsoleCursorPosition(console, cursor);
 }
 
-void printAtCursor(string content, COORD cursor) {
+void printAtCursor(string content, COORD cursor, string textColor) {
     // setup the surrentCursor to cursor
     currentCursor.X = cursor.X;
 	currentCursor.Y = cursor.Y;
