@@ -111,7 +111,7 @@ void game::drawLine(pair<int, int> startCell, pair<int, int> endCell) {
 
 } 
 
-void game::game::drawVerticalLine(int r, int c1, int c2) {
+void game::drawVerticalLine(int r, int c1, int c2) {
 
 }
 

@@ -5,6 +5,7 @@
 #include <ctime>
 #include <vector>
 #include <algorithm>
+#include "board.h"
 
 using namespace std;
 
@@ -31,6 +32,7 @@ struct player {
 
     void newPlayer(string __name = "");
 
+    void saveGame(board map);
     string playerInfo();
     void saveScore();
 };

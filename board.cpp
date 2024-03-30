@@ -9,25 +9,7 @@ board::board() {
 
 //Create a board specific for its difficult
 board::board(int difficult) {
-    ROW = sizeROW[difficult];
-    COL = sizeCOL[difficult];
-    suggestPair = array<int, 4>{};
-
-    //Add a boundary of the initial board
-    //Allowed an efficient and clear implementation
-    grid = new char*[ROW + 2];
-    flood = new array<int, 3>*[ROW + 2];
-
-    for (int r = 0; r < ROW + 2; r++) {
-        grid[r] = new char[COL + 2]{};
-        flood[r] = new array<int, 3>[COL + 2]{};    
-    }
-
-    //Consider the boundary as deleted cell
-    for (int r = 0; r < ROW + 2; r++) 
-        grid[r][0] = grid[r][COL + 1] = '$';
-    for (int c = 0; c < COL + 2; c++)
-        grid[0][c] = grid[ROW + 1][c] = '$';
+    createBoard(difficult);
 }
 
 //Deallocate dynamically memory used
@@ -46,6 +28,31 @@ board::~board() {
     grid = NULL;
     flood = NULL;
 }
+
+void board::createBoard(int difficult) {
+    ROW = sizeROW[difficult];
+    COL = sizeCOL[difficult];
+    suggestPair = array<int, 4>{};
+
+    //Add a boundary of the initial board
+    //Allowed an efficient and clear implementation
+    grid = new char*[ROW + 2];
+    flood = new array<int, 3>**[ROW + 2];
+
+    for (int r = 0; r < ROW + 2; r++) 
+    {
+        grid[r] = new char[COL + 2]{};
+        flood[r] = new array<int, 3>*[COL + 2]{};
+        for (int c = 0; c < COL + 2; c++)
+            flood[r][c] = new array<int, 3>[2]{};    
+    }
+
+    //Consider the boundary as deleted cell
+    for (int r = 0; r < ROW + 2; r++) 
+        grid[r][0] = grid[r][COL + 1] = '$';
+    for (int c = 0; c < COL + 2; c++)
+        grid[0][c] = grid[ROW + 1][c] = '$';
+} 
 
 //Initialize board
 void board::initializeBoard() {
@@ -139,13 +146,16 @@ bool board::checkMatch(pair<int, int> startCell, pair<int, int> endCell, bool ma
     ++timeCheck;
 
     //Two queues to store nodes while BFS
-    queue<array<int, 3>> prevQ, curQ;
-
+    queue<array<int, 4>> prevQ, curQ;
+    
     //Add initial nodes to queue and mark it (visited node)
-    prevQ.push({r1, c1, -1});
-    flood[r1][c1][0] = timeCheck;
-    flood[r1][c1][1] = -1;
-    flood[r1][c1][2] = -1;
+    prevQ.push({r1, c1, 0, -1});
+    prevQ.push({r1, c1, 1, -1});
+    for (int type = 0; type < 2; type++) {
+        flood[r1][c1][type][0] = timeCheck;
+        flood[r1][c1][type][1] = -1;
+        flood[r1][c1][type][2] = -1;
+    }
 
     for (int numStep = 0; numStep <= 2 + magic; numStep++) {
         while(!prevQ.empty()) {
@@ -154,20 +164,21 @@ bool board::checkMatch(pair<int, int> startCell, pair<int, int> endCell, bool ma
             //Each node is a state consists of row index, column index of the cell and vector index used to reach that cell
             int curR = prevQ.front()[0];
             int curC = prevQ.front()[1];
-            int curD = prevQ.front()[2];
+            int curType = prevQ.front()[2];
+            int curD = prevQ.front()[3];
+
             prevQ.pop();
 
             //Iterate all possible moves
             for (int dir = 0; dir < 4; dir++) {
                 //Only allowed to visit nodes with direction perpendicular to this state's vector  
-                if (curD != -1) {
-                    if (dir == curD) continue;
-                    if (abs(dir - curD) == 2) continue;
-                }
+                if (curType == ((dir == 0) || (dir == 2))) 
+                    continue;
                 
                 //Start from this cell, keep moving with that direction until certain conditions are satisfied
                 int newR = curR;
                 int newC = curC;
+                bool newType = (dir == 0 || dir == 2); //vertical
                 while(true) {
                     newR += dx[dir], newC += dy[dir];
                     //Out of bounds
@@ -175,7 +186,7 @@ bool board::checkMatch(pair<int, int> startCell, pair<int, int> endCell, bool ma
                         break;
 
                     //Visited cell
-                    if (flood[newR][newC][0] == timeCheck) 
+                    if (flood[newR][newC][newType][0] == timeCheck) 
                         break;
 
                     //This cell is not deleted yet but it has a different character from the character we focused on
@@ -185,14 +196,14 @@ bool board::checkMatch(pair<int, int> startCell, pair<int, int> endCell, bool ma
                     //This cell is deleted, or this cell is not deleted yet and it has the same character as the character we focused on
                     //We can visit this cell
                     if ((grid[newR][newC] == '$') || (grid[newR][newC] != '$' && grid[newR][newC] == aimCharacter)) {
-                        flood[newR][newC][0] = timeCheck;
-                        flood[newR][newC][1] = curR;
-                        flood[newR][newC][2] = curC;
+                        flood[newR][newC][newType][0] = timeCheck;
+                        flood[newR][newC][newType][1] = curR;
+                        flood[newR][newC][newType][2] = curC;
                         
                         //If this cell is deleted, then we can add this state to current layer
                         //otherwise, we know that a valid move exist (so we can check if the board has some valid moves or not)
                         if (grid[newR][newC] == '$')
-                            curQ.push({newR, newC, dir});
+                            curQ.push({newR, newC, newType, dir});
                         else {
                             *found = true;
                             //A valid move exist
@@ -212,19 +223,30 @@ bool board::checkMatch(pair<int, int> startCell, pair<int, int> endCell, bool ma
     }
 
     //If we can reach endCell in this attempt, then this move is valid
-    return (flood[r2][c2][0] == timeCheck);
+    return (flood[r2][c2][0][0] == timeCheck || flood[r2][c2][1][0] == timeCheck);
 }
 
 //Vector of cells represent the path between two cells
 vector<pair<int, int>> board::getPath(pair<int, int> startCell, pair<int, int> endCell) {
-    int curR = endCell.first;
-    int curC = endCell.second;
+    int endR = endCell.first;
+    int endC = endCell.second;
     vector<pair<int, int>> result;
-    do
-    {
-        result.emplace_back(curR, curC);
-        tie(curR, curC) = make_tuple(flood[curR][curC][1], flood[curR][curC][2]);
-    } while (curR != -1 && curC != -1);
+
+    for (int T = 0; T < 2; T++) {
+        if (flood[endR][endC][T][0] == timeCheck) {
+            vector<pair<int, int>> validPath;
+            int curR = endR, curC = endC, type = T;
+            do
+            {
+                validPath.emplace_back(curR, curC);
+                tie(curR, curC, type) = make_tuple(flood[curR][curC][type][1], flood[curR][curC][type][2], type ^ 1);
+            } while (curR != -1 && curC != -1);
+            if (result.empty() || (result.size() > validPath.size()))
+                result = validPath;
+        }
+    }
+
+    // cerr << result.size() << '\n';
     return result;
 }
 
@@ -314,10 +336,9 @@ void board::importBoard() {
     out.open("board.txt");
 
     //Size of the board, curent timeCheck and data of each cell
-    out << ROW << ' ' << COL << ' ' << timeCheck << '\n';
     for (int r = 1; r <= ROW; r++) {
         for (int c = 1; c <= COL; c++) {
-            out << grid[r][c] << ' ' << flood[r][c][0]  << ' ';
+            out << grid[r][c] << ' ' << flood[r][c][0][0]  << ' ' << flood[r][c][1][0] << ' ';
         }
     }
 
@@ -336,7 +357,7 @@ pair<string*, int> board::readBoard(string pathSaveFile) {
 
     //Create a buffer to read the size of board, current timeCheck, all character and relative information of each cell
     //The extra size used to check the valid of input as well
-    int maxSize = sizeROW[2] * sizeCOL[2] * 2 + 3 + 1;
+    int maxSize = sizeROW[2] * sizeCOL[2] * 3 + 3 + 1;
     string* buffer = new string[maxSize]{}; 
     int __size = 0;
     while(true) {
@@ -377,18 +398,20 @@ pair<string*, int> board::readBoard(string pathSaveFile) {
     }
     
     //Check amount of integer read
-    if (__size != curRow * curCol * 2 + 3) {
+    if (__size != curRow * curCol * 3 + 3) {
         delete [] buffer;
         return make_pair((string*)NULL, -1);
     }
     
     // //Check valid information of each cell
     bool valid = true;
-    for (int i = 3; i < __size; i += 2) {
+    for (int i = 3; i < __size; i += 3) {
         if (buffer[i].size() > 1) valid = false;
         if (buffer[i][0] != '$' && (buffer[i][0] < 'A' || 'Z' < buffer[i][0])) valid = false;
         if (!validNumber(buffer[i + 1])) valid = false;
         else if (stoi(buffer[i + 1]) > curTimeCheck) valid = false;
+        if (!validNumber(buffer[i + 2])) valid = false;
+        else if (stoi(buffer[i + 2]) > curTimeCheck) valid = false;
     }
 
     //Return the valid of this saved game
@@ -408,15 +431,17 @@ void board::loadBoard(pair<string*, int> saveBoard) {
     int diff = saveBoard.second;
     string* buffer = saveBoard.first;
     //Initialize board with given difficult
-    *this = board(diff);
-    
+    // *this = board(diff); Sai lam tuoi tre
+    createBoard(diff);
+
     //Then read character and last timeCheck of each cell
     int idBuffer = 3;
     for (int r = 1; r <= ROW; r++) {
         for (int c = 1; c <= COL; c++) {
             grid[r][c] = buffer[idBuffer][0];
-            flood[r][c][0] = stoi(buffer[idBuffer + 1]);
-            idBuffer += 2;
+            flood[r][c][0][0] = stoi(buffer[idBuffer + 1]);
+            flood[r][c][1][0] = stoi(buffer[idBuffer + 2]);
+            idBuffer += 3;
         }
     }
 

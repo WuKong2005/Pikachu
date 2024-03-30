@@ -26,6 +26,7 @@ struct game {
     //player currentPlayer;
 
     game();
+
     ~game(); 
     game(int difficult); //Start a new game based on choosen difficult
     game(string pathSaveFile); //Load save file

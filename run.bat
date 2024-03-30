@@ -1,2 +1,2 @@
-g++ main.cpp controller.cpp visual.cpp menu.cpp game.cpp board.cpp -o test.exe
+g++ main.cpp menu.cpp Visual.cpp controller.cpp -o test.exe -lwinmm
 Start "" "test.exe"

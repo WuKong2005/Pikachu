@@ -1,12 +1,16 @@
 #include "controller.h"
 #include "menu.h"
-#include "game.h"
+// #include "game.h"
 
 int main() {
     // initializeProgram();
     // SetConsoleOutputCP(65001);
     // printLogo();
     // MAIN_MENU_CONTROL();
+    playSound(MENU);
+    system("pause");
+    playSound(MENU, true);
+    system("pause");
 
     SetConsoleOutputCP(437);
     game g(HARD);
@@ -22,6 +26,5 @@ int main() {
     // system("pause");
     // newGame.startGame();
     system("pause");
-
     return 0;
 }

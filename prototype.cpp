@@ -25,7 +25,7 @@ int ROW, COL;
 char** grid;
 int frequent[ALPHABET]{};
 int timeCheck = 0;
-array<int, 3>** flood;
+array<int, 3>*** flood;
 
 void createGrid();
 
@@ -47,12 +47,14 @@ void createGrid()
     COL = 16;
 
     grid = new char*[ROW + 2];
-    flood = new array<int, 3>*[ROW + 2];
+    flood = new array<int, 3>**[ROW + 2];
 
     for (int r = 0; r < ROW + 2; r++) 
     {
         grid[r] = new char[COL + 2]{};
-        flood[r] = new array<int, 3>[COL + 2]{};    
+        flood[r] = new array<int, 3>*[COL + 2]{};
+        for (int c = 0; c < COL + 2; c++)
+            flood[r][c] = new array<int, 3>[2]{};    
     }
 
     for (int r = 0; r < ROW + 2; r++)
@@ -143,46 +145,51 @@ bool validMatch(int r1, int c1, int r2, int c2)
     if (grid[r1][c1] != grid[r2][c2]) return false;
     char C = grid[r1][c1]; 
     ++timeCheck;
-    queue<array<int, 3>> prevQ, curQ;
-    prevQ.push({r1, c1, -1});
+    queue<array<int, 4>> prevQ, curQ;
+    prevQ.push({r1, c1, 0, -1});
+    prevQ.push({r1, c1, 1, -1});
 
-    flood[r1][c1][0] = timeCheck;
-    flood[r1][c1][1] = -1;
-    flood[r1][c1][2] = -1;
+    for (int type = 0; type < 2; type++) {
+        flood[r1][c1][type][0] = timeCheck;
+        flood[r1][c1][type][1] = -1;
+        flood[r1][c1][type][2] = -1;
+    }
 
     for (int numStep = 0; numStep <= 2; numStep++)
     {
         while(!prevQ.empty())
         {
-            auto &[r, c, d] = prevQ.front();
+            int r = prevQ.front()[0];
+            int c = prevQ.front()[1];
+            int type = prevQ.front()[2];
+            int d = prevQ.front()[3];
             prevQ.pop();
 
             for (int dir = 0; dir < 4; dir++)
             {
-                if (d != -1)
-                {
-                    if (dir == d) continue;
-                    if (abs(dir - d) == 2) continue;
-                }
+                if (type == ((dir == 0) || (dir == 2))) 
+                    continue;
                 
                 int newR = r;
                 int newC = c;
+                bool newType = (dir == 0 || dir == 2); //vertical
+                assert(newType ^ type == true);
                 while(true)
                 {
                     newR += dx[dir], newC += dy[dir];
                     if (0 > newR || newR >= ROW + 2 || 0 > newC || newC >= COL + 2) 
                         break;
-                    if (flood[newR][newC][0] == timeCheck) 
+                    if (flood[newR][newC][newType][0] == timeCheck) 
                         break;
                     if (grid[newR][newC] != '$' && grid[newR][newC] != C) 
                         break;
                     if (grid[newR][newC] == '$' || (grid[newR][newC] != '$' && grid[newR][newC] == C))
                     {
-                        flood[newR][newC][0] = timeCheck;
-                        flood[newR][newC][1] = r;
-                        flood[newR][newC][2] = c;
+                        flood[newR][newC][newType][0] = timeCheck;
+                        flood[newR][newC][newType][1] = r;
+                        flood[newR][newC][newType][2] = c;
                         if (grid[newR][newC] == '$')
-                            curQ.push({newR, newC, dir});
+                            curQ.push({newR, newC, newType, dir});
                     }
                     if (grid[newR][newC] != '$')
                         break;
@@ -192,7 +199,7 @@ bool validMatch(int r1, int c1, int r2, int c2)
         prevQ.swap(curQ);
     }
 
-    return (flood[r2][c2][0] == timeCheck);
+    return (flood[r2][c2][0][0] == timeCheck || flood[r2][c2][1][0] == timeCheck);
 }
 
 void deleteMatch(int r1, int c1, int r2, int c2)
@@ -201,13 +208,23 @@ void deleteMatch(int r1, int c1, int r2, int c2)
 }
 
 vector<pair<int, int>> getPath(int r1, int c1, int r2, int c2) {
-    int curR = r2, curC = c2;
     vector<pair<int, int>> result;
-    do
-    {
-        result.emplace_back(curR, curC);
-        tie(curR, curC) = make_tuple(flood[curR][curC][1], flood[curR][curC][2]);
-    } while (curR != -1 && curC != -1);
+
+    for (int T = 0; T < 2; T++) {
+        if (flood[r2][c2][T][0] == timeCheck) {
+            vector<pair<int, int>> validPath;
+            int curR = r2, curC = c2, type = T;
+            do
+            {
+                validPath.emplace_back(curR, curC);
+                tie(curR, curC, type) = make_tuple(flood[curR][curC][type][1], flood[curR][curC][type][2], type ^ 1);
+            } while (curR != -1 && curC != -1);
+            if (result.empty() || (result.size() > validPath.size()))
+                result = validPath;
+        }
+    }
+
+    // cerr << result.size() << '\n';
     return result;
 }
 
@@ -229,7 +246,7 @@ void importBoard() {
     out << ROW << ' ' << COL << ' ' << timeCheck << '\n';
     for (int r = 1; r <= ROW; r++) {
         for (int c = 1; c <= COL; c++) {
-            out << grid[r][c] << ' ' << flood[r][c][0]  << ' ';
+            out << grid[r][c] << ' ' << flood[r][c][0][0]  << ' ' << flood[r][c][1][0] << ' ';
         }
     }
 
@@ -247,7 +264,7 @@ string* readBoard(string pathSaveFile) {
 
     //Create a buffer to read the size of board, current timeCheck, all character and relative information of each cell
     //The extra size used to check the valid of input as well
-    int maxSize = sizeROW[2] * sizeCOL[2] * 2 + 3 + 1;
+    int maxSize = sizeROW[2] * sizeCOL[2] * 3 + 3 + 1;
     string* buffer = new string[maxSize]{}; 
     int __size = 0;
     while(true) {
@@ -283,28 +300,30 @@ string* readBoard(string pathSaveFile) {
     }
 
     int curRow = stoi(buffer[0]), curCol = stoi(buffer[1]), curTimeCheck = stoi(buffer[2]);
-    bool found = false;
-    for (int difficult = 0; difficult < 3; difficult++) 
-        if (curRow == sizeROW[difficult] && curCol == sizeCOL[difficult]) 
-            found = true;
-    if (!found) {
-        delete [] buffer;
-        return NULL;
-    }
+    // bool found = false;
+    // for (int difficult = 0; difficult < 3; difficult++) 
+    //     if (curRow == sizeROW[difficult] && curCol == sizeCOL[difficult]) 
+    //         found = true;
+    // if (!found) {
+    //     delete [] buffer;
+    //     return NULL;
+    // }
     
     //Check amount of integer read
-    if (__size != curRow * curCol * 2 + 3) {
+    if (__size != curRow * curCol * 3 + 3) {
         delete [] buffer;
         return NULL;
     }
     
     // //Check valid information of each cell
     bool valid = true;
-    for (int i = 3; i < __size; i += 2) {
+    for (int i = 3; i < __size; i += 3) {
         if (buffer[i].size() > 1) valid = false;
         if (buffer[i][0] != '$' && (buffer[i][0] < 'A' || 'Z' < buffer[i][0])) valid = false;
         if (!validNumber(buffer[i + 1])) valid = false;
         else if (stoi(buffer[i + 1]) > curTimeCheck) valid = false;
+        if (!validNumber(buffer[i + 2])) valid = false;
+        else if (stoi(buffer[i + 2]) > curTimeCheck) valid = false;
     }
 
     //Return the valid of this saved game
@@ -324,12 +343,14 @@ void loadBoard(string* &buffer) {
     cerr << ROW << ' ' << COL << ' ' << timeCheck << '\n';
 
     grid = new char*[ROW + 2];
-    flood = new array<int, 3>*[ROW + 2];
+    flood = new array<int, 3>**[ROW + 2];
 
     for (int r = 0; r < ROW + 2; r++) 
     {
         grid[r] = new char[COL + 2]{};
-        flood[r] = new array<int, 3>[COL + 2]{};    
+        flood[r] = new array<int, 3>*[COL + 2]{};
+        for (int c = 0; c < COL + 2; c++)
+            flood[r][c] = new array<int, 3>[2]{};    
     }
 
     for (int r = 0; r < ROW + 2; r++)
@@ -342,9 +363,10 @@ void loadBoard(string* &buffer) {
         for (int c = 1; c <= COL; c++) {
             cout << buffer[idBuffer] << ' ' << buffer[idBuffer + 1] << '\n';
             grid[r][c] = buffer[idBuffer][0];
-            flood[r][c][0] = stoi(buffer[idBuffer + 1]);
-            idBuffer += 2;
-            cout << grid[r][c] << ' ' << flood[r][c][0] << ' ' << flood[r][c][1] << ' ' << flood[r][c][2] << '\n';
+            flood[r][c][0][0] = stoi(buffer[idBuffer + 1]);
+            flood[r][c][1][0] = stoi(buffer[idBuffer + 2]);
+            idBuffer += 3;
+            cout << grid[r][c] << ' ' << flood[r][c][0][0] << ' ' << flood[r][c][0][1] << ' ' << flood[r][c][0][2] << ' ' << flood[r][c][1][0] << ' ' << flood[r][c][1][1] << ' ' << flood[r][c][1][2] << '\n';
         }
     }
 
@@ -380,6 +402,8 @@ int main()
 
     initializeGrid();
 
+    cout << "\033[2J" << "\033[1;1H";
+
     printGrid();
 
     while(true)
@@ -403,6 +427,7 @@ int main()
         
         //https://student.cs.uwaterloo.ca/~cs452/terminal.html
         cout << "\033[2J" << "\033[1;1H";
+        system("cls");
         printGrid();
         if (found) {
             vector<pair<int, int>> path = getPath(r1, c1, r2, c2);
