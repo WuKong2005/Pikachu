@@ -20,24 +20,6 @@ void Visual_moveArrow(int visual, int input) {
     cout << arrow;
 }
 
-void hideCursor() {
-    HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE); // get Handle of the output console
-	CONSOLE_CURSOR_INFO cursorInfo; // get the infomation of the cursor
-	GetConsoleCursorInfo(console, &cursorInfo);
-	cursorInfo.bVisible = false; // hide the cursor
-	cursorInfo.dwSize = 100; // set the cursor size to a large value
-	SetConsoleCursorInfo(console, &cursorInfo); // apply the changes
-}
-
-void showCursor() {
-    HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE); // get Handle of the output console
-	CONSOLE_CURSOR_INFO cursorInfo; // get the infomation of the cursor
-	GetConsoleCursorInfo(console, &cursorInfo);
-	cursorInfo.bVisible = true; // show the cursor
-	cursorInfo.dwSize = 1; // set the cursor size to 1
-	SetConsoleCursorInfo(console, &cursorInfo); // apply the changes
-}
-
 void printLogo() {
     SetConsoleOutputCP(65001); // set the console code page to print UTF-8 characters
 

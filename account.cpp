@@ -1,8 +1,8 @@
 #include "account.h"
 
-record::record(int __score, time_t __time) {
-    time = __time;
-    score = __score - (int)(__time * 0.25);
+record::record(int __score, time_t __timePlayed) {
+    timePlayed = __timePlayed;
+    score = __score - (int)(timePlayed * 0.25);
 
     time_t currentTime = time(0);
     timeFinished = *localtime(&currentTime);
@@ -22,5 +22,5 @@ account::account() {
 }
 
 string account::accountInfo(record &resultGame) {
-    return username + ';' + to_string(resultGame.score) + ';' + to_string(resultGame.time) + ';' + resultGame.getTimeFinished();
+    return username + ';' + to_string(resultGame.score) + ';' + to_string(resultGame.timePlayed) + ';' + resultGame.getTimeFinished();
 }
