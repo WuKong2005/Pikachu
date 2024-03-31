@@ -4,7 +4,7 @@
 #include "Visual.h"
 #include "controller.h" 
 #include "board.h"
-// #include "player.h"
+#include "account.h"
 
 using namespace std;
 
@@ -15,15 +15,12 @@ int const BUFFER_HEIGHT_CELL = 3;
 
 struct game {
     board map;
-    string* background;
-    pair<int, int> currentPos; // row - column
-    pair<int, int> currentSelect; // row - column
-    int numLeft;
-    bool isPlaying;
-    int diff;
+    string** background;
+    pair<int, int> currentCoord, currentSelect;
+    int timeUsed, numLeft, diff, score;
+    bool useMagicMatching, useHiddenCell, isPlaying;
     COORD upperLeftCorner;
-    
-    //player currentPlayer;
+    account player;
 
     game();
 
@@ -53,6 +50,11 @@ struct game {
     
     void select(); // Select this cell or unselect it (if it is already selected)
     void getRespond(pair<int, int> nextSelect); // Determine if this move is valid, and respond to that decision
+
+    void saveScore();
+    void saveGame();
+    bool verifySaveFile();
+    void loadGame();
 
     void startGame(); // Start the game
     void finishGame(); // Finish the game

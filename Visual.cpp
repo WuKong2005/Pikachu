@@ -122,7 +122,7 @@ void printLeaderboard() {
 
     cout << TEXT_BLACK << Visual[LEADERBOARD];
 
-     cursor = {8, 5}; // initialized with the coordinate of upper left corner of board
+    cursor = {8, 5}; // initialized with the coordinate of upper left corner of board
     SetConsoleCursorPosition(console, cursor);
     int lengthSide = 130;
     int widthSide = 19;

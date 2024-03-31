@@ -244,7 +244,7 @@ void LEADERBOARD_CONTROL() {
     for (int difficulty = easy; difficulty <= hard; ++difficulty) {
         currentCursor.Y = row_Leaderboard[difficulty];
 
-        fin.open(fileName[difficulty].c_str());
+        fin.open(saveFilePath[difficulty].c_str());
         
         string buffer;
 

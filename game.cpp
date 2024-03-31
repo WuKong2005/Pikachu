@@ -12,9 +12,15 @@ game::~game() {
 game::game(int difficult) {
     map.~board();
     new (&map) board(difficult);
+
+    currentCoord = currentSelect = {0, 0};
+    timeUsed = 0;
     numLeft = map.ROW * map.COL;
-    isPlaying = true;
     diff = difficult;
+    score = 0;
+    useMagicMatching = useHiddenCell = false;
+    isPlaying = true;
+    
     upperLeftCorner = {7, 4};
     currentPos = {1, 1};
     
@@ -27,6 +33,10 @@ game::game(int difficult) {
     while (count < height && getline(fin, background[count]))
         count++;
     fin.close();
+}
+
+game::game(string pathSaveFile) {
+    player.loadGame(map, diff, timeUsed, useMagicMatching, useHiddenCell);
 }
 
 void game::drawInterface() {
@@ -109,7 +119,7 @@ void game::drawCell(pair<int, int> cell, char key) {
     }
 
     setCursor(position.X + WIDTH_CELL / 2, position.Y + HEIGHT_CELL / 2);
-    cout << key;
+    cout << TEXT_COLOR[WHITE] << key;
 }
 
 void game::removeCell(pair<int, int> cell) {
@@ -356,6 +366,161 @@ void game::select() {
 
 void game::getRespond(pair<int, int> nextSelect) {
 
+}
+
+void game::saveScore() {
+    assert(numLeft == 0);
+    ifstream inp;
+    inp.open(saveFilePath[diff].c_str());
+    if (!inp.is_open()) {
+        return;
+    }
+
+    record resultGame;
+
+    vector<pair<int, string>> record;
+    string inputline;
+    while(true) {
+        inp >> inputline;
+        if (inputline.empty()) {
+            break;
+        }
+
+        int firstPos = *find(inputline.begin(), inputline.end(), ';');
+        int secondPos = *find(inputline.begin() + pos + 1, inputline.end(), ';');
+        int recordScore = stoi(inputline.substr(firstPos, secondPos - firstPos - 1));
+        record.emplace_back(recordScore, inputline);
+    }
+    inp.close();
+
+    pair<int, string> thisGame = make_pair(resultGame.score, player.accountInfo(resultGame));
+    bool add = false;
+    for (int i = 0; i < (int)record.size(); i++) {
+        if (thisGame.first > record[i].first) {
+            record.insert(record.begin() + i, thisGame);
+            add = true;
+        }
+    }
+    if (!add)
+        record.push_back(thisGame);
+    
+    if (record.size() > MAX_PLAYER)
+        record.pop_back();
+    
+    ofstream out;
+    out.open(saveFilePath[diff].c_str());
+    if (!out.is_open()) {
+        return;
+    }
+
+    for (auto it: record) {
+        out << it.second << '\n';
+    }
+
+    out.close();
+}
+
+
+void game::saveGame() {
+    ofstream out;
+    out.open("record/savegame.txt");
+    if (!out.is_open())
+        return;
+    
+    map.importBoard();
+    ifstream inp;
+    inp.open("record/board.txt");
+
+    out << player.username << ' ' << player.password << ' ' << score << ' ' << timeUsed << ' ' << useMagicMatching << ' ' << useHiddenCell << ' ';
+    string val(0);
+    while(true) {
+        inp >> val;
+        if (val.empty()) 
+            break;
+        out << val << ' ';
+    }
+
+    inp.close();
+    out.close();
+}
+
+bool game::verifySaveFile() {
+    ifstream inp;
+    inp.open("record/savegame.txt");
+    if (!inp.is_open())
+        return false;
+    
+    string __score, __timeUsed, __useMagicMatching, __useHiddenCell;
+    
+    inp >> player.username >> player.password >> __score >> __timeUsed >> __useMagicMatching >> __useHiddenCell;
+    if (__username.empty() || __password.empty() || __timeUsed.empty() || __useMagicMatching.empty() || __useHiddenCell.empty()) {
+        inp.close();
+        return false;
+    }
+    if (__useMagicMatching.size() > 1 || (__useMagicMatching[0] != '0' && __useMagicMatching[0] != '1')) {
+        inp.close();
+        return false;
+    }
+    if (__useHiddenCell.size() > 1 || (__useHiddenCell[0] != '0' && __useHiddenCell[0] != '1')) {
+        inp.close();
+        return false;
+    }
+    for (char digit: __timeUsed) {
+        if (digit < '0' || '9' < digit) {
+            inp.close();
+            return false;
+        }
+    }
+    for (char digit: __score) {
+        if (digit < '0' || '9' < digit) {
+            inp.close();
+            return false;
+        }
+    }
+
+    ofstream out;
+    out.open("record/board.txt");
+
+    string val(0);
+    while(true) {
+        inp >> val;
+        if (val.empty())
+            break;
+        out << val << ' ';
+    }
+
+    inp.close();
+    out.close();
+
+    board tmp;
+    return (tmp.readBoard("record/board.txt", true).second >= 0);
+}
+
+void game::loadGame() {
+    ifstream inp;
+    inp.open("record/savegame.txt");
+    if (!inp.is_open())
+        return;
+
+    inp >> player.username >> player.password >> score >> timeUsed >> useMagicMatching >> useHiddenCell;
+
+    ofstream out;
+    out.open("record/board.txt");
+
+    string val(0);
+    while(true) {
+        inp >> val;
+        if (val.empty())
+            break;
+        out << val << ' ';
+    }
+
+    inp.close();
+    out.close();
+
+    pair<string*, int> buffer = map.readBoard("record/board.txt", false);
+    map.loadBoard(buffer);
+    diff = buffer.second;
 }
 
 void game::startGame() {

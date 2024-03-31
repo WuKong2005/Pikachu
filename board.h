@@ -28,7 +28,7 @@ int const ALPHABET = 26;
 //Easy; Medium; Hard - Easy peasy; Medium is premium; Things may be hard, but I'm harder
 int const sizeROW[] = {4, 6, 7};
 int const sizeCOL[] = {6, 9, 12};
-
+int const limTime[] = {60, 150, 300};
 
 //Gamemode
 enum DIFFICULT {
@@ -85,6 +85,7 @@ struct board {
     void shuffleBoard();
 
     char getChar(pair<int, int> cell);
+    void assignCell(pair<int, int> cell, char c);
 
     bool checkMatch(pair<int, int> startCell, pair<int, int> endCell, bool magic = false, bool* found = NULL);
     vector<pair<int, int>> getPath(pair<int, int> startCell, pair<int, int> endCell);
@@ -97,6 +98,6 @@ struct board {
     array<int, 4> suggestMove();
     
     void importBoard();
-    pair<string*, int> readBoard(string pathSaveFile);
+    pair<string*, int> readBoard(string pathSaveFile, bool checkOnly);
     void loadBoard(pair<string*, int> saveBoard);
 };
