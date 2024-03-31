@@ -129,6 +129,10 @@ char board::getChar(pair<int, int> cell) {
     return grid[cell.first][cell.second];
 }
 
+void board::assignCell(pair<int, int> cell, char c) {
+    grid[cell.first][cell.second] = c;
+}
+
 //Check valid move from the player, started from startCell and ended at endCell
 //Flag "magic" allow more possible moves
 bool board::checkMatch(pair<int, int> startCell, pair<int, int> endCell, bool magic, bool* found) {
@@ -333,7 +337,7 @@ array<int, 4> board::suggestMove() {
 //For debug and save/load game
 void board::importBoard() {
     ofstream out;
-    out.open("board.txt");
+    out.open("record/board.txt");
 
     //Size of the board, curent timeCheck and data of each cell
     for (int r = 1; r <= ROW; r++) {
@@ -346,7 +350,7 @@ void board::importBoard() {
 }
 
 //Load a saved board
-pair<string*, int> board::readBoard(string pathSaveFile) {
+pair<string*, int> board::readBoard(string pathSaveFile, bool checkOnly) {
     ifstream inp;
     inp.open(pathSaveFile.c_str());
     
@@ -421,7 +425,13 @@ pair<string*, int> board::readBoard(string pathSaveFile) {
     }
     else {
         int diff = EASY * (curRow == sizeROW[EASY]) + MEDIUM * (curRow == sizeROW[MEDIUM]) + HARD * (curRow == sizeROW[HARD]);
-        return make_pair(buffer, diff);
+        if (!checkOnly) {
+            return make_pair(buffer, diff);
+        }
+        else {
+            delete [] buffer;
+            return make_pair((string*)NULL, diff);
+        }
     }
 }
 

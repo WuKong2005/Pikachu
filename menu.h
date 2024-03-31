@@ -2,7 +2,7 @@
 
 #include "Visual.h"
 #include "controller.h"
-// #include "game.h"
+#include "game.h"
 #include <fstream>
 #include <windows.h>
 #include <iostream>
@@ -52,10 +52,10 @@ const int column_Leaderboard[4] {
 };
 
 // filename which is stored data of LEADERBOARD
-const string fileName[3] = {
-    "easy.txt", // easy
-    "medium.txt", // medium
-    "hard.txt" // hard
+const string saveFilePath[3] = {
+    "record/easy.txt", // easy
+    "record/medium.txt", // medium
+    "record/hard.txt" // hard
 };
 
 // control the user interface
