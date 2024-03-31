@@ -12,10 +12,10 @@ using namespace std;
 // enumerate the type of move in menu
 enum move {
     ESC,
-    UP,
     DOWN,
-    LEFT,
     RIGHT,
+    UP,
+    LEFT,
     ENTER
 };
 
@@ -61,6 +61,11 @@ int getInputKey();
 
 // delete the current Arrow
 void removeArrow();
+
+// hide the Cursor in Console
+void hideCursor();
+
+void showCursor();
 
 //
 void setCursor(short x, short y);

@@ -103,11 +103,6 @@ const int WidthBlock[5] = {
 };
 const int HeightBlock = 3;
 
-// hide the Cursor in Console
-void hideCursor();
-
-void showCursor();
-
 // intro game
 void printLogo();
 

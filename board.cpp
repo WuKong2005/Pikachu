@@ -138,7 +138,7 @@ void board::assignCell(pair<int, int> cell, char c) {
 bool board::checkMatch(pair<int, int> startCell, pair<int, int> endCell, bool magic, bool* found) {
     //Assume startCell and endCell are two different cells
     int r1 = startCell.first, c1 = startCell.second;
-    int r2 = endCell.first, c2 = startCell.second;
+    int r2 = endCell.first, c2 = endCell.second;
 
     //If the character from these 2 cells are different then the match is invalid
     if (grid[r1][c1] != grid[r2][c2]) return false;
@@ -163,7 +163,6 @@ bool board::checkMatch(pair<int, int> startCell, pair<int, int> endCell, bool ma
 
     for (int numStep = 0; numStep <= 2 + magic; numStep++) {
         while(!prevQ.empty()) {
-            //C++17
             //Dequeue a node from previous layer
             //Each node is a state consists of row index, column index of the cell and vector index used to reach that cell
             int curR = prevQ.front()[0];
@@ -196,7 +195,6 @@ bool board::checkMatch(pair<int, int> startCell, pair<int, int> endCell, bool ma
                     //This cell is not deleted yet but it has a different character from the character we focused on
                     if (grid[newR][newC] != '$' && grid[newR][newC] != aimCharacter) 
                         break;
-                    
                     //This cell is deleted, or this cell is not deleted yet and it has the same character as the character we focused on
                     //We can visit this cell
                     if ((grid[newR][newC] == '$') || (grid[newR][newC] != '$' && grid[newR][newC] == aimCharacter)) {
@@ -209,7 +207,8 @@ bool board::checkMatch(pair<int, int> startCell, pair<int, int> endCell, bool ma
                         if (grid[newR][newC] == '$')
                             curQ.push({newR, newC, newType, dir});
                         else {
-                            *found = true;
+                            if (found != NULL)
+                                *found = true;
                             //A valid move exist
                             suggestPair = {r1, c1, newR, newC};
                         }
@@ -225,7 +224,7 @@ bool board::checkMatch(pair<int, int> startCell, pair<int, int> endCell, bool ma
         //Move to the next layer
         prevQ.swap(curQ);
     }
-
+    
     //If we can reach endCell in this attempt, then this move is valid
     return (flood[r2][c2][0][0] == timeCheck || flood[r2][c2][1][0] == timeCheck);
 }
