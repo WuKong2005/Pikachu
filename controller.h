@@ -8,7 +8,6 @@
 #pragma comment(lib, "Winmm.lib")
 
 using namespace std;
-#include <string>
 
 // enumerate the type of move in menu
 enum move {

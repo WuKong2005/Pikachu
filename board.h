@@ -26,7 +26,7 @@ int const ALPHABET = 26;
 
 //Size of board based on difficult the player choosed
 //Easy; Medium; Hard - Easy peasy; Medium is premium; Things may be hard, but I'm harder
-int const sizeROW[] = {4, 6, 8};
+int const sizeROW[] = {4, 6, 7};
 int const sizeCOL[] = {6, 9, 12};
 
 
@@ -48,6 +48,16 @@ enum corner {
 // ascii code of 4-corners
 const int frame[4] = {201, 187, 200, 188};
 
+enum turningCorner {
+    DOWN_RIGHT,
+    LEFT_DOWN,
+    UP_RIGHT,
+    LEFT_UP
+};
+
+// ascii code of 4 turingCorner
+const int turning[4] = {218, 191, 192, 217};
+
 //Type of matching
 enum MATCHING {
     I_MATCHING,
@@ -56,6 +66,8 @@ enum MATCHING {
     U_MATCHING,
     MAGIC_MATCHING
 };
+
+const string backGroundImage[3] = {"background\\easy.txt", "background\\medium.txt", "background\\hard.txt"};
 
 struct board {
     int ROW, COL;

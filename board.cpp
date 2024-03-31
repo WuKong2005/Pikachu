@@ -281,6 +281,7 @@ int board::getTypePath(vector<pair<int, int>> path) {
 //Remove(delete) a cell from the board
 void board::deleteCell(pair<int, int> cell) {
     grid[cell.first][cell.second] = '$';
+    // removeCell(cell);
 }
 
 //Remove(delete) a match from the board
