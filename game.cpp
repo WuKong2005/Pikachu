@@ -26,7 +26,7 @@ game::game(int difficult) {
     currentPos = {1, 1};
     
     ifstream fin;
-    int height = sizeROW[difficult] * (HEIGHT_CELL - 1) + 1;
+    int height = sizeROW[difficult] * (HEIGHT_CELL - 1) + 1 + 2 * (BUFFER_HEIGHT_CELL - 1);
     background = new string [height];
 
     fin.open(backGroundImage[difficult].c_str());
@@ -42,6 +42,7 @@ game::game(string pathSaveFile) {
 
 void game::drawInterface() {
     drawBoard();
+    highlightCell(1, 1, BACKGROUND_COLOR[CYAN]);
 }
 
 void game::drawBoard() {
@@ -124,6 +125,8 @@ void game::drawCell(pair<int, int> cell, char key) {
 }
 
 void game::removeCell(pair<int, int> cell) {
+    if (cell.first < 1 || cell.second < 1 || cell.first > map.ROW || cell.second > map.COL)
+        return;
     if (map.grid[cell.first][cell.second] != '$')
         return;
     
@@ -138,28 +141,28 @@ void game::removeCell(pair<int, int> cell) {
     if (map.grid[cell.first - 1][cell.second] == '$') {
         setCursor(posX, posY);
         for (int numChar = 0; numChar < WIDTH_CELL; ++numChar)    
-            cout << background[(cell.first - 1) * (HEIGHT_CELL - 1)][(cell.second - 1) * (WIDTH_CELL - 1) + numChar];
+            cout << background[(cell.first - 1) * (HEIGHT_CELL - 1) + (BUFFER_HEIGHT_CELL - 1)][(cell.second - 1) * (WIDTH_CELL - 1) + numChar];
     }
     //check and delete bottom side
     if (map.grid[cell.first + 1][cell.second] == '$') {
         setCursor(posX, posY + (HEIGHT_CELL - 1));
         for (int numChar = 0; numChar < WIDTH_CELL; ++numChar)
-            cout << background[(cell.first - 1) * (HEIGHT_CELL - 1) + HEIGHT_CELL - 1][(cell.second - 1) * (WIDTH_CELL - 1) + numChar];
+            cout << background[(cell.first - 1) * (HEIGHT_CELL - 1) + HEIGHT_CELL - 1 + (BUFFER_HEIGHT_CELL - 1)][(cell.second - 1) * (WIDTH_CELL - 1) + numChar];
     }
     //check and delete left side
     if (map.grid[cell.first][cell.second - 1] == '$')
         for (int numChar = 0; numChar < HEIGHT_CELL; ++numChar) {
             setCursor(posX, posY + numChar);
-            cout << background[(cell.first - 1) * (HEIGHT_CELL - 1) + numChar][(cell.second - 1) * (WIDTH_CELL - 1)];
+            cout << background[(cell.first - 1) * (HEIGHT_CELL - 1) + (BUFFER_HEIGHT_CELL - 1) + numChar][(cell.second - 1) * (WIDTH_CELL - 1)];
         }
     // check and delete right side
     if (map.grid[cell.first][cell.second + 1] == '$')
         for (int numChar = 0; numChar < HEIGHT_CELL; ++numChar) {
             setCursor(posX + (WIDTH_CELL - 1), posY + numChar);
-            cout << background[(cell.first - 1) * (HEIGHT_CELL - 1) + numChar][(cell.second - 1) * (WIDTH_CELL - 1)];
+            cout << background[(cell.first - 1) * (HEIGHT_CELL - 1) + (BUFFER_HEIGHT_CELL - 1) + numChar][(cell.second - 1) * (WIDTH_CELL - 1)];
         }
     cout << TEXT_BLACK;
-    Sleep(1000);
+    // Sleep(1000);
 
     unHighlightCell(cell.first, cell.second);
 }
@@ -168,10 +171,26 @@ void game::drawGuide() {
 
 }
 
-void game::drawPath(pair<int, int> startCell, pair<int, int> endCell, vector<pair<int, int>> path) {
+void game::drawPath(vector<pair<int, int>> path, bool draw) {
     assert(path.size() >= 2);
-    for (int i = 0; i + 1 <= (int)path.size(); i++) {
-        drawLine(path[i], path[i + 1], true);
+    int numCell = path.size();
+
+    for (int cell = 0; cell + 1 <= numCell; ++cell) {
+        drawLine(path[cell], path[cell + 1], draw);
+    }
+    vector<pair<int, int>> vec;
+    for (int i = 0; i < numCell - 1; ++i)
+        vec.push_back({path[i].first - path[i + 1].first, path[i].second - path[i + 1].second});
+    
+    for (int i = 0; i < numCell - 2; ++i) {
+        if (vec[i].first > 0 && vec[i + 1].second > 0)
+            drawTurningPoint(path[i + 1].first, path[i + 1].second, LEFT_DOWN, draw);
+        else if (vec[i].first > 0 && vec[i + 1].second < 0)
+            drawTurningPoint(path[i + 1].first, path[i + 1].second, DOWN_RIGHT, draw);
+        else if (vec[i].first < 0 && vec[i + 1].second > 0)
+            drawTurningPoint(path[i + 1].first, path[i + 1].second, LEFT_UP, draw);
+        else
+            drawTurningPoint(path[i + 1].first, path[i + 1].second, UP_RIGHT, draw);
     }
 }
 
@@ -192,12 +211,18 @@ void game::drawVerticalLine(int col, int row1, int row2, bool draw) {
     short posY2 = upperLeftCorner.Y + BUFFER_HEIGHT_CELL + (row2 - 1) * (HEIGHT_CELL - 1) + HEIGHT_CELL / 2;
 
     cout << (draw ? TEXT_COLOR[BRIGHT_YELLOW] : TEXT_BLACK);
-    
-    while (posY1 < posY2 - 1) {
-        posY1++;
-        setCursor(posX, posY1);
-        cout << (draw ? char(179) : background[posY1 - (upperLeftCorner.Y + BUFFER_HEIGHT_CELL)][posX - (upperLeftCorner.X + BUFFER_WIDTH_CELL)]);
-    }
+    if (!draw)
+        while (posY1 < posY2 - 1) {
+            posY1++;
+            setCursor(posX, posY1);
+            cout << background[posY1 - (upperLeftCorner.Y + BUFFER_HEIGHT_CELL) + (BUFFER_HEIGHT_CELL - 1)][posX - (upperLeftCorner.X + BUFFER_WIDTH_CELL)];
+        }
+    else 
+        while (posY1 < posY2 - 1) {
+            posY1++;
+            setCursor(posX, posY1);
+            cout << char(179);
+        }
     cout << TEXT_BLACK;
 }
 
@@ -209,11 +234,19 @@ void game::drawHorizontalLine(int row, int col1, int col2, bool draw) {
     short posY = upperLeftCorner.Y + BUFFER_HEIGHT_CELL + (row - 1) * (HEIGHT_CELL - 1) + HEIGHT_CELL / 2;
 
     cout << (draw ? TEXT_COLOR[BRIGHT_YELLOW] : TEXT_BLACK);
-    while (posX1 < posX2 - 1) {
-        posX1++;
-        setCursor(posX1, posY);
-        cout << (draw ? char(196) : background[posY - (upperLeftCorner.Y + BUFFER_HEIGHT_CELL)][posX1 - (upperLeftCorner.X + BUFFER_WIDTH_CELL)]);
-    }
+
+    if (!draw)
+        while (posX1 < posX2 - 1) {
+            posX1++;
+            setCursor(posX1, posY);
+            cout << background[posY - (upperLeftCorner.Y + BUFFER_HEIGHT_CELL) + (BUFFER_HEIGHT_CELL - 1)][posX1 - (upperLeftCorner.X + BUFFER_WIDTH_CELL)];
+        }
+    else
+        while (posX1 < posX2 - 1) {
+            posX1++;
+            setCursor(posX1, posY);
+            cout << char(196);
+        }
     cout << TEXT_BLACK;
 }
 
@@ -226,7 +259,8 @@ void game::drawTurningPoint(int row, int col, int type, bool draw) {
         cout << TEXT_COLOR[BRIGHT_YELLOW] << char(turning[type]);
     }
     else {
-        cout << TEXT_BLACK << background[posY - (upperLeftCorner.Y + BUFFER_HEIGHT_CELL)][posX - (upperLeftCorner.X + BUFFER_WIDTH_CELL)];
+        cout << TEXT_BLACK;
+        cout << background[posY - (upperLeftCorner.Y + BUFFER_HEIGHT_CELL) + (BUFFER_HEIGHT_CELL - 1)][posX - (upperLeftCorner.X + BUFFER_WIDTH_CELL)];
     }
     cout << TEXT_BLACK;
 }
@@ -293,19 +327,22 @@ void game::select() {
     else if (map.checkMatch(currentSelect, currentPos)) {
         highlightCell(currentPos.first, currentPos.second, BACKGROUND_COLOR[GREEN]);
         highlightCell(currentSelect.first, currentSelect.second, BACKGROUND_COLOR[GREEN]);
-        Sleep(15);
-        
+        // vector<pair<int, int>> path = map.getPath(currentSelect, currentPos);
+        // drawPath(path, true);
+        Sleep(89);
+
         map.deleteCell(currentSelect);
         map.deleteCell(currentPos);
         removeCell(currentPos);
         removeCell(currentSelect);
+        // drawPath(path, false);
     }
     else {
         highlightCell(currentPos.first, currentPos.second, BACKGROUND_COLOR[RED]);
         highlightCell(currentSelect.first, currentSelect.second, BACKGROUND_COLOR[RED]);
-        Sleep(15);
+        Sleep(89);
 
-        unHighlightCell(currentPos.first, currentPos.second);
+        highlightCell(currentPos.first, currentPos.second, BACKGROUND_COLOR[CYAN]);
         unHighlightCell(currentSelect.first, currentSelect.second);
     }
     currentSelect = {0, 0};

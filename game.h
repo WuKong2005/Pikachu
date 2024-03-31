@@ -34,7 +34,7 @@ struct game {
     void removeCell(pair<int, int> cell); // delete a cell
     void drawGuide(); // Draw text box of guide, help, etc
 
-    void drawPath(pair<int, int> startCell, pair<int, int> endCell, vector<pair<int, int>> path); // Draw the path between 2 cells
+    void drawPath(vector<pair<int, int>> path, bool draw); // Draw the path between 2 cells
     void drawLine(pair<int, int> startCell, pair<int, int> endCell, bool draw); // Draw or delete the straight line between 2 cells
     void drawVerticalLine(int col, int row1, int row2, bool draw); // Draw or delete a vertical line
     void drawHorizontalLine(int row, int col1, int col2, bool draw); // Draw or delete a horizontal line
