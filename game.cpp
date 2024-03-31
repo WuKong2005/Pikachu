@@ -13,7 +13,7 @@ game::game(int difficult) {
     map.~board();
     new (&map) board(difficult);
 
-    currentCoord = currentSelect = {0, 0};
+    currentPos = currentSelect = {0, 0};
     timeUsed = 0;
     numLeft = map.ROW * map.COL;
     diff = difficult;

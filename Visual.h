@@ -94,14 +94,14 @@ const int numBlock[5] = {
 	1 // USERNAME
 };
 
-const int lengthBlock[5] = {
+const int WidthBlock[5] = {
 	19, // MAIN_MENU
 	19, // PLAY_GAME
 	19, // GAME_MODE
 	19, // LOAD_GAME
 	32 // USERNAME
 };
-const int widthBlock = 3;
+const int HeightBlock = 3;
 
 // hide the Cursor in Console
 void hideCursor();

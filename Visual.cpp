@@ -238,7 +238,7 @@ void printFrameBlock(int Visual) {
 
         SetConsoleCursorPosition(console, currentCursor);
         string sideFrame;
-        sideFrame.assign(lengthBlock[Visual], char(205));
+        sideFrame.assign(WidthBlock[Visual], char(205));
         cout << char(201);
         cout << sideFrame;
         cout << char(187);
@@ -247,11 +247,11 @@ void printFrameBlock(int Visual) {
         SetConsoleCursorPosition(console, currentCursor);
         cout << char(186);
 
-        currentCursor.X += lengthBlock[Visual] + 1;
+        currentCursor.X += WidthBlock[Visual] + 1;
         SetConsoleCursorPosition(console, currentCursor);
         cout << char(186);
 
-        currentCursor.X -= lengthBlock[Visual] + 1;
+        currentCursor.X -= WidthBlock[Visual] + 1;
         currentCursor.Y++;
         SetConsoleCursorPosition(console, currentCursor);
         cout << char(200);

@@ -15,8 +15,8 @@ int const BUFFER_HEIGHT_CELL = 3;
 
 struct game {
     board map;
-    string** background;
-    pair<int, int> currentCoord, currentSelect;
+    string* background;
+    pair<int, int> currentPos, currentSelect;
     int timeUsed, numLeft, diff, score;
     bool useMagicMatching, useHiddenCell, isPlaying;
     COORD upperLeftCorner;
