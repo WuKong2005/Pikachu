@@ -17,6 +17,7 @@ enum COLOR {
   GREEN,
   YELLOW,
   BLUE,
+  MAGENTA,
   CYAN,
   WHITE,
   BRIGHT_RED,
@@ -27,11 +28,12 @@ enum COLOR {
 };
 
 const string TEXT_BLACK = "\x1B[0m";
-const string TEXT_COLOR[10] = {
+const string TEXT_COLOR[11] = {
 	"\x1B[31m",
 	"\x1B[32m", 
 	"\x1B[33;1m", 
-	"\x1B[34m", 
+	"\x1B[34m",
+	"\x1b[35m", 
 	"\x1B[36m",
 	"\x1B[37m", 
 	"\x1B[91m", 
@@ -40,11 +42,12 @@ const string TEXT_COLOR[10] = {
 	"\x1B[94m"
 };
 
-const string BACKGROUND_COLOR[11] = {
+const string BACKGROUND_COLOR[12] = {
 	"\x1B[41m", 
 	"\x1B[42m", 
 	"\x1B[43;1m", 
-	"\x1B[44m", 
+	"\x1B[44m",
+	"\x1b[45m", 
 	"\x1B[46m",
 	"\x1B[47m", 
 	"\x1B[101m", 

@@ -342,6 +342,7 @@ void board::importBoard() {
     out.open("record/board.txt");
 
     //Size of the board, curent timeCheck and data of each cell
+    out << ROW << ' ' << COL << ' ' << timeCheck << '\n';
     for (int r = 1; r <= ROW; r++) {
         for (int c = 1; c <= COL; c++) {
             out << grid[r][c] << ' ' << flood[r][c][0][0]  << ' ' << flood[r][c][1][0] << ' ';

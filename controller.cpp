@@ -2,6 +2,7 @@
 
 HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 COORD currentCursor = {0, 0};
+vector<wstring> soundFile{L"bgm/menu.mp3", L"bgm/easy.mp3", L"bgm/medium.mp3", L"bgm/hard.mp3", L"bgm/extra.mp3", L"sfx/choose.wav", L"sfx/move.wav" , L"sfx/valid.wav", L"sfx/invalid.wav", L"sfx/win.wav", L"sfx/lose.wav"};
 
 void initializeProgram() {
     SetConsoleOutputCP(65001);
@@ -42,7 +43,7 @@ int getInputKey() {
                 return GET_HINT;
             case 'M': case 'm':
                 return TOGGLE_MUSIC;
-            case 'L': case 'l':
+            case 'P': case 'p':
                 return SAVE_GAME;
             case 'G': case 'g':
                 return MAGIC_MOVE;
@@ -95,15 +96,11 @@ void clearScreen() {
     system("cls");
 }
 
-void playSound(int type, bool stop, bool loop) {
-	static vector<wstring> soundFile{L"bgm/menu.mp3", L"bgm/easy.mp3", L"bgm/medium.mp3", L"bgm/hard.mp3", L"bgm/extra.mp3", L"sfx/choose.wav", L"sfx/move.wav" , L"sfx/valid.wav", L"sfx/invalid.wav", L"sfx/win.wav", L"sfx/lose.wav"};
+void playSound(int type, bool stop) {
     if (type <= EXTRA_MODE) {
         wstring command;
         if (!stop) {
-            command += LR"(play ")" + soundFile[type] + LR"(")";
-            if (loop) {
-                command += LR"( repeat)";
-            }
+            command += LR"(play ")" + soundFile[type] + LR"(" repeat)";
         }
         else {
             command += LR"(stop ")" + soundFile[type] + LR"(")";
@@ -113,4 +110,14 @@ void playSound(int type, bool stop, bool loop) {
     else {
         PlaySoundW(soundFile[type].c_str(), NULL, SND_FILENAME | SND_ASYNC);
     }
+}
+
+bool isMp3Playing(wstring pathFile) {
+    wchar_t status[128]{};
+    mciSendStringW((L"status \"" + pathFile + L"\" mode").c_str(), status, 128, 0);
+    return (wcscmp(status, L"playing") == 0);
+}
+
+void toggleMusic(int type) {
+    playSound(type, isMp3Playing(soundFile[type]));
 }

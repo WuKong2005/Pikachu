@@ -75,4 +75,6 @@ void printAtCursor(string content, COORD cursor, string textColor = "\x1B[0m");
 
 void clearScreen();
 
-void playSound(int type, bool stop = false, bool loop = true);
+void playSound(int type, bool stop = false);
+
+void toggleMusic(int type);
