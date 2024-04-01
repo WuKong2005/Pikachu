@@ -78,6 +78,11 @@ void showCursor() {
 	SetConsoleCursorInfo(console, &cursorInfo); // apply the changes
 }
 
+void hideScrollBars() {
+    HWND consoleWindow = GetConsoleWindow();
+	ShowScrollBar(consoleWindow, SB_BOTH, false);
+}
+
 void setCursor(short x, short y) {
     COORD cursor = {x, y};
     SetConsoleCursorPosition(console, cursor);

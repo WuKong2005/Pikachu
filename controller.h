@@ -67,6 +67,9 @@ void hideCursor();
 // show the cursor
 void showCursor();
 
+// hide the Scroll bars
+void hideScrollBars();
+
 // set Cursor to coordinates (x, y)
 void setCursor(short x, short y);
 

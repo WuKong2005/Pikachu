@@ -118,7 +118,8 @@ void printLoadGame();
 void printLeaderboard();
 void printHelp();
 void printUsername();
-void printInfoIngame();
+void printInfoInGame(short posX, short posY);
+void printHelpInGame(short posX, short posY);
 void printFrameBlock(int Visual);
 
 // FRONTEND
@@ -246,7 +247,7 @@ R"(
 
 
 // stored the visual
-const string Visual[8] = {
+const string Visual[7] = {
     // MAIN_MENU
     R"(
 			    	                                  ,'\
@@ -439,7 +440,7 @@ const string Visual[8] = {
 		|      MOVES:      |                                                                                       |
 		|                  |          DOWN: S, s, down arrow                   RIGHT: D, d, right arrow            |
 		 ---------------------------------------------------------------------------------------------------------- 
-		|                  |          L: Save game                             H: Get hind (move suggestion)       |
+		|                  |          P: Save game                             H: Get hind (move suggestion)       |
 		|   SPECIAL KEYS   |                            C: Open Help in game                                       |
 		|                  |          M: TOGGLE_MUSIC                          G: Magic matching                   |
 		 ---------------------------------------------------------------------------------------------------------- 
@@ -462,25 +463,5 @@ const string Visual[8] = {
 		 ----------------------------------------------------------------------------------------------------------
 
 							PRESS ANY KEY TO GO BACK ! 
-    )",
-
-	// INFORMATION_INGAME
-	R"(  
-													 ---------------------------------- 
-													|         POKEMON MATCHING         |
-													|                                  |
-													| USERNAME:                        |
-													| DIFFICULTY:                      |
-													|                                  |
-													| SCORE:                           |
-													| TIME REMAIN:                     |
-													| HINT:                            |
-													| MAGIC MATCHING:                  |
-													|                                  |
-													 ---------------------------------- 
-													|                                  |
-													|                                  |
-													|                                  |
-													 ---------------------------------- 
-)"
+    )"
 };

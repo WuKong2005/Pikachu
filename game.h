@@ -61,5 +61,7 @@ struct game {
 
     void startGame(); // Start the game
     void finishGame(); // Finish the game
+
+    void getBackground();
 };
 

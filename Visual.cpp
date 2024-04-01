@@ -253,11 +253,112 @@ void printUsername() {
     printFrameBlock(USERNAME);
 }
 
-void printInfoIngame() {
+/*
+	 --------------------------
+    |     POKEMON MATCHING     |
+	|                          |
+	| SCORE:                   |
+	| HINT:                    |
+    | MAGIC:                   |
+    |                          |
+     -------------------------- 
+    |                          |
+    |                          |
+    |                          |
+     --------------------------
+*/
+// print the infomation when playing game
+void printInfoInGame(short posX, short posY) {
     SetConsoleOutputCP(437);
+
     cout << TEXT_BLACK;
-    cout << Visual[INFORMATION_INGAME];
+    
+//draw the frame
+    string side;
+    side.append(26, char(196));
+
+    // draw top side
+    setCursor(posX, posY);
+    cout << char(218) << side << char(191);
+    // draw middle side
+    setCursor(posX, posY + 7);
+    cout << char(195) << side << char(180);
+    // draw bottom side
+    setCursor(posX, posY + 11);
+    cout << char(192) << side << char(217);
+
+    // draw the remaining 2 sides
+    for (int row = 1; row <= 10; ++row) {
+        if (row == 7)
+            continue;
+        setCursor(posX, posY + row);
+        cout << char(179);
+        setCursor(posX + 27, posY + row);
+        cout << char(179);
+    }
+
+// print content
+    setCursor(posX + 6, posY + 1);
+    cout << "POKEMON MATCHING";
+    setCursor(posX + 2, posY + 3);
+    cout << "SCORE: ";
+    setCursor(posX + 2, posY + 4);
+    cout << "HINT: ";
+    setCursor(posX + 2, posY + 5);
+    cout << "MAGIC MOVE: ";
 }
+
+/*
+     ---------------------------
+    |         HELP MENU         |
+    |                           |
+    | MOVE: WASD or arrow keys  |
+    | ENTER: select or unselect |
+    | H: Get hint               |
+    | M: Toggle music           |
+    | P: Save game              |
+    | G: Magic move             |
+    | C: Open HELP menu         |
+    |                           |
+     ---------------------------
+*/
+void printHelpInGame(short posX, short posY) {
+    string side;
+    side.append(27, char(196));
+
+    // draw top side
+    setCursor(posX, posY);
+    cout << char(218) << side << char(191);
+    // draw bottom side
+    setCursor(posX, posY + 11);
+    cout << char(192) << side << char(217);
+    // draw column
+    for (int row = 1; row < 11; ++row) {
+        setCursor(posX, posY + row);
+        cout << char(179);
+        setCursor(posX + 28, posY + row);
+        cout << char(179);
+    }
+
+    // print content
+    setCursor(posX + 11, posY + 1);
+    cout << "HELP MENU";
+    setCursor(posX + 2, posY + 3);
+    cout << "MOVE: WASD or arrow keys";
+    setCursor(posX + 2, posY + 4);
+    cout << "ENTER: select or unselect";
+    setCursor(posX + 2, posY + 5);
+    cout << "H: Get hint";
+    setCursor(posX + 2, posY + 6);
+    cout << "M: Toggle music";
+    setCursor(posX + 2, posY + 7);
+    cout << "P: Save game";
+    setCursor(posX + 2, posY + 8);
+    cout << "G: Magic move";
+    setCursor(posX + 2, posY + 9);
+    cout << "C: Open HELP menu";
+}
+
 
 /*
     this function use to print the frame of block Visual (MAIN_MENU, ...)

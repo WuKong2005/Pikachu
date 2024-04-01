@@ -34,7 +34,7 @@ game::game(int difficult) {
     applyMagicMatching = applyHiddenCell = false;
     tempCell = make_pair(make_pair(0, 0), '$');
     
-    upperLeftCorner = {7, 4};
+    upperLeftCorner = map.boardPos[difficult];
     currentPos = {1, 1};
     
     ifstream fin;
@@ -53,9 +53,32 @@ int game::timeDuration() {
 }
 
 void game::drawInterface() {
-    drawBoard();   
-    setCursor(0, upperLeftCorner.Y);
-    printInfoIngame();
+    drawBoard(); 
+
+    //print information in game at position about 4 (or 6) spaces away from the board frame
+    printInfoInGame((upperLeftCorner.X + map.COL * (WIDTH_CELL - 1) + 1 + 2 * BUFFER_WIDTH_CELL) + (diff == HARD ? 4 : 6),
+                     upperLeftCorner.Y);
+
+    // print the help menu in game at position about 4 (or 6) spaces away from board frame 
+    // and lower than information in game 19 spaces
+    printHelpInGame((upperLeftCorner.X + map.COL * (WIDTH_CELL - 1) + 1 + 2 * BUFFER_WIDTH_CELL) + (diff == HARD? 4 : 6),
+                     upperLeftCorner.Y + 19);
+
+    // print user information
+    setCursor(map.boardPos[diff].X, 1);
+    cout << TEXT_COLOR[YELLOW] << "USERNAME: " << player.username;
+    setCursor(45 + map.boardPos[diff].X, 1);
+    cout << "DIFFICULTY: ";
+    if (diff == EASY)
+        cout << "EASY";
+    else if (diff == MEDIUM)
+        cout << "MEDIUM";
+    else
+        cout << "HARD";
+    setCursor(90 + map.boardPos[diff].X, 1);
+    cout << "TIME: ";
+
+    cout << TEXT_BLACK;
     highlightCell(1, 1, BACKGROUND_COLOR[CYAN]);
 }
 
@@ -156,31 +179,61 @@ void game::removeCell(pair<int, int> cell) {
     short posX = upperLeftCorner.X + BUFFER_WIDTH_CELL + (cell.second - 1) * (WIDTH_CELL - 1);
     short posY = upperLeftCorner.Y + BUFFER_HEIGHT_CELL + (cell.first - 1) * (HEIGHT_CELL - 1);
 
-    // cout << BACKGROUND_COLOR[YELLOW];
+    // check if the 4 cells next to cell is deleted of not 
+    bool cellTop, cellBottom, cellLeft, cellRight;
+    cellTop = map.grid[cell.first - 1][cell.second] == '$';
+    cellBottom = map.grid[cell.first + 1][cell.second] == '$';
+    cellLeft = map.grid[cell.first][cell.second - 1] == '$';
+    cellRight = map.grid[cell.first][cell.second + 1] == '$';
+
+//Check 4 sides
     // check and delete top side
-    if (map.grid[cell.first - 1][cell.second] == '$') {
-        setCursor(posX, posY);
-        for (int numChar = 0; numChar < WIDTH_CELL; ++numChar)    
+    if (cellTop) {
+        setCursor(posX + 1, posY);
+        for (int numChar = 1; numChar < WIDTH_CELL - 1; ++numChar)    
             cout << background[(cell.first - 1) * (HEIGHT_CELL - 1) + (BUFFER_HEIGHT_CELL - 1)][(cell.second - 1) * (WIDTH_CELL - 1) + (BUFFER_WIDTH_CELL - 1) + numChar];
     }
     //check and delete bottom side
-    if (map.grid[cell.first + 1][cell.second] == '$') {
-        setCursor(posX, posY + (HEIGHT_CELL - 1));
-        for (int numChar = 0; numChar < WIDTH_CELL; ++numChar)
+    if (cellBottom) {
+        setCursor(posX + 1, posY + (HEIGHT_CELL - 1));
+        for (int numChar = 1; numChar < WIDTH_CELL - 1; ++numChar)
             cout << background[(cell.first - 1) * (HEIGHT_CELL - 1) + HEIGHT_CELL - 1 + (BUFFER_HEIGHT_CELL - 1)][(cell.second - 1) * (WIDTH_CELL - 1) + (BUFFER_WIDTH_CELL - 1) + numChar];
     }
     //check and delete left side
-    if (map.grid[cell.first][cell.second - 1] == '$')
-        for (int numChar = 0; numChar < HEIGHT_CELL; ++numChar) {
+    if (cellLeft)
+        for (int numChar = 1; numChar < HEIGHT_CELL - 1; ++numChar) {
             setCursor(posX, posY + numChar);
             cout << background[(cell.first - 1) * (HEIGHT_CELL - 1) + (BUFFER_HEIGHT_CELL - 1) + numChar][(cell.second - 1) * (WIDTH_CELL - 1) + (BUFFER_WIDTH_CELL - 1)];
         }
     // check and delete right side
-    if (map.grid[cell.first][cell.second + 1] == '$')
-        for (int numChar = 0; numChar < HEIGHT_CELL; ++numChar) {
+    if (cellRight)
+        for (int numChar = 1; numChar < HEIGHT_CELL - 1; ++numChar) {
             setCursor(posX + (WIDTH_CELL - 1), posY + numChar);
             cout << background[(cell.first - 1) * (HEIGHT_CELL - 1) + (BUFFER_HEIGHT_CELL - 1) + numChar][(cell.second - 1) * (WIDTH_CELL - 1) + (BUFFER_WIDTH_CELL - 1)];
         }
+
+// Check 4 corners
+    // upper left corner
+    if(cellTop && cellLeft && map.grid[cell.first - 1][cell.second - 1] == '$') {
+        setCursor(posX, posY);
+        cout << background[(cell.first - 1) * (HEIGHT_CELL - 1) + (BUFFER_HEIGHT_CELL - 1)][(cell.second - 1) * (WIDTH_CELL - 1) + (BUFFER_WIDTH_CELL - 1)];
+    }
+    // upper right corner
+    if (cellTop && cellRight && map.grid[cell.first - 1][cell.second + 1] == '$') {
+        setCursor(posX + (WIDTH_CELL - 1), posY);
+        cout << background[(cell.first - 1) * (HEIGHT_CELL - 1) + (BUFFER_HEIGHT_CELL - 1)][cell.second * (WIDTH_CELL - 1) + (BUFFER_WIDTH_CELL - 1)];
+    }
+    // lower left corner
+    if (cellBottom && cellLeft && map.grid[cell.first + 1][cell.second - 1] == '$') {
+        setCursor(posX, posY + (HEIGHT_CELL - 1));
+        cout << background[cell.first * (HEIGHT_CELL - 1) + (BUFFER_HEIGHT_CELL - 1)][(cell.second - 1) * (WIDTH_CELL - 1) + (BUFFER_WIDTH_CELL - 1)];
+    }
+    // lower right corner
+    if (cellBottom && cellRight && map.grid[cell.first + 1][cell.second + 1] == '$') {
+        setCursor(posX + (WIDTH_CELL - 1), posY + (HEIGHT_CELL - 1));
+        cout << background[cell.first * (HEIGHT_CELL - 1) + (BUFFER_HEIGHT_CELL - 1)][cell.second * (WIDTH_CELL - 1) + (BUFFER_WIDTH_CELL - 1)];
+    }
+
     cout << TEXT_BLACK;
     // Sleep(1000);
 
@@ -194,7 +247,7 @@ void game::drawGuide() {
 void game::drawPath(vector<pair<int, int>> path, bool draw) {
     assert(path.size() >= 2);
     int numCell = path.size();
-
+    
     for (int cell = 0; cell + 1 <= numCell; ++cell) {
         drawLine(path[cell], path[cell + 1], draw);
     }
@@ -360,10 +413,11 @@ void game::select() {
 
     if (map.checkMatch(currentSelect, currentPos, applyMagicMatching)) {
         playSound(VALID_MOVE);
-        highlightCell(currentPos.first, currentPos.second, BACKGROUND_COLOR[GREEN]);
-        highlightCell(currentSelect.first, currentSelect.second, BACKGROUND_COLOR[GREEN]);
         vector<pair<int, int>> path = map.getPath(currentSelect, currentPos);
         drawPath(path, true);
+        highlightCell(currentPos.first, currentPos.second, BACKGROUND_COLOR[GREEN]);
+        highlightCell(currentSelect.first, currentSelect.second, BACKGROUND_COLOR[GREEN]);
+        
         score += path.size() - 1;
         // drawPath(path, true);
         Sleep(100);
@@ -682,4 +736,19 @@ void game::finishGame() {
     playSound(diff + 1, true);
     playSound(WIN);
     saveScore();
+}
+
+void game:: getBackground() {
+    ifstream fin;
+    background = NULL;
+    int height = sizeROW[diff] * (HEIGHT_CELL - 1) + 1 + 2 * (BUFFER_HEIGHT_CELL - 1);
+    background = new string [height] {};
+
+    fin.open(backGroundImage[diff].c_str());
+    int count = 0;
+    while (count < height && getline(fin, background[count])) {
+        // cerr << background[count] << endl;
+        count++;
+    }
+    fin.close();
 }
