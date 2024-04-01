@@ -64,10 +64,10 @@ void removeArrow();
 
 // hide the Cursor in Console
 void hideCursor();
-
+// show the cursor
 void showCursor();
 
-//
+// set Cursor to coordinates (x, y)
 void setCursor(short x, short y);
 
 // update the currentCursor to newCursor and print content
