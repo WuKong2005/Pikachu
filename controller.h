@@ -20,10 +20,11 @@ enum move {
 };
 
 enum special_input {
-    GET_HINT,
+    GET_HINT = ENTER + 1,
     TOGGLE_MUSIC,
     SAVE_GAME,
-    MAGIC_MOVE
+    MAGIC_MOVE,
+    HELP_MENU
 };
 
 enum SOUND_EFFECT {
@@ -32,9 +33,8 @@ enum SOUND_EFFECT {
     MEDIUM_MODE,
     HARD_MODE,
     EXTRA_MODE,
-    MOVE_IN_MENU,
-    MOVE_INGAME,
-    ERROR_MOVE,
+    CHOOSE,
+    MOVE,
     VALID_MOVE,
     INVALID_MOVE,
     WIN,

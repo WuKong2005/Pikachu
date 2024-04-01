@@ -19,7 +19,7 @@ void MAIN_MENU_CONTROL() {
         }
         else if (input == ENTER) {
             system("cls");
-            playSound(MOVE_IN_MENU);
+            playSound(CHOOSE);
             // determine which block is chosen by player
             int posBlock = (currentCursor.Y - ARROW_POS_FIRST_BLOCK[MAIN_MENU].Y) / distanceBlock[MAIN_MENU];
             COORD preCursor; // store the previous coordinate of cursor
@@ -84,7 +84,7 @@ void PLAY_GAME_CONTROL() {
         }
         else if (input == ENTER) {
             system("cls");
-            playSound(MOVE_IN_MENU);
+            playSound(CHOOSE);
             // determine which block is chosen by player
             int posBlock = (currentCursor.Y - ARROW_POS_FIRST_BLOCK[PLAY_GAME].Y) / distanceBlock[PLAY_GAME];
             COORD preCursor; // store the previous coordinate of cursor
@@ -138,7 +138,7 @@ void GAME_MODE_CONTROL() {
         }
         else if (input == ENTER) {
             system("cls");
-            playSound(MOVE_IN_MENU);
+            playSound(CHOOSE);
             // determine which block is chosen by player
             int posBlock = (currentCursor.Y - ARROW_POS_FIRST_BLOCK[GAME_MODE].Y) / distanceBlock[GAME_MODE];
             COORD preCursor; // store the previous coordinate of cursor
@@ -210,7 +210,7 @@ void LOAD_GAME_CONTROL() {
         }
         else if (input == ENTER) {
             system("cls");
-            playSound(MOVE_IN_MENU);
+            playSound(CHOOSE);
             int posBlock = (currentCursor.Y - ARROW_POS_FIRST_BLOCK[LOAD_GAME].Y) / distanceBlock[LOAD_GAME];
             switch (posBlock) {
                 case 0: // SAVE FILE 1

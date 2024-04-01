@@ -21,12 +21,15 @@ struct game {
     bool useMagicMatching, useHiddenCell, isPlaying;
     COORD upperLeftCorner;
     account player;
+    time_t timeStart;
 
     game();
 
     ~game(); 
     game(int difficult); // Start a new game based on choosen difficult
     game(string pathSaveFile); // Load save file
+
+    int timeDuration();
 
     void drawInterface(); // Draw everything 
     void drawBoard(); // Draw the board and its boundary

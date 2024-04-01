@@ -136,6 +136,8 @@ void board::assignCell(pair<int, int> cell, char c) {
 //Check valid move from the player, started from startCell and ended at endCell
 //Flag "magic" allow more possible moves
 bool board::checkMatch(pair<int, int> startCell, pair<int, int> endCell, bool magic, bool* found) {
+    if (startCell == endCell) 
+        return false;
     //Assume startCell and endCell are two different cells
     int r1 = startCell.first, c1 = startCell.second;
     int r2 = endCell.first, c2 = endCell.second;

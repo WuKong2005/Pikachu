@@ -40,6 +40,10 @@ game::game(string pathSaveFile) {
     loadGame();
 }
 
+int game::timeDuration() {
+    return (int)difftime(time(0), timeStart);
+}
+
 void game::drawInterface() {
     drawBoard();
     highlightCell(1, 1, BACKGROUND_COLOR[CYAN]);
@@ -266,14 +270,10 @@ void game::drawTurningPoint(int row, int col, int type, bool draw) {
 }
 
 void game::moveCell(int direction) {
-    if (direction == ENTER) {
-        select();
-    }
-    else if (DOWN <= direction && direction <= LEFT) {
-        unHighlightCell(currentPos.first, currentPos.second);
-        currentPos.first = ((currentPos.first + dx[direction - 1] + map.ROW - 1) % map.ROW) + 1;
-        currentPos.second = ((currentPos.second + dy[direction - 1] + map.COL - 1) % map.COL) + 1;
-    }
+    playSound(MOVE);
+    unHighlightCell(currentPos.first, currentPos.second);
+    currentPos.first = ((currentPos.first + dx[direction - 1] + map.ROW - 1) % map.ROW) + 1;
+    currentPos.second = ((currentPos.second + dy[direction - 1] + map.COL - 1) % map.COL) + 1;
     highlightCell(currentPos.first, currentPos.second, BACKGROUND_COLOR[CYAN]);
 }
 
@@ -316,6 +316,7 @@ void game::unHighlightCell(int row, int col) {
 }
 
 void game::select() {
+    playSound(CHOOSE);
     if (currentSelect == make_pair(0, 0)) {
         currentSelect = currentPos;
         highlightCell(currentPos.first, currentPos.second, BACKGROUND_COLOR[YELLOW]);
@@ -325,9 +326,11 @@ void game::select() {
         unHighlightCell(currentPos.first, currentPos.second);
     }
     else if (map.checkMatch(currentSelect, currentPos)) {
+        playSound(VALID_MOVE);
         highlightCell(currentPos.first, currentPos.second, BACKGROUND_COLOR[GREEN]);
         highlightCell(currentSelect.first, currentSelect.second, BACKGROUND_COLOR[GREEN]);
-        // vector<pair<int, int>> path = map.getPath(currentSelect, currentPos);
+        vector<pair<int, int>> path = map.getPath(currentSelect, currentPos);
+        score += path.size() - 1;
         // drawPath(path, true);
         Sleep(89);
 
@@ -336,8 +339,11 @@ void game::select() {
         removeCell(currentPos);
         removeCell(currentSelect);
         // drawPath(path, false);
+
+        numLeft -= 2;
     }
     else {
+        playSound(INVALID_MOVE);
         highlightCell(currentPos.first, currentPos.second, BACKGROUND_COLOR[RED]);
         highlightCell(currentSelect.first, currentSelect.second, BACKGROUND_COLOR[RED]);
         Sleep(89);
@@ -360,20 +366,22 @@ void game::saveScore() {
         return;
     }
 
-    record resultGame;
+    record resultGame(score, timeUsed + timeDuration()); // swap them
 
     vector<pair<int, string>> record;
     string inputline;
     while(true) {
-        inp >> inputline;
+        getline(inp, inputline, '\n');
         if (inputline.empty()) {
             break;
         }
 
-        int firstPos = *find(inputline.begin(), inputline.end(), ';');
-        int secondPos = *find(inputline.begin() + firstPos + 1, inputline.end(), ';');
-        int recordScore = stoi(inputline.substr(firstPos, secondPos - firstPos - 1));
+        int firstPos = inputline.find(';');
+        int secondPos = inputline.find(';', firstPos + 1);
+        int recordScore = stoi(inputline.substr(firstPos + 1, secondPos - firstPos - 1));
+        
         record.emplace_back(recordScore, inputline);
+        inputline.clear();
     }
     inp.close();
 
@@ -383,11 +391,12 @@ void game::saveScore() {
         if (thisGame.first > record[i].first) {
             record.insert(record.begin() + i, thisGame);
             add = true;
+            break;
         }
     }
     if (!add)
         record.push_back(thisGame);
-    
+        
     if (record.size() > MAX_PLAYER)
         record.pop_back();
     
@@ -510,6 +519,7 @@ void game::loadGame() {
 void game::startGame() {
     clearScreen();
     hideCursor();
+    timeStart = time(0);
 
     drawInterface();
 
@@ -529,12 +539,19 @@ void game::startGame() {
             default:
                 break;
         }
+        
         if (currentSelect.first != 0 && currentSelect.second != 0) {
             highlightCell(currentSelect.first, currentSelect.second, BACKGROUND_COLOR[YELLOW]);
+        }
+        if (numLeft == 0) {
+            finishGame();
+            Sleep(8000);
+            isPlaying = false;
         }
     }
 }
 
 void game::finishGame() {
-    
+    playSound(WIN);
+    saveScore();
 }

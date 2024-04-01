@@ -13,7 +13,8 @@ int main() {
     // system("pause");
 
     SetConsoleOutputCP(437);
-    game g(EASY);
+    game g(HARD);
+    Sleep(1000);
     g.startGame();
     return 0;
 }

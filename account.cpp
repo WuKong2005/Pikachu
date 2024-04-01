@@ -10,14 +10,14 @@ record::record(int __score, time_t __timePlayed) {
 
 string record::getTimeFinished() {
     string result = "";
-    result += timeFinished.tm_hour + ':' + timeFinished.tm_min + ':' + timeFinished.tm_sec;
+    result += to_string(timeFinished.tm_hour) + ':' + to_string(timeFinished.tm_min) + ':' + to_string(timeFinished.tm_sec);
     result += '-';
-    result += timeFinished.tm_wday + '/' + timeFinished.tm_mon + '/' + timeFinished.tm_year;
+    result += to_string(timeFinished.tm_wday) + '/' + to_string(timeFinished.tm_mon + 1) + '/' + to_string(timeFinished.tm_year + 1900);
     return result;
 }
 
 account::account() {
-    username = "";
+    username = "Tam";
     password = "password";
 }
 
