@@ -62,7 +62,8 @@ enum frontend {
   LOAD_GAME,
   USERNAME,
   LEADERBOARD,
-  HELP
+  HELP,
+  INFORMATION_INGAME
 };
 
 // move the Arrow according to keyboardInput (UP, DOWN, ESC)
@@ -114,6 +115,7 @@ void printLoadGame();
 void printLeaderboard();
 void printHelp();
 void printUsername();
+void printInfoIngame();
 void printFrameBlock(int Visual);
 
 // FRONTEND
@@ -241,7 +243,7 @@ R"(
 
 
 // stored the visual
-const string Visual[7] = {
+const string Visual[8] = {
     // MAIN_MENU
     R"(
 			    	                                  ,'\
@@ -433,7 +435,11 @@ const string Visual[7] = {
 		|                  |          UP:   W, w, up arrow                     LEFT:  A, a, left arrow             |
 		|      MOVES:      |                                                                                       |
 		|                  |          DOWN: S, s, down arrow                   RIGHT: D, d, right arrow            |
-		----------------------------------------------------------------------------------------------------------
+		 ---------------------------------------------------------------------------------------------------------- 
+		|                  |          L: Save game                             H: Get hind (move suggestion)       |
+		|   SPECIAL KEYS   |                            C: Open Help in game                                       |
+		|                  |          M: TOGGLE_MUSIC                          G: Magic matching                   |
+		 ---------------------------------------------------------------------------------------------------------- 
 		|                  |   - The Matching Game (also known as the Pikachu Puzzle Game) includes a board of     |
 		|                  |   mutiple cells, each of which presents a figure.                                     |
 		|                  |                                                                                       |
@@ -442,16 +448,36 @@ const string Visual[7] = {
 		|                  |                                                                                       |
 		|                  |   - A legal match will make the two cells disappear. And the game ends when all the   |
 		|                  |   matching pairs are found (the board is empty).                                      |
-		----------------------------------------------------------------------------------------------------------
-		|                  |                                                                                       |
-		|     SCORING:     |                                                                                       |
-		|                  |                                                                                       |
-		----------------------------------------------------------------------------------------------------------
+		 ----------------------------------------------------------------------------------------------------------
+		|                  |          - I Matching: +1                         - L Mathching: +2                   |
+		|     SCORING:     |          - Z or U Matching: +3                    - Magic matching: +4                |
+		|                  |          - Move suggestion: -2                    - Not Matched: -2                   |
+		 ----------------------------------------------------------------------------------------------------------
 		|                  |                - Tran Cong Minh - 23127007 - 23CLC05 - HCMUS                          |
 		|    DEVELOPERS    |                                                                                       |
 		|                  |                - Nguyen Hoang Minh Tam - 23127017 - 23CLC05 - HCMUS                   |
-		----------------------------------------------------------------------------------------------------------
+		 ----------------------------------------------------------------------------------------------------------
 
 							PRESS ANY KEY TO GO BACK ! 
-    )"
+    )",
+
+	// INFORMATION_INGAME
+	R"(  
+													 ---------------------------------- 
+													|         POKEMON MATCHING         |
+													|                                  |
+													| USERNAME:                        |
+													| DIFFICULTY:                      |
+													|                                  |
+													| SCORE:                           |
+													| TIME REMAIN:                     |
+													| HINT:                            |
+													| MAGIC MATCHING:                  |
+													|                                  |
+													 ---------------------------------- 
+													|                                  |
+													|                                  |
+													|                                  |
+													 ---------------------------------- 
+)"
 };

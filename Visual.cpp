@@ -170,8 +170,7 @@ void printLeaderboard() {
 
     for (int row = 0; row < 3; ++row) {
         short newRow = 5 + specialRow[row];
-        cursor = {9, newRow};
-        SetConsoleCursorPosition(console, cursor);
+        setCursor(9, newRow);
         string content;
         content.append(lengthSide - 2, char(196));
         cout << content;
@@ -198,6 +197,54 @@ void printLeaderboard() {
 void printHelp() {
     cout << TEXT_BLACK;
     cout << Visual[HELP];
+    COORD UpperLeftCorner = {16, 5};
+
+    SetConsoleOutputCP(437);
+    
+
+    string topSide;
+    topSide = topSide + char(218);
+    topSide.append(18, char(196));
+    topSide = topSide + char(194);
+    topSide.append(87, char(196));
+    topSide = topSide + char(191);
+
+    string bottomSide = topSide;
+    bottomSide[0] = char(192);
+    bottomSide[19] = char(193);
+    bottomSide[107] = char(217);
+
+    string middleSide = topSide;
+    middleSide[0] = char(195);
+    middleSide[19] = char(197);
+    middleSide[107] = char(180);
+
+    setCursor(16, 5);
+    cout << topSide;
+    setCursor(16, 30);
+    cout << bottomSide;
+    setCursor(16, 9);
+    cout << middleSide;
+    setCursor(16, 13);
+    cout << middleSide;
+    setCursor(16, 22);
+    cout << middleSide;
+    setCursor(16, 26);
+    cout << middleSide;
+
+    for (int i = 1; i < 25; ++i)
+        if (i == 4 || i == 8 || i == 17 || i == 21)
+            continue;
+        else {
+            setCursor(16, 5 + i);
+            cout << char(179);
+            setCursor(16 + 19, 5 + i);
+            cout << char(179);
+            setCursor(16 + 107, 5 + i);
+            cout << char(179);
+        }
+
+    SetConsoleOutputCP(65001);
 }
 
 void printUsername() {
@@ -206,6 +253,11 @@ void printUsername() {
     printFrameBlock(USERNAME);
 }
 
+void printInfoIngame() {
+    SetConsoleOutputCP(437);
+    cout << TEXT_BLACK;
+    cout << Visual[INFORMATION_INGAME];
+}
 
 /*
     this function use to print the frame of block Visual (MAIN_MENU, ...)
