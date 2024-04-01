@@ -42,7 +42,7 @@ int getInputKey() {
                 return GET_HINT;
             case 'M': case 'm':
                 return TOGGLE_MUSIC;
-            case 'L': case 'l':
+            case 'P': case 'p':
                 return SAVE_GAME;
             case 'G': case 'g':
                 return MAGIC_MOVE;
@@ -75,6 +75,11 @@ void showCursor() {
 	cursorInfo.bVisible = true; // show the cursor
 	cursorInfo.dwSize = 1; // set the cursor size to 1
 	SetConsoleCursorInfo(console, &cursorInfo); // apply the changes
+}
+
+void hideScrollBars() {
+    HWND consoleWindow = GetConsoleWindow();
+	ShowScrollBar(consoleWindow, SB_BOTH, false);
 }
 
 void setCursor(short x, short y) {

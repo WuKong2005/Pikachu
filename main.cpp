@@ -3,6 +3,8 @@
 #include "game.h"
 
 int main() {
+    srand(time(NULL));
+    // SetConsoleScreenBufferSize(console, )
     // initializeProgram();
     // SetConsoleOutputCP(65001);
     // printLogo();

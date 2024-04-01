@@ -26,8 +26,8 @@ int const ALPHABET = 26;
 
 //Size of board based on difficult the player choosed
 //Easy; Medium; Hard - Easy peasy; Medium is premium; Things may be hard, but I'm harder
-int const sizeROW[] = {4, 6, 7};
-int const sizeCOL[] = {6, 9, 12};
+int const sizeROW[] = {6, 6, 7};
+int const sizeCOL[] = {7, 10, 12};
 int const limTime[] = {60, 150, 300};
 
 //Gamemode
@@ -75,6 +75,7 @@ struct board {
     int timeCheck = 0;
     array<int, 3>*** flood;
     array<int, 4> suggestPair;
+    COORD boardPos[3] = {{11, 5}, {6, 5} , {2, 5}}; 
 
     board();
     board(int difficult);
