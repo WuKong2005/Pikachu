@@ -5,11 +5,11 @@ void Visual_moveArrow(int visual, int input) {
         case ESC:
             return;
         case UP:
-            if (currentCursor.Y != FIRST_BLOCK[MAIN_MENU].Y) // check if cursor is at the first block
+            if (currentCursor.Y != ARROW_POS_FIRST_BLOCK[MAIN_MENU].Y) // check if cursor is at the first block
                 currentCursor.Y -= distanceBlock[visual]; // move cursor UP
             break;
         case DOWN:
-            if (currentCursor.Y != FIRST_BLOCK[MAIN_MENU].Y + (numBlock[visual] - 1) * distanceBlock[visual]) // check if cursor is at the last block
+            if (currentCursor.Y != ARROW_POS_FIRST_BLOCK[MAIN_MENU].Y + (numBlock[visual] - 1) * distanceBlock[visual]) // check if cursor is at the last block
                 currentCursor.Y += distanceBlock[visual]; // move cursor DOWN
             break;
         default:
@@ -60,23 +60,27 @@ void printLogo() {
 }
 
 void printMainMenu() {
+    SetConsoleOutputCP(65001);
     cout << Visual[MAIN_MENU];
     printFrameBlock(MAIN_MENU);
 }
 
 void printPlayGame() {
+    SetConsoleOutputCP(65001);
     cout << TEXT_BLACK;
     cout << Visual[PLAY_GAME];
     printFrameBlock(PLAY_GAME);
 }
 
 void printGameMode() {
+    SetConsoleOutputCP(65001);
     cout << TEXT_BLACK;
     cout << Visual[GAME_MODE];
     printFrameBlock(GAME_MODE);
 }
 
 void printLoadGame() {
+    SetConsoleOutputCP(65001);
 	cout << TEXT_BLACK;
 	cout << Visual[LOAD_GAME];
     printFrameBlock(LOAD_GAME);
@@ -250,7 +254,7 @@ void printHelp() {
 void printUsername() {
     cout << TEXT_BLACK;
     cout << Visual[USERNAME];
-    // printFrameBlock(USERNAME);
+    printFrameBlock(USERNAME);
 }
 
 /*

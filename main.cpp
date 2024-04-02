@@ -10,15 +10,16 @@ int main() {
     // printLogo();
     // MAIN_MENU_CONTROL();
     // playSound(MENU);
-    // system("pause");
-    // playSound(MENU, true);
+
+    printUsername();
+    system("pause");
     
 
 
-    SetConsoleOutputCP(437);
-    game g(EASY);
-    system("pause");
-    Sleep(1000);
-    g.startGame();
+    // SetConsoleOutputCP(437);
+    // game g(HARD);
+    // system("pause");
+    // Sleep(1000);
+    // g.startGame();
     return 0;
 }

@@ -78,7 +78,7 @@ const COORD FIRST_BLOCK[5] {
 	{56, 19}, // PLAY_GAME
 	{56, 19}, // GAME_MODE
 	{56, 19}, // LOAD_GAME
-	{34, 8} // USERNAME
+	{26, 10} // USERNAME
 };
 
 // distance between each block of each Visual
@@ -407,17 +407,18 @@ const string Visual[7] = {
                     
                     
                     
-                PLEASE ENTER YOUR USERNAME AND PASSWORD (AT LEAST 5 AND AT MOST 30 CHARACTERS)
-					PASSWORD MUST CONTAIN ONLY ALPHABETS AND DIGITS
+        PLEASE ENTER YOUR USERNAME AND PASSWORD (AT LEAST 5 AND AT MOST 30 CHARACTERS)
+                        USERNAME DOES NOT CONTAIN ';' CHARACTER
+                    PASSWORD MUST CONTAIN ONLY ALPHABETS AND DIGITS
 
-					   --------------------------------
-				USERNAME: |                                |
-			    	       	   --------------------------------
-			        	   --------------------------------
-				PASSWORD: |                                |
-                    	   		   -------------------------------- 
+                           --------------------------------
+                USERNAME: |                                |
+                           --------------------------------
+                           --------------------------------
+                PASSWORD: |                                |
+                           -------------------------------- 
                         
-					IF YOU WANNA GO BACK, PRESS ESC KEY
+                         IF YOU WANNA GO BACK, PRESS ESC KEY
     )",
 
 	// LEADERBOARD
