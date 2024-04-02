@@ -16,7 +16,10 @@ int main() {
 
 
     SetConsoleOutputCP(437);
-    game g(EASY);
+    game g(HARD);
+    // game g;
+    // cerr << g.verifySaveFile() << '\n';
+    // g.loadGame();
     system("pause");
     Sleep(1000);
     g.startGame();

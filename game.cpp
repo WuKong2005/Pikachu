@@ -28,7 +28,7 @@ game::game(int difficult) {
     useHint = 3;
     int total = diff * 2 + 1;
     // useMagicMatching = total * (rand() % 2);
-    useMagicMatching = total;
+    useMagicMatching = 0;
     useHiddenCell = total - useMagicMatching;
     isPlaying = true;
     applyMagicMatching = applyHiddenCell = false;
@@ -244,7 +244,7 @@ void game::drawPath(vector<pair<int, int>> path, bool draw) {
     assert(path.size() >= 2);
     int numCell = path.size();
     
-    for (int cell = 0; cell + 1 <= numCell; ++cell) {
+    for (int cell = 0; cell + 1 < numCell; ++cell) {
         drawLine(path[cell], path[cell + 1], draw);
     }
     vector<pair<int, int>> vec;
@@ -443,10 +443,11 @@ void game::select() {
     if (tempCell.second != '$') {
         map.assignCell(tempCell.first, tempCell.second);
         drawCell(tempCell.first, tempCell.second);
-        make_pair(make_pair(0, 0), '$');
+        unHighlightCell(tempCell.first.first, tempCell.first.second);
+        tempCell = make_pair(make_pair(0, 0), '$');
     }
 
-    if (success && !map.automaticCheck()) {
+    if (success && numLeft > 0 && !map.automaticCheck()) {
         // notification
         map.shuffleBoard();
         clearScreen();
@@ -627,6 +628,8 @@ bool game::verifySaveFile() {
         return false;
     }
 
+    cerr << "start check board\n";
+
     ofstream out;
     out.open("record/board.txt");
 
@@ -636,8 +639,10 @@ bool game::verifySaveFile() {
         if (val.empty())
             break;
         out << val << ' ';
+        cerr << val << ' ';
         val.clear();
     }
+    cerr << "\n";
 
     inp.close();
     out.close();
@@ -677,15 +682,7 @@ void game::loadGame() {
         for (int c = 1; c <= map.COL; c++)
             numLeft += (map.grid[r][c] != '$');
 
-    ifstream fin;
-    int height = sizeROW[diff] * (HEIGHT_CELL - 1) + 1 + 2 * (BUFFER_HEIGHT_CELL - 1);
-    background = new string [height];
-
-    fin.open(backGroundImage[diff].c_str());
-    int count = 0;
-    while (count < height && getline(fin, background[count]))
-        count++;
-    fin.close();
+    getBackground();
 }
 
 void game::startGame() {
@@ -754,7 +751,7 @@ void game:: getBackground() {
     fin.open(backGroundImage[diff].c_str());
     int count = 0;
     while (count < height && getline(fin, background[count])) {
-        cerr << background[count] << endl;
+        // cerr << background[count] << endl;
         if (background[count].length() < width) {
             int curLength = background[count].length();
             background[count].append(width - curLength, ' ');

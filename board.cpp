@@ -345,6 +345,7 @@ void board::importBoard() {
     out << ROW << ' ' << COL << ' ' << timeCheck << '\n';
     for (int r = 1; r <= ROW; r++) {
         for (int c = 1; c <= COL; c++) {
+            assert(flood[r][c][0][0] <= timeCheck && flood[r][c][1][0] <= timeCheck);
             out << grid[r][c] << ' ' << flood[r][c][0][0]  << ' ' << flood[r][c][1][0] << ' ';
         }
     }

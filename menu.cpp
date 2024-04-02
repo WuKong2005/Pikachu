@@ -335,7 +335,7 @@ string USERNAME_CONTROL() {
         if (User.find(';') != string::npos) {
             SetConsoleCursorPosition(console, warningBlock);
             cout << TEXT_COLOR[RED];
-            cout << "INVALID CHARACTER FOUND !!!";
+            cout << "INVALID CHARACTER ';' FOUND !!!";
 
             // wait for user to press any key to redo (or ESC)
             int buffer = _getch();
