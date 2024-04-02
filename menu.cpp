@@ -297,15 +297,15 @@ string USERNAME_CONTROL() {
     COORD currentCursor = ARROW_POS_FIRST_BLOCK[USERNAME];
     COORD warningBlock = {29, 15};
 
-    printUsername();
-
     string User = ""; // stored the USERNAME
-
-    SetConsoleCursorPosition(console, currentCursor);
-    showCursor();
 
     // get user input and check valid
     while (true) {
+        system("cls");
+        printUsername();
+        SetConsoleCursorPosition(console, currentCursor);
+        showCursor();
+
         getline(cin, User, '\n');
 
         // else if (input == ';') 
@@ -318,8 +318,8 @@ string USERNAME_CONTROL() {
             cout << "THE LENGTH OF USERNAME IS LESS THAN 5 CHARACTERS !!!";
 
             // wait for user to press any key to redo (or ESC)
-            while (!_kbhit())
-                continue;
+            int buffer = _getch();
+            continue;
             // else if (input == ';') 
             //     continue;
         }
@@ -329,8 +329,8 @@ string USERNAME_CONTROL() {
             cout << "THE LENGTH OF USERNAME IS OVER THAN 30 CHARACTERS !!!";
 
             // wait for user to press any key to redo (or ESC)
-            while (!_kbhit())
-                continue;
+            int buffer = _getch();
+            continue;
         }
         cout << TEXT_BLACK;
         break;

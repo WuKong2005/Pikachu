@@ -30,6 +30,7 @@ struct game {
     game(string pathSaveFile); // Load save file
 
     int timeDuration();
+    int getCurrentTime();
 
     void drawInterface(); // Draw everything 
     void drawBoard(); // Draw the board and its boundary
@@ -59,5 +60,9 @@ struct game {
     void finishGame(); // Finish the game
 
     void getBackground();
+    void renderScore(int score);
+    void renderHint(int hint);
+    void renderMagic(int magic);
+    void renderTime();
 };
 

@@ -36,6 +36,10 @@ int game::timeDuration() {
     return (int)difftime(time(0), timeStart);
 }
 
+int game::getCurrentTime() {
+    return limTime[diff] - (timeUsed + timeDuration());
+}
+
 void game::drawInterface() {
     drawBoard(); 
 
@@ -45,7 +49,7 @@ void game::drawInterface() {
 
     // print the help menu in game at position about 4 (or 6) spaces away from board frame 
     // and lower than information in game 19 spaces
-    printHelpInGame((upperLeftCorner.X + map.COL * (WIDTH_CELL - 1) + 1 + 2 * BUFFER_WIDTH_CELL) + (diff == HARD? 4 : 6),
+    printHelpInGame((upperLeftCorner.X + map.COL * (WIDTH_CELL - 1) + 1 + 2 * BUFFER_WIDTH_CELL) + (diff == HARD ? 4 : 6),
                      upperLeftCorner.Y + 19);
 
     // print user information
@@ -60,7 +64,7 @@ void game::drawInterface() {
     else
         cout << "HARD";
     setCursor(90 + map.boardPos[diff].X, 1);
-    cout << "TIME: ";
+    cout << "TIME REMAIN: ";
 
     cout << TEXT_BLACK;
     highlightCell(1, 1, BACKGROUND_COLOR[CYAN]);
@@ -175,7 +179,7 @@ void game::removeCell(pair<int, int> cell) {
     if (cellBottom) {
         setCursor(posX + 1, posY + (HEIGHT_CELL - 1));
         for (int numChar = 1; numChar < WIDTH_CELL - 1; ++numChar)
-            cout << background[(cell.first - 1) * (HEIGHT_CELL - 1) + HEIGHT_CELL - 1 + (BUFFER_HEIGHT_CELL - 1)][(cell.second - 1) * (WIDTH_CELL - 1) + (BUFFER_WIDTH_CELL - 1) + numChar];
+            cout << background[cell.first * (HEIGHT_CELL - 1) + (BUFFER_HEIGHT_CELL - 1)][(cell.second - 1) * (WIDTH_CELL - 1) + (BUFFER_WIDTH_CELL - 1) + numChar];
     }
     //check and delete left side
     if (cellLeft)
@@ -187,7 +191,7 @@ void game::removeCell(pair<int, int> cell) {
     if (cellRight)
         for (int numChar = 1; numChar < HEIGHT_CELL - 1; ++numChar) {
             setCursor(posX + (WIDTH_CELL - 1), posY + numChar);
-            cout << background[(cell.first - 1) * (HEIGHT_CELL - 1) + (BUFFER_HEIGHT_CELL - 1) + numChar][(cell.second - 1) * (WIDTH_CELL - 1) + (BUFFER_WIDTH_CELL - 1)];
+            cout << background[(cell.first - 1) * (HEIGHT_CELL - 1) + (BUFFER_HEIGHT_CELL - 1) + numChar][cell.second * (WIDTH_CELL - 1) + (BUFFER_WIDTH_CELL - 1)];
         }
 
 // Check 4 corners
@@ -608,13 +612,56 @@ void game:: getBackground() {
     ifstream fin;
     background = NULL;
     int height = sizeROW[diff] * (HEIGHT_CELL - 1) + 1 + 2 * (BUFFER_HEIGHT_CELL - 1);
+    int width = sizeCOL[diff] * (WIDTH_CELL - 1) + 1 + 2 * (BUFFER_WIDTH_CELL - 1);
     background = new string [height] {};
 
     fin.open(backGroundImage[diff].c_str());
     int count = 0;
     while (count < height && getline(fin, background[count])) {
         // cerr << background[count] << endl;
+        if (background[count].length() < width) {
+            int curLength = background[count].length();
+            background[count].append(width - curLength, ' ');
+        }
         count++;
     }
+
+    while (count < height) {
+        background[count].append(width, ' ');
+        count++;
+    }
+
     fin.close();
+}
+
+void game::renderScore(int score) {
+    short infor_PosX = (upperLeftCorner.X + map.COL * (WIDTH_CELL - 1) + 1 + 2 * BUFFER_WIDTH_CELL) + (diff == HARD ? 4 : 6);
+    short infor_PosY = upperLeftCorner.Y;
+    setCursor(infor_PosX + 14, infor_PosY + 3);
+
+    cout << score;
+
+    // setCursor(upperLeftCorner.X + BUFFER_WIDTH_CELL + (map.COL - 1) * (WIDTH_CELL - 1) + 1,
+    //           upperLeftCorner.Y + BUFFER_HEIGHT_CELL + (map.ROW - 1) * (HEIGHT_CELL - 1) + 1);
+}
+
+void game::renderHint(int hint) {
+    short infor_PosX = (upperLeftCorner.X + map.COL * (WIDTH_CELL - 1) + 1 + 2 * BUFFER_WIDTH_CELL) + (diff == HARD ? 4 : 6);
+    short infor_PosY = upperLeftCorner.Y;
+    setCursor(infor_PosX + 14, infor_PosY + 4);
+
+    cout << hint;
+}
+
+void game::renderMagic(int magic) {
+    short infor_PosX = (upperLeftCorner.X + map.COL * (WIDTH_CELL - 1) + 1 + 2 * BUFFER_WIDTH_CELL) + (diff == HARD ? 4 : 6);
+    short infor_PosY = upperLeftCorner.Y;
+    setCursor(infor_PosX + 14, infor_PosY + 4);
+
+    cout << score;
+}
+
+void game::renderTime() {
+    setCursor(103 + map.boardPos[diff].X, 1);
+    cout << getCurrentTime();
 }
