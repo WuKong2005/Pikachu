@@ -75,7 +75,6 @@ void game::drawInterface() {
     cout << "TIME REMAIN: ";
 
     cout << TEXT_BLACK;
-    highlightCell(1, 1, BACKGROUND_COLOR[CYAN]);
 }
 
 void game::drawBoard() {
@@ -749,6 +748,12 @@ void game:: getBackground() {
     background = new string [height] {};
 
     fin.open(backGroundImage[diff].c_str());
+
+    if (!fin.is_open()) {
+        cerr << "error file";
+        return;
+    }
+
     int count = 0;
     while (count < height && getline(fin, background[count])) {
         // cerr << background[count] << endl;
@@ -797,4 +802,11 @@ void game::renderMagic(int magic) {
 void game::renderTime() {
     setCursor(103 + map.boardPos[diff].X, 1);
     cout << getCurrentTime();
+}
+
+void game::renderNotificate(string noti) {
+    short infor_PosX = (upperLeftCorner.X + map.COL * (WIDTH_CELL - 1) + 1 + 2 * BUFFER_WIDTH_CELL) + (diff == HARD ? 4 : 6);
+    short infor_PosY = upperLeftCorner.Y;
+    setCursor(infor_PosX + 1, infor_PosY + 7);
+    cout << TEXT_COLOR[RED] << noti << TEXT_BLACK;
 }

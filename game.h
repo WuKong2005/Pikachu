@@ -68,5 +68,6 @@ struct game {
     void renderHint(int hint);
     void renderMagic(int magic);
     void renderTime();
+    void renderNotificate(string noti);
 };
 

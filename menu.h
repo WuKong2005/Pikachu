@@ -18,7 +18,7 @@ const COORD ARROW_POS_FIRST_BLOCK[5] = {
     {52, 20}, // PLAY_GAME
     {52, 20}, // GAME_MODE
     {52, 20}, // LOAD_GAME
-    {44, 10} // USERNAME
+    {28, 11} // USERNAME
 };
 
 // enumerate the difficulty (use for row of LEADERBOARD)
@@ -36,21 +36,6 @@ enum information {
     Date
 };
 
-// coordinate of first row of each difficulty in LEADERBOARD
-const int row_Leaderboard[3] = {
-    8, // easy
-    14, // medium
-    20 // hard
-};
-
-// column of information in LEADERBOARD
-const int column_Leaderboard[4] {
-    41, // Username
-    82, // Time
-    99, // Score
-    113 // Date
-};
-
 // filename which is stored data of LEADERBOARD
 const string saveFilePath[3] = {
     "record/easy.txt", // easy
@@ -65,4 +50,4 @@ void GAME_MODE_CONTROL();
 void LOAD_GAME_CONTROL();
 void LEADERBOARD_CONTROL();
 void HELP_CONTROL();
-string USERNAME_CONTROL();
+bool USERNAME_CONTROL(string& username, string& password);

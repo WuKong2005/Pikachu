@@ -143,49 +143,22 @@ void GAME_MODE_CONTROL() {
             int posBlock = (currentCursor.Y - ARROW_POS_FIRST_BLOCK[GAME_MODE].Y) / distanceBlock[GAME_MODE];
             COORD preCursor; // store the previous coordinate of cursor
 
-            switch (posBlock) {
-                case 0: // EASY
-                {
-                    string playerName = USERNAME_CONTROL();
+            if (posBlock <= HARD) {
+                string username, password;
+                if (USERNAME_CONTROL(username, password)) {
                     //game start
                         
                     //
-
-                    // return GAME_MODE after escape USERNAME
-                    printGameMode();
-                    // Set up the cursor in PLAY_GAME - block EASY
-                    preCursor.X = ARROW_POS_FIRST_BLOCK[GAME_MODE].X;
-                    preCursor.Y = ARROW_POS_FIRST_BLOCK[GAME_MODE].Y;
-                    printAtCursor(arrow, preCursor);
-                    break;
                 }
-                case 1: // MEDIUM
-                {
-                    string playerName = USERNAME_CONTROL(); //transfer of control bypasses initialization of: variable "playerName" (declared at line 167) ???
-
-                    // return GAME_MODE after escape USERNAME
-                    printGameMode();
-                    // Set up the cursor in PLAY_GAME - block MEDIUM
-                    preCursor.X = ARROW_POS_FIRST_BLOCK[GAME_MODE].X;
-                    preCursor.Y = ARROW_POS_FIRST_BLOCK[GAME_MODE].Y + distanceBlock[GAME_MODE];
-                    printAtCursor(arrow, preCursor);
-                    break;
-                }
-                    
-                case 2: // HARD
-                {
-                    string playerName = USERNAME_CONTROL();
-
-                    // return GAME_MODE after escape USERNAME
-                    cout << Visual[GAME_MODE];
-                    // Set up the cursor in PLAY_GAME - block HARD
-                    preCursor.X = ARROW_POS_FIRST_BLOCK[GAME_MODE].X;
-                    preCursor.Y = ARROW_POS_FIRST_BLOCK[GAME_MODE].Y + 2 * distanceBlock[GAME_MODE];
-                    printAtCursor(arrow, preCursor);
-                    break;
-                }
-                default: // GO BACK
-                    return;
+                // return GAME_MODE after escape USERNAME
+                printGameMode();
+                // Set up the cursor in PLAY_GAME - block EASY
+                preCursor.X = ARROW_POS_FIRST_BLOCK[GAME_MODE].X;
+                preCursor.Y = ARROW_POS_FIRST_BLOCK[GAME_MODE].Y + distanceBlock[GAME_MODE] * posBlock;
+                printAtCursor(arrow, preCursor);
+            }
+            else {
+                return;
             }
         }
         // move the Cursor and print newArrow
@@ -236,6 +209,20 @@ void LOAD_GAME_CONTROL() {
 }
 
 void LEADERBOARD_CONTROL() {
+    // coordinate of first row of each difficulty in LEADERBOARD
+    const int row_Leaderboard[3] = {
+        8, // easy
+        14, // medium
+        20 // hard
+    };
+
+    // column of information in LEADERBOARD
+    const int column_Leaderboard[4] {
+        41, // Username
+        82, // Time
+        99, // Score
+        113 // Date
+    };
     printLeaderboard();
 
     ifstream fin;
@@ -291,13 +278,14 @@ void HELP_CONTROL() {
     system("cls");
 }
 
-string USERNAME_CONTROL() {
+bool USERNAME_CONTROL(string& username, string& password) {
     // get console and some cursor information
     HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
     COORD currentCursor = ARROW_POS_FIRST_BLOCK[USERNAME];
-    COORD warningBlock = {29, 20};
+    COORD warningBlock = {25, 20};
 
-    string User = ""; // stored the USERNAME
+    username = "";
+    password = "";
 
     // get user input and check valid
     while (true) {
@@ -306,41 +294,102 @@ string USERNAME_CONTROL() {
         SetConsoleCursorPosition(console, currentCursor);
         showCursor();
 
-        getline(cin, User, '\n');
-
-        // else if (input == ';') 
-        //         continue;
+        getline(cin, username, '\n');
         
-        // Check valid and warning
-        if (User.length() < 5) {
+        // Check valid USERNAME and warning
+        if (username.length() < 5) {
             SetConsoleCursorPosition(console, warningBlock);
             cout << TEXT_COLOR[RED];
             cout << "THE LENGTH OF USERNAME IS LESS THAN 5 CHARACTERS !!!";
 
             // wait for user to press any key to redo (or ESC)
             int buffer = _getch();
+
+            if (buffer == KEY_ESC)
+                return false;
+                
             continue;
-            // else if (input == ';') 
-            //     continue;
         }
-        if (User.length() > 30) {
+        if (username.length() > 30) {
             SetConsoleCursorPosition(console, warningBlock);
             cout << TEXT_COLOR[RED];
             cout << "THE LENGTH OF USERNAME IS OVER THAN 30 CHARACTERS !!!";
 
             // wait for user to press any key to redo (or ESC)
             int buffer = _getch();
+
+            if (buffer == KEY_ESC)
+                return false;
+
             continue;
         }
-        if (User.find(';') != string::npos) {
+        if (username.find(';') != string::npos) {
             SetConsoleCursorPosition(console, warningBlock);
             cout << TEXT_COLOR[RED];
             cout << "INVALID CHARACTER ';' FOUND !!!";
 
             // wait for user to press any key to redo (or ESC)
             int buffer = _getch();
+
+            if (buffer == KEY_ESC)
+                return false;
+
             continue;
         }
+
+        // if USERNAME is valid, move to PASSWORD
+        currentCursor.Y += 3;
+        setConsoleCursorPosition(console, currentCursor);
+
+        getline(cin, password);
+
+        // check valid PASSWORD
+        if (password.length() < 5) {
+            SetConsoleCursorPosition(console, warningBlock);
+            cout << TEXT_COLOR[RED];
+            cout << "THE LENGTH OF PASSWORD IS LESS THAN 5 CHARACTERS !!!";
+
+            // wait for user to press any key to redo (or ESC)
+            int buffer = _getch();
+
+            if (buffer == KEY_ESC)
+                return false;
+                
+            continue;
+        }
+        if (password.length() > 30) {
+            SetConsoleCursorPosition(console, warningBlock);
+            cout << TEXT_COLOR[RED];
+            cout << "THE LENGTH OF PASSWORD IS OVER THAN 30 CHARACTERS !!!";
+
+            // wait for user to press any key to redo (or ESC)
+            int buffer = _getch();
+
+            if (buffer == KEY_ESC)
+                return false;
+
+            continue;
+        }
+        bool isValidPassword = true;
+        for (char ch : password)
+            if (!isalnum(ch)) {
+                isValidPassword = false;
+                break;
+            }
+        if (!isValidPassword) {
+            SetConsoleCursorPosition(console, warningBlock);
+            cout << TEXT_COLOR[RED];
+            cout << "INVALID PASSWORD!!!";
+
+            // wait for user to press any key to redo (or ESC)
+            int buffer = _getch();
+
+            if (buffer == KEY_ESC)
+                return false;
+
+            continue;
+        }
+
         cout << TEXT_BLACK;
         break;
     }
@@ -351,5 +400,5 @@ string USERNAME_CONTROL() {
 
     // start game
 
-    return User;
+    return true;
 }
