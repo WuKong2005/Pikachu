@@ -825,6 +825,7 @@ void game::startGame() {
                 if (getInputKey() == ESC) {
                     playSound(diff + 1, true);
                     isPlaying = false;
+                    clearScreen();
                 }
                 else {
                     renderNotificate("                        ");

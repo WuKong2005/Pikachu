@@ -6,11 +6,11 @@ void Visual_moveArrow(int visual, int input) {
             return;
         case UP:
             if (currentCursor.Y != ARROW_POS_FIRST_BLOCK[MAIN_MENU].Y) // check if cursor is at the first block
-                currentCursor.Y -= distanceBlock[visual]; // move cursor UP
+                currentCursor.Y -= distanceBlock; // move cursor UP
             break;
         case DOWN:
-            if (currentCursor.Y != ARROW_POS_FIRST_BLOCK[MAIN_MENU].Y + (numBlock[visual] - 1) * distanceBlock[visual]) // check if cursor is at the last block
-                currentCursor.Y += distanceBlock[visual]; // move cursor DOWN
+            if (currentCursor.Y != ARROW_POS_FIRST_BLOCK[MAIN_MENU].Y + (numBlock[visual] - 1) * distanceBlock) // check if cursor is at the last block
+                currentCursor.Y += distanceBlock; // move cursor DOWN
             break;
         default:
             break;
@@ -202,7 +202,7 @@ void printLeaderboard() {
 void printHelp() {
     cout << TEXT_BLACK;
     cout << Visual[HELP];
-    COORD UpperLeftCorner = {16, 5};
+    COORD UpperLeftCorner = {16, 4};
 
     SetConsoleOutputCP(437);
     
@@ -224,30 +224,35 @@ void printHelp() {
     middleSide[19] = char(197);
     middleSide[107] = char(180);
 
-    setCursor(16, 5);
+    setCursor(16, 4);
     cout << topSide;
-    setCursor(16, 30);
+    setCursor(16, 42);
     cout << bottomSide;
-    setCursor(16, 9);
+    setCursor(16, 8);
     cout << middleSide;
-    setCursor(16, 13);
+    setCursor(16, 12);
     cout << middleSide;
-    setCursor(16, 22);
+    setCursor(16, 25);
     cout << middleSide;
-    setCursor(16, 26);
+    setCursor(16, 34);
+    cout << middleSide;
+    setCursor(16, 38);
     cout << middleSide;
 
-    for (int i = 1; i < 25; ++i)
-        if (i == 4 || i == 8 || i == 17 || i == 21)
+    for (int i = 1; i < 38; ++i)
+        if (i == 4 || i == 8 || i == 21 || i == 30 || i == 34)
             continue;
         else {
-            setCursor(16, 5 + i);
+            setCursor(16, 4 + i);
             cout << char(179);
-            setCursor(16 + 19, 5 + i);
+            setCursor(16 + 19, 4 + i);
             cout << char(179);
-            setCursor(16 + 107, 5 + i);
+            setCursor(16 + 107, 4 + i);
             cout << char(179);
         }
+
+    setCursor(60, 44);
+    cout << TEXT_COLOR[GREEN] << "PRESS ANY KEY TO ESC" << TEXT_BLACK;
 
     SetConsoleOutputCP(65001);
 }
@@ -376,7 +381,7 @@ void printFrameBlock(int Visual) {
     SetConsoleOutputCP(437);
     for (int numblock = 0; numblock < numBlock[Visual]; ++numblock) {
         COORD currentCursor = FIRST_BLOCK[Visual];
-        currentCursor.Y += numblock * distanceBlock[Visual];
+        currentCursor.Y += numblock * distanceBlock;
 
         SetConsoleCursorPosition(console, currentCursor);
         string sideFrame;

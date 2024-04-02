@@ -21,7 +21,7 @@ void MAIN_MENU_CONTROL() {
             system("cls");
             playSound(CHOOSE);
             // determine which block is chosen by player
-            int posBlock = (currentCursor.Y - ARROW_POS_FIRST_BLOCK[MAIN_MENU].Y) / distanceBlock[MAIN_MENU];
+            int posBlock = (currentCursor.Y - ARROW_POS_FIRST_BLOCK[MAIN_MENU].Y) / distanceBlock;
             COORD preCursor; // store the previous coordinate of cursor
 
             switch (posBlock) {
@@ -43,7 +43,7 @@ void MAIN_MENU_CONTROL() {
                     printMainMenu();
                     // Set up the cursor in MAIN_MENU - BLOCK LEADERBOARD
                     preCursor.X = ARROW_POS_FIRST_BLOCK[MAIN_MENU].X;
-                    preCursor.Y = ARROW_POS_FIRST_BLOCK[MAIN_MENU].Y + distanceBlock[MAIN_MENU];
+                    preCursor.Y = ARROW_POS_FIRST_BLOCK[MAIN_MENU].Y + distanceBlock;
                     printAtCursor(arrow, preCursor);
                     break;
 
@@ -54,7 +54,7 @@ void MAIN_MENU_CONTROL() {
                     printMainMenu();
                     // Set up the cursor in MAIN_MENU - BLOCK HELP
                     preCursor.X = ARROW_POS_FIRST_BLOCK[MAIN_MENU].X;
-                    preCursor.Y = ARROW_POS_FIRST_BLOCK[MAIN_MENU].Y + 2 * distanceBlock[MAIN_MENU];
+                    preCursor.Y = ARROW_POS_FIRST_BLOCK[MAIN_MENU].Y + 2 * distanceBlock;
                     printAtCursor(arrow, preCursor);
                     break;
 
@@ -86,7 +86,7 @@ void PLAY_GAME_CONTROL() {
             system("cls");
             playSound(CHOOSE);
             // determine which block is chosen by player
-            int posBlock = (currentCursor.Y - ARROW_POS_FIRST_BLOCK[PLAY_GAME].Y) / distanceBlock[PLAY_GAME];
+            int posBlock = (currentCursor.Y - ARROW_POS_FIRST_BLOCK[PLAY_GAME].Y) / distanceBlock;
             COORD preCursor; // store the previous coordinate of cursor
 
             switch (posBlock) {
@@ -108,9 +108,12 @@ void PLAY_GAME_CONTROL() {
                     printPlayGame();
                      // Set up the cursor in PLAY_GAME - block LOAD_GAME
                     preCursor.X = ARROW_POS_FIRST_BLOCK[PLAY_GAME].X;
-                    preCursor.Y = ARROW_POS_FIRST_BLOCK[PLAY_GAME].Y + distanceBlock[PLAY_GAME];
+                    preCursor.Y = ARROW_POS_FIRST_BLOCK[PLAY_GAME].Y + distanceBlock;
                     printAtCursor(arrow, preCursor);
                     break;
+
+                case 2: // EXTRA
+                    return;
 
                 default: // GO BACK
                     return;
@@ -140,7 +143,7 @@ void GAME_MODE_CONTROL() {
             system("cls");
             playSound(CHOOSE);
             // determine which block is chosen by player
-            int posBlock = (currentCursor.Y - ARROW_POS_FIRST_BLOCK[GAME_MODE].Y) / distanceBlock[GAME_MODE];
+            int posBlock = (currentCursor.Y - ARROW_POS_FIRST_BLOCK[GAME_MODE].Y) / distanceBlock;
             COORD preCursor; // store the previous coordinate of cursor
 
             if (posBlock <= HARD) {
@@ -156,10 +159,11 @@ void GAME_MODE_CONTROL() {
                 }
                 playSound(MENU);
                 // return GAME_MODE after escape USERNAME
+                hideCursor();
                 printGameMode();
                 // Set up the cursor in PLAY_GAME - block EASY
                 preCursor.X = ARROW_POS_FIRST_BLOCK[GAME_MODE].X;
-                preCursor.Y = ARROW_POS_FIRST_BLOCK[GAME_MODE].Y + distanceBlock[GAME_MODE] * posBlock;
+                preCursor.Y = ARROW_POS_FIRST_BLOCK[GAME_MODE].Y + distanceBlock * posBlock;
                 printAtCursor(arrow, preCursor);
             }
             else {
@@ -189,7 +193,7 @@ void LOAD_GAME_CONTROL() {
         else if (input == ENTER) {
             system("cls");
             playSound(CHOOSE);
-            int posBlock = (currentCursor.Y - ARROW_POS_FIRST_BLOCK[LOAD_GAME].Y) / distanceBlock[LOAD_GAME];
+            int posBlock = (currentCursor.Y - ARROW_POS_FIRST_BLOCK[LOAD_GAME].Y) / distanceBlock;
             switch (posBlock) {
                 case 0: // SAVE FILE 1
 
@@ -287,7 +291,7 @@ bool USERNAME_CONTROL(string &username, string &password) {
     // get console and some cursor information
     HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
     
-    COORD warningBlock = {25, 20};
+    COORD warningBlock = {50, 20};
 
     username = "";
     password = "";
@@ -312,7 +316,7 @@ bool USERNAME_CONTROL(string &username, string &password) {
             int buffer = _getch();
 
             if (buffer == KEY_ESC) {
-                system("cls");
+                clearScreen();
                 return false;
             }
                 
@@ -327,7 +331,7 @@ bool USERNAME_CONTROL(string &username, string &password) {
             int buffer = _getch();
 
             if (buffer == KEY_ESC) {
-                system("cls");
+                clearScreen();
                 return false;
             }
 
@@ -342,7 +346,7 @@ bool USERNAME_CONTROL(string &username, string &password) {
             int buffer = _getch();
 
             if (buffer == KEY_ESC) {
-                system("cls");
+                clearScreen();
                 return false;
             }
 
@@ -364,8 +368,8 @@ bool USERNAME_CONTROL(string &username, string &password) {
             // wait for user to press any key to redo (or ESC)
             int buffer = _getch();
 
-            if (buffer == KEY_ESC){
-                system("cls");
+            if (buffer == KEY_ESC) {
+                clearScreen();
                 return false;
             }
                 
@@ -379,8 +383,8 @@ bool USERNAME_CONTROL(string &username, string &password) {
             // wait for user to press any key to redo (or ESC)
             int buffer = _getch();
 
-            if (buffer == KEY_ESC){
-                system("cls");
+            if (buffer == KEY_ESC) {
+                clearScreen();
                 return false;
             }
 
@@ -401,10 +405,10 @@ bool USERNAME_CONTROL(string &username, string &password) {
             int buffer = _getch();
 
             if (buffer == KEY_ESC) {
-                system("cls");
+                clearScreen();
                 return false;
             }
-                
+
             continue;
         }
 
@@ -413,7 +417,6 @@ bool USERNAME_CONTROL(string &username, string &password) {
     }
 
     hideCursor();
-
     system("cls");
 
     // start game
