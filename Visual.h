@@ -140,6 +140,7 @@ R"(
 
 
 						PRESS ANY KEY FROM KEYBOARD TO CONTINUE
+					MAKE SURE TO SWITCH TO FULL SCREEN BEFORE PLAYING GAME
     )",
     // 1
     R"(
@@ -157,6 +158,7 @@ R"(
 
 
 						PRESS ANY KEY FROM KEYBOARD TO CONTINUE 
+					MAKE SURE TO SWITCH TO FULL SCREEN BEFORE PLAYING GAME
     )",
     // 2
     R"(
@@ -174,6 +176,7 @@ R"(
     				                                `'
 
 						PRESS ANY KEY FROM KEYBOARD TO CONTINUE
+					MAKE SURE TO SWITCH TO FULL SCREEN BEFORE PLAYING GAME
     )",
     // 3
     R"(
@@ -191,6 +194,7 @@ R"(
     				                                `'
 
 						PRESS ANY KEY FROM KEYBOARD TO CONTINUE
+					MAKE SURE TO SWITCH TO FULL SCREEN BEFORE PLAYING GAME
     )",
     // 4
     R"(
@@ -208,6 +212,7 @@ R"(
     				                                `'
 
 						PRESS ANY KEY FROM KEYBOARD TO CONTINUE
+					MAKE SURE TO SWITCH TO FULL SCREEN BEFORE PLAYING GAME
     )",
     // 5
     R"(
@@ -225,6 +230,7 @@ R"(
     				                                `'
 
 						PRESS ANY KEY FROM KEYBOARD TO CONTINUE
+					MAKE SURE TO SWITCH TO FULL SCREEN BEFORE PLAYING GAME
     )",
     // 6
     R"(
@@ -242,6 +248,7 @@ R"(
     				                                `'                            '-._|
 														
 						PRESS ANY KEY FROM KEYBOARD TO CONTINUE
+					MAKE SURE TO SWITCH TO FULL SCREEN BEFORE PLAYING GAME
     )",
 };
 

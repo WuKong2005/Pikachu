@@ -259,7 +259,7 @@ void printUsername() {
 	|                          |
 	| SCORE:                   |
 	| HINT:                    |
-    | MAGIC:                   |
+    | MAGIC MOVE:              |
     |                          |
      -------------------------- 
     |                          |
