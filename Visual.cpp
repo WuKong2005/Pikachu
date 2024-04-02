@@ -6,11 +6,11 @@ void Visual_moveArrow(int visual, int input) {
             return;
         case UP:
             if (currentCursor.Y != ARROW_POS_FIRST_BLOCK[MAIN_MENU].Y) // check if cursor is at the first block
-                currentCursor.Y -= distanceBlock[visual]; // move cursor UP
+                currentCursor.Y -= distanceBlock; // move cursor UP
             break;
         case DOWN:
-            if (currentCursor.Y != ARROW_POS_FIRST_BLOCK[MAIN_MENU].Y + (numBlock[visual] - 1) * distanceBlock[visual]) // check if cursor is at the last block
-                currentCursor.Y += distanceBlock[visual]; // move cursor DOWN
+            if (currentCursor.Y != ARROW_POS_FIRST_BLOCK[MAIN_MENU].Y + (numBlock[visual] - 1) * distanceBlock) // check if cursor is at the last block
+                currentCursor.Y += distanceBlock; // move cursor DOWN
             break;
         default:
             break;
@@ -381,7 +381,7 @@ void printFrameBlock(int Visual) {
     SetConsoleOutputCP(437);
     for (int numblock = 0; numblock < numBlock[Visual]; ++numblock) {
         COORD currentCursor = FIRST_BLOCK[Visual];
-        currentCursor.Y += numblock * distanceBlock[Visual];
+        currentCursor.Y += numblock * distanceBlock;
 
         SetConsoleCursorPosition(console, currentCursor);
         string sideFrame;

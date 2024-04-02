@@ -27,7 +27,26 @@ enum COLOR {
   BLACK
 };
 
+// enumerate the frontend
+enum frontend {
+  MAIN_MENU,
+  PLAY_GAME,
+  GAME_MODE,
+  LOAD_GAME,
+  USERNAME,
+  LEADERBOARD,
+  HELP,
+  INFORMATION_INGAME
+};
+
+// text color default
 const string TEXT_BLACK = "\x1B[0m";
+// height of block in menu
+const int HeightBlock = 3;
+// distance between each block of each Visual
+const int distanceBlock = 3;
+
+// text color
 const string TEXT_COLOR[11] = {
 	"\x1B[31m",
 	"\x1B[32m", 
@@ -42,6 +61,7 @@ const string TEXT_COLOR[11] = {
 	"\x1B[94m"
 };
 
+// background color
 const string BACKGROUND_COLOR[12] = {
 	"\x1B[41m", 
 	"\x1B[42m", 
@@ -57,21 +77,6 @@ const string BACKGROUND_COLOR[12] = {
 	"\x1B[40m"
 };
 
-// enumerate the frontend
-enum frontend {
-  MAIN_MENU,
-  PLAY_GAME,
-  GAME_MODE,
-  LOAD_GAME,
-  USERNAME,
-  LEADERBOARD,
-  HELP,
-  INFORMATION_INGAME
-};
-
-// move the Arrow according to keyboardInput (UP, DOWN, ESC)
-void Visual_moveArrow(int visual, int input);
-
 // coordinate of the first block (upper left corner) of each Visual
 const COORD FIRST_BLOCK[5] {
 	{64, 19}, // MAIN_MENU
@@ -81,14 +86,7 @@ const COORD FIRST_BLOCK[5] {
 	{58, 10} // USERNAME
 };
 
-// distance between each block of each Visual
-const int distanceBlock[5] = {
-    3, // MAIN_MENU
-    3, // PLAY_GAME
-    3, // GAME_MODE
-    3, // LOAD_GAME
-	3 // USERNAME
-};
+
 
 // number of block of each Visual
 const int numBlock[5] = {
@@ -106,7 +104,9 @@ const int WidthBlock[5] = {
 	19, // LOAD_GAME
 	32 // USERNAME
 };
-const int HeightBlock = 3;
+
+// move the Arrow according to keyboardInput (UP, DOWN, ESC)
+void Visual_moveArrow(int visual, int input);
 
 // intro game
 void printLogo();
