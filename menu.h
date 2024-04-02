@@ -50,4 +50,4 @@ void GAME_MODE_CONTROL();
 void LOAD_GAME_CONTROL();
 void LEADERBOARD_CONTROL();
 void HELP_CONTROL();
-bool USERNAME_CONTROL(string& username, string& password);
+bool USERNAME_CONTROL(string& username, string& password, bool loadFile = false, string usernameSaveFile = "", string passwordSaveFile = "");

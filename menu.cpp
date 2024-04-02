@@ -194,21 +194,40 @@ void LOAD_GAME_CONTROL() {
             system("cls");
             playSound(CHOOSE);
             int posBlock = (currentCursor.Y - ARROW_POS_FIRST_BLOCK[LOAD_GAME].Y) / distanceBlock;
-            switch (posBlock) {
-                case 0: // SAVE FILE 1
+            COORD preCursor; // store the previous coordinate of cursor
 
-                    return;
-                    // break;
-                case 1: // SAVE FILE 2
+            if (posBlock <= 2) {
+                game newGame;
+                if (!newGame.verifySaveFile(posBlock)) {
+                    clearScreen();
+                    cout << "OOPS! THERE IS NOTHING HERE. PLEASE COMEBACK LATER.\n";
+                    Sleep(5000);
+                    clearScreen();
+                }
+                else {
+                    string username, password;
+                    newGame.loadGame(posBlock);
+                    if (USERNAME_CONTROL(username, password, true, newGame.player.username, newGame.player.password)) {
+                        // cerr << "account valid\n";
+                        SetConsoleOutputCP(437);
+                        playSound(MENU, true);
+                        
+                        newGame.startGame();
+                    }
+                }
+                
 
-                    return;
-                    // break;
-                case 2: // SAVE FILE 3
-
-                    return;
-                    // break;
-                default: // GO BACK
-                    return;
+                playSound(MENU);
+                // return GAME_MODE after escape USERNAME
+                hideCursor();
+                printLoadGame();
+                // Set up the cursor in PLAY_GAME - block EASY
+                preCursor.X = ARROW_POS_FIRST_BLOCK[LOAD_GAME].X;
+                preCursor.Y = ARROW_POS_FIRST_BLOCK[LOAD_GAME].Y + distanceBlock * posBlock;
+                printAtCursor(arrow, preCursor);
+            }
+            else {
+                return;
             }
         }
         // if input is UP or DOWN, move the Cursor and print newArrow
@@ -287,7 +306,7 @@ void HELP_CONTROL() {
     system("cls");
 }
 
-bool USERNAME_CONTROL(string &username, string &password) {
+bool USERNAME_CONTROL(string &username, string &password, bool loadFile, string usernameSaveFile, string passwordSaveFile) {
     // get console and some cursor information
     HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
     
@@ -301,6 +320,9 @@ bool USERNAME_CONTROL(string &username, string &password) {
         COORD currentCursor = ARROW_POS_FIRST_BLOCK[USERNAME];
         system("cls");
         printUsername();
+        if (loadFile) {
+            printAtCursor("BOTH OF THEM MUST MATCH THE CORRESPONDING ONES IN THE SAVE FILE", {45, 9});
+        }
         SetConsoleCursorPosition(console, currentCursor);
         showCursor();
 
@@ -341,6 +363,21 @@ bool USERNAME_CONTROL(string &username, string &password) {
             SetConsoleCursorPosition(console, warningBlock);
             cout << TEXT_COLOR[RED];
             cout << "INVALID CHARACTER ';' FOUND !!!";
+
+            // wait for user to press any key to redo (or ESC)
+            int buffer = _getch();
+
+            if (buffer == KEY_ESC) {
+                clearScreen();
+                return false;
+            }
+
+            continue;
+        }
+        if (loadFile && username != usernameSaveFile) {
+            SetConsoleCursorPosition(console, warningBlock);
+            cout << TEXT_COLOR[RED];
+            cout << "WRONG USERNAME!!!";
 
             // wait for user to press any key to redo (or ESC)
             int buffer = _getch();
@@ -400,6 +437,21 @@ bool USERNAME_CONTROL(string &username, string &password) {
             SetConsoleCursorPosition(console, warningBlock);
             cout << TEXT_COLOR[RED];
             cout << "INVALID PASSWORD!!!";
+
+            // wait for user to press any key to redo (or ESC)
+            int buffer = _getch();
+
+            if (buffer == KEY_ESC) {
+                clearScreen();
+                return false;
+            }
+
+            continue;
+        }
+        if (loadFile && encrypt(password) != passwordSaveFile) {
+            SetConsoleCursorPosition(console, warningBlock);
+            cout << TEXT_COLOR[RED];
+            cout << "WRONG PASSWORD!!!";
 
             // wait for user to press any key to redo (or ESC)
             int buffer = _getch();

@@ -38,6 +38,8 @@ int getIndex(char x) {
         return 10 + (int)x - 'a';
     else if ('A' <= x && x <= 'Z')
         return 10 + 26 + (int)x - 'A';
+    else
+        return -1;
 }
 
 string encrypt(string password) {

@@ -50,7 +50,7 @@ void printLogo() {
     }
 
     // Animation
-	for (int time = 0; time < 4; ++time)
+	for (int time = 0; time < 1; ++time)
 		for (int color = 0; color < 4; ++color) {
 		cout << TEXT_COLOR[color];
 		printMainMenu();
