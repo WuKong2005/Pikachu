@@ -17,19 +17,6 @@
 
 using namespace std;
 
-//4 possible moves
-int const dx[] = {1, 0, -1, 0};
-int const dy[] = {0, 1, 0, -1};
-
-//Size of alphabet used
-int const ALPHABET = 26;
-
-//Size of board based on difficult the player choosed
-//Easy; Medium; Hard - Easy peasy; Medium is premium; Things may be hard, but I'm harder
-int const sizeROW[] = {6, 6, 7};
-int const sizeCOL[] = {7, 10, 12};
-int const limTime[] = {240, 420, 600};
-
 //Gamemode
 enum DIFFICULT {
     EASY,
@@ -45,18 +32,12 @@ enum corner {
     LOWER_RIGHT
 };
 
-// ascii code of 4-corners
-const int frame[4] = {201, 187, 200, 188};
-
 enum turningCorner {
     DOWN_RIGHT,
     LEFT_DOWN,
     UP_RIGHT,
     LEFT_UP
 };
-
-// ascii code of 4 turingCorner
-const int turning[4] = {218, 191, 192, 217};
 
 //Type of matching
 enum MATCHING {
@@ -66,6 +47,25 @@ enum MATCHING {
     U_MATCHING,
     MAGIC_MATCHING
 };
+
+//Size of alphabet used
+int const ALPHABET = 26;
+
+//4 possible moves
+int const dx[] = {1, 0, -1, 0};
+int const dy[] = {0, 1, 0, -1};
+
+//Size of board based on difficult the player choosed
+//Easy; Medium; Hard - Easy peasy; Medium is premium; Things may be hard, but I'm harder
+int const sizeROW[] = {6, 6, 7};
+int const sizeCOL[] = {7, 10, 12};
+int const limTime[] = {240, 420, 600};
+
+// ascii code of 4-corners
+const int frame[4] = {201, 187, 200, 188};
+
+// ascii code of 4 turingCorner
+const int turning[4] = {218, 191, 192, 217};
 
 const string backGroundImage[3] = {"background\\easy.txt", "background\\medium.txt", "background\\hard.txt"};
 

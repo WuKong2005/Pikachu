@@ -50,10 +50,10 @@ const int KEY_ESC = 27;
 const int KEY_ENTER = 13;
 const int KEY_BACKSPACE = 8;
 
-// 
 extern HANDLE console;
 extern COORD currentCursor;
 
+// set up to initialize the program
 void initializeProgram();
 
 // process and determine which type of input of user (UP, DOWN, LEFT, RIGHT, ESC)
@@ -82,14 +82,14 @@ void hideCursor();
 // show the cursor
 void showCursor();
 
-// hide the Scroll bars
+// hide the Scrollbars
 void hideScrollBars();
-
-// setup the console
-void setAndCenterWindow(short width, short height);
 
 // disable mouse
 void disableMouseInput();
+
+// setup the console
+void setAndCenterWindow(short width, short height);
 
 // setup screen buffer
 void SetScreenBufferSize(short width, short height);

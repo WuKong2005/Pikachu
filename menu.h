@@ -9,18 +9,6 @@
 
 using namespace std;
 
-// Arrow
-const string arrow = ">>>";
-
-// Coordinate of the arrow points to the first block of each Visual
-const COORD ARROW_POS_FIRST_BLOCK[5] = {
-    {60, 20}, // MAIN_MENU
-    {60, 20}, // PLAY_GAME
-    {60, 20}, // GAME_MODE
-    {60, 20}, // LOAD_GAME
-    {60, 11} // USERNAME
-};
-
 // enumerate the difficulty (use for row of LEADERBOARD)
 enum difficulty {
     easy,
@@ -34,6 +22,18 @@ enum information {
     Score,
     Time,
     Date
+};
+
+// Arrow
+const string arrow = ">>>";
+
+// Coordinate of the arrow points to the first block of each Visual
+const COORD ARROW_POS_FIRST_BLOCK[5] = {
+    {60, 20}, // MAIN_MENU
+    {60, 20}, // PLAY_GAME
+    {60, 20}, // GAME_MODE
+    {60, 20}, // LOAD_GAME
+    {60, 11} // USERNAME
 };
 
 // filename which is stored data of LEADERBOARD
