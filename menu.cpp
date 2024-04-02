@@ -329,8 +329,8 @@ string USERNAME_CONTROL() {
             cout << "THE LENGTH OF USERNAME IS OVER THAN 30 CHARACTERS !!!";
 
             // wait for user to press any key to redo (or ESC)
-            while (!_kbhit())
-                continue;
+            int buffer = _getch();
+            continue;
         }
         if (User.find(';') != string::npos) {
             SetConsoleCursorPosition(console, warningBlock);
