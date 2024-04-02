@@ -286,7 +286,7 @@ void HELP_CONTROL() {
 bool USERNAME_CONTROL(string& username, string& password) {
     // get console and some cursor information
     HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
-    COORD currentCursor = ARROW_POS_FIRST_BLOCK[USERNAME];
+    
     COORD warningBlock = {25, 20};
 
     username = "";
@@ -294,6 +294,7 @@ bool USERNAME_CONTROL(string& username, string& password) {
 
     // get user input and check valid
     while (true) {
+        COORD currentCursor = ARROW_POS_FIRST_BLOCK[USERNAME];
         system("cls");
         printUsername();
         SetConsoleCursorPosition(console, currentCursor);
