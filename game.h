@@ -57,8 +57,9 @@ struct game {
 
     void saveScore();
     void saveGame();
-    bool verifySaveFile();
-    void loadGame();
+    void saveGame(int slot);
+    bool verifySaveFile(int slot);
+    void loadGame(int slot);
 
     void startGame(); // Start the game
     bool finishGame(); // Finish the game

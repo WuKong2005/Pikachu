@@ -475,11 +475,13 @@ void game::select() {
     }
 
     if (success && numLeft > 0 && !map.automaticCheck()) {
-        // notification
+        renderNotificate("NO VALID MOVE EXIST!!!");
+        Sleep(2000);
         map.shuffleBoard();
         clearScreen();
         SetConsoleOutputCP(437);
         drawInterface();
+        renderNotificate("AUTO SHUFFLE COMPLETE");
     }
 } 
 
@@ -608,10 +610,20 @@ void game::saveScore() {
 
     out.close();
 }
-
 void game::saveGame() {
+    renderNotificate("SAVE AT SLOT 0, 1 OR 2?");
+    int option = getch();
+    if (option - (int)'0' >= 0 && option - (int)'0' < 3) {
+        saveGame(option - (int)'0');
+    }
+    else {
+        renderNotificate("INVALID SLOT INDEX");
+    }
+}
+
+void game::saveGame(int slot) {
     ofstream out;
-    out.open("record/savegame.txt");
+    out.open("record/savegame" + to_string(slot) + ".txt");
     if (!out.is_open())
         return;
     
@@ -619,7 +631,7 @@ void game::saveGame() {
     ifstream inp;
     inp.open("record/board.txt");
 
-    out << player.username << ' ' << player.password << ' ' << score << ' ' << timeUsed + timeDuration() << ' ' << useHint << ' ' << useMagicMatching << ' ' << useHiddenCell << ' ';
+    out << player.username << ';' << player.password << ';' << score << ';' << timeUsed + timeDuration() << ';' << useHint << ';' << useMagicMatching << ';' << useHiddenCell << ';';
     string val;
     while(true) {
         inp >> val;
@@ -635,16 +647,56 @@ void game::saveGame() {
     renderNotificate("GAME SAVED!!!");
 }
 
-bool game::verifySaveFile() {
+bool game::verifySaveFile(int slot) {
     ifstream inp;
-    inp.open("record/savegame.txt");
+    inp.open("record/savegame" + to_string(slot) + ".txt");
     if (!inp.is_open())
         return false;
     
-    string __score, __timeUsed, __useHint, __useMagicMatching, __useHiddenCell;
+    string __score, __timeUsed, __useHint, __useMagicMatching, __useHiddenCell, infoBoard;
+    int index = 0;
+    string token;
+
+    while(true) {
+        getline(inp, token, ';');
+        if (token.empty()) 
+            break;
+        
+        switch (index)
+        {
+            case 0:
+                player.username = token;
+                break;
+            case 1:
+                player.password = token;
+                break;
+            case 2:
+                __score = token;
+                break;
+            case 3:
+                __timeUsed = token;
+                break;
+            case 4:
+                __useHint = token;
+                break;
+            case 5:
+                __useMagicMatching = token;
+                break;
+            case 6:
+                __useHiddenCell = token;
+                break;
+            case 7:
+                infoBoard = token;
+                break;
+            default:
+                break;
+        }
+
+        index++;
+        token.clear();
+    }
     
-    inp >> player.username >> player.password >> __score >> __timeUsed >> __useHint >> __useMagicMatching >> __useHiddenCell;
-    if (player.username.empty() || player.username.empty() || __timeUsed.empty() || __useHint.empty() || __useMagicMatching.empty() || __useHiddenCell.empty()) {
+    if (player.username.empty() || player.password.empty() || __timeUsed.empty() || __useHint.empty() || __useMagicMatching.empty() || __useHiddenCell.empty()) {
         inp.close();
         return false;
     }
@@ -677,21 +729,10 @@ bool game::verifySaveFile() {
         return false;
     }
 
-    cerr << "start check board\n";
-
     ofstream out;
     out.open("record/board.txt");
 
-    string val;
-    while(true) {
-        inp >> val;
-        if (val.empty())
-            break;
-        out << val << ' ';
-        cerr << val << ' ';
-        val.clear();
-    }
-    cerr << "\n";
+    out << infoBoard;
 
     inp.close();
     out.close();
@@ -700,24 +741,57 @@ bool game::verifySaveFile() {
     return (tmp.readBoard("record/board.txt", true).second >= 0);
 }
 
-void game::loadGame() {
+void game::loadGame(int slot) {
     ifstream inp;
-    inp.open("record/savegame.txt");
+    inp.open("record/savegame" + to_string(slot) + ".txt");
     if (!inp.is_open())
         return;
+    
+    int index = 0;
+    string token, infoBoard;
 
-    inp >> player.username >> player.password >> score >> timeUsed >> useHint >> useMagicMatching >> useHiddenCell;
+    while(true) {
+        getline(inp, token, ';');
+        if (token.empty()) 
+            break;
+        
+        switch (index)
+        {
+            case 0:
+                player.username = token;
+                break;
+            case 1:
+                player.password = token;
+                break;
+            case 2:
+                score = stoi(token);
+                break;
+            case 3:
+                timeUsed = stoi(token);
+                break;
+            case 4:
+                useHint = stoi(token);
+                break;
+            case 5:
+                useMagicMatching = stoi(token);
+                break;
+            case 6:
+                useHiddenCell = stoi(token);
+                break;
+            case 7:
+                infoBoard = token;
+                break;
+            default:
+                break;
+        }
+
+        index++;
+        token.clear();
+    }
+
     ofstream out;
     out.open("record/board.txt");
-
-    string val;
-    while(true) {
-        inp >> val;
-        if (val.empty())
-            break;
-        out << val << ' ';
-        val.clear();
-    }
+    out << infoBoard;
 
     inp.close();
     out.close();
@@ -749,6 +823,7 @@ void game::startGame() {
             {
                 renderNotificate("PRESS ESC AGAIN TO LEAVE");
                 if (getInputKey() == ESC) {
+                    playSound(diff + 1, true);
                     isPlaying = false;
                     clearScreen();
                 }
@@ -769,9 +844,11 @@ void game::startGame() {
             case TOGGLE_MUSIC:
                 toggleMusic(diff + 1);
                 break;
-            case SAVE_GAME:
+            case SAVE_GAME: 
+            {
                 saveGame();
                 break;
+            }
             case MAGIC_MOVE:
                 magicMove();
                 break;
@@ -790,6 +867,8 @@ void game::startGame() {
             isPlaying = false;
         }
     }
+
+    clearScreen();
 }
 
 bool game::finishGame() {
@@ -902,7 +981,7 @@ void game::renderNotificate(string noti) {
     short infor_PosX = (upperLeftCorner.X + map.COL * (WIDTH_CELL - 1) + 1 + 2 * BUFFER_WIDTH_CELL) + (diff == HARD ? 4 : 6);
     short infor_PosY = upperLeftCorner.Y;
     setCursor(infor_PosX + 3, infor_PosY + 10);
-    cout << TEXT_BLACK << "                    ";
+    cout << TEXT_BLACK << "                         ";
     setCursor(infor_PosX + 3, infor_PosY + 10);
     cout << TEXT_COLOR[RED] << noti << TEXT_BLACK;
 }

@@ -342,13 +342,10 @@ void board::importBoard() {
     out.open("record/board.txt");
 
     //Size of the board, curent timeCheck and data of each cell
-    out << ROW << ' ' << COL << ' ' << timeCheck << '\n';
-    for (int r = 1; r <= ROW; r++) {
-        for (int c = 1; c <= COL; c++) {
-            assert(flood[r][c][0][0] <= timeCheck && flood[r][c][1][0] <= timeCheck);
+    out << ROW << ' ' << COL << ' ' << timeCheck << ' ';
+    for (int r = 1; r <= ROW; r++) 
+        for (int c = 1; c <= COL; c++) 
             out << grid[r][c] << ' ' << flood[r][c][0][0]  << ' ' << flood[r][c][1][0] << ' ';
-        }
-    }
 
     out.close();
 }
@@ -447,6 +444,7 @@ void board::loadBoard(pair<string*, int> saveBoard) {
     //Initialize board with given difficult
     // *this = board(diff); Sai lam tuoi tre
     createBoard(diff);
+    timeCheck = stoi(buffer[2]);
 
     //Then read character and last timeCheck of each cell
     int idBuffer = 3;

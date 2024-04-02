@@ -287,7 +287,7 @@ void HELP_CONTROL() {
     system("cls");
 }
 
-bool USERNAME_CONTROL(string& username, string& password) {
+bool USERNAME_CONTROL(string &username, string &password) {
     // get console and some cursor information
     HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
     
