@@ -750,6 +750,7 @@ void game::startGame() {
                 renderNotificate("PRESS ESC AGAIN TO LEAVE");
                 if (getInputKey() == ESC) {
                     isPlaying = false;
+                    clearScreen();
                 }
                 else {
                     renderNotificate("                        ");

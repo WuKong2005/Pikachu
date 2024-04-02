@@ -6,6 +6,11 @@ vector<wstring> soundFile{L"bgm/menu.mp3", L"bgm/easy.mp3", L"bgm/medium.mp3", L
 
 void initializeProgram() {
     SetConsoleOutputCP(65001);
+    hideCursor();
+    setAndCenterWindow(1230, 840);
+    disableMouseInput();
+    SetScreenBufferSize(149, 50);
+    hideScrollBars();
 }
 
 int getInputKey() {
@@ -60,28 +65,6 @@ void removeArrow() {
     cout << "   ";
 }
 
-void hideCursor() {
-    HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE); // get Handle of the output console
-	CONSOLE_CURSOR_INFO cursorInfo; // get the infomation of the cursor
-	GetConsoleCursorInfo(console, &cursorInfo);
-	cursorInfo.bVisible = false; // hide the cursor
-	cursorInfo.dwSize = 100; // set the cursor size to a large value
-	SetConsoleCursorInfo(console, &cursorInfo); // apply the changes
-}
-
-void showCursor() {
-    HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE); // get Handle of the output console
-	CONSOLE_CURSOR_INFO cursorInfo; // get the infomation of the cursor
-	GetConsoleCursorInfo(console, &cursorInfo);
-	cursorInfo.bVisible = true; // show the cursor
-	cursorInfo.dwSize = 1; // set the cursor size to 1
-	SetConsoleCursorInfo(console, &cursorInfo); // apply the changes
-}
-
-void hideScrollBars() {
-    HWND consoleWindow = GetConsoleWindow();
-	ShowScrollBar(consoleWindow, SB_BOTH, false);
-}
 
 void setCursor(short x, short y) {
     COORD cursor = {x, y};
@@ -125,4 +108,56 @@ bool isMp3Playing(wstring pathFile) {
 
 void toggleMusic(int type) {
     playSound(type, isMp3Playing(soundFile[type]));
+}
+
+
+void hideCursor() {
+    HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE); // get Handle of the output console
+	CONSOLE_CURSOR_INFO cursorInfo; // get the infomation of the cursor
+	GetConsoleCursorInfo(console, &cursorInfo);
+	cursorInfo.bVisible = false; // hide the cursor
+	cursorInfo.dwSize = 100; // set the cursor size to a large value
+	SetConsoleCursorInfo(console, &cursorInfo); // apply the changes
+}
+
+void showCursor() {
+    HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE); // get Handle of the output console
+	CONSOLE_CURSOR_INFO cursorInfo; // get the infomation of the cursor
+	GetConsoleCursorInfo(console, &cursorInfo);
+	cursorInfo.bVisible = true; // show the cursor
+	cursorInfo.dwSize = 1; // set the cursor size to 1
+	SetConsoleCursorInfo(console, &cursorInfo); // apply the changes
+}
+
+// ref: Pikachu-game-Louis
+void hideScrollBars() {
+    HWND consoleWindow = GetConsoleWindow();
+	ShowScrollBar(consoleWindow, SB_BOTH, false);
+}
+
+// ref: Pikachu-game-Louis
+void setAndCenterWindow(short width, short height) {
+    HWND consoleWindow = GetConsoleWindow();
+	RECT rectClient, rectWindow;
+	GetClientRect(consoleWindow, &rectClient), GetWindowRect(consoleWindow, &rectWindow);
+	int posX = (GetSystemMetrics(SM_CXSCREEN) - width) / 2,
+		posY = (GetSystemMetrics(SM_CYSCREEN) - height) / 2;
+	MoveWindow(consoleWindow, posX, posY, width, height, TRUE);
+}
+
+// ref: Pikachu-game-Louis
+void disableMouseInput() {
+	DWORD prev_mode;
+	HANDLE hInput = GetStdHandle(STD_INPUT_HANDLE);
+	GetConsoleMode(hInput, &prev_mode);
+	SetConsoleMode(hInput, prev_mode & ~ENABLE_QUICK_EDIT_MODE);
+}
+
+// ref: codelearn.io
+void SetScreenBufferSize(short width, short height) {
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD bufferSize = { width, height };
+
+    if (!SetConsoleScreenBufferSize(hConsole, bufferSize))
+        cerr << "cannot setup buffer size!!!" << endl;
 }

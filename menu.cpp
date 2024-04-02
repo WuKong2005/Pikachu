@@ -112,6 +112,9 @@ void PLAY_GAME_CONTROL() {
                     printAtCursor(arrow, preCursor);
                     break;
 
+                case 2: // EXTRA
+                    return;
+
                 default: // GO BACK
                     return;
             }
@@ -156,6 +159,7 @@ void GAME_MODE_CONTROL() {
                 }
                 playSound(MENU);
                 // return GAME_MODE after escape USERNAME
+                hideCursor();
                 printGameMode();
                 // Set up the cursor in PLAY_GAME - block EASY
                 preCursor.X = ARROW_POS_FIRST_BLOCK[GAME_MODE].X;
@@ -287,7 +291,7 @@ bool USERNAME_CONTROL(string& username, string& password) {
     // get console and some cursor information
     HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
     
-    COORD warningBlock = {25, 20};
+    COORD warningBlock = {50, 20};
 
     username = "";
     password = "";
@@ -311,8 +315,10 @@ bool USERNAME_CONTROL(string& username, string& password) {
             // wait for user to press any key to redo (or ESC)
             int buffer = _getch();
 
-            if (buffer == KEY_ESC)
+            if (buffer == KEY_ESC) {
+                clearScreen();
                 return false;
+            }
                 
             continue;
         }
@@ -324,8 +330,10 @@ bool USERNAME_CONTROL(string& username, string& password) {
             // wait for user to press any key to redo (or ESC)
             int buffer = _getch();
 
-            if (buffer == KEY_ESC)
+            if (buffer == KEY_ESC) {
+                clearScreen();
                 return false;
+            }
 
             continue;
         }
@@ -337,8 +345,10 @@ bool USERNAME_CONTROL(string& username, string& password) {
             // wait for user to press any key to redo (or ESC)
             int buffer = _getch();
 
-            if (buffer == KEY_ESC)
+            if (buffer == KEY_ESC) {
+                clearScreen();
                 return false;
+            }
 
             continue;
         }
@@ -358,8 +368,10 @@ bool USERNAME_CONTROL(string& username, string& password) {
             // wait for user to press any key to redo (or ESC)
             int buffer = _getch();
 
-            if (buffer == KEY_ESC)
+            if (buffer == KEY_ESC) {
+                clearScreen();
                 return false;
+            }
                 
             continue;
         }
@@ -371,8 +383,10 @@ bool USERNAME_CONTROL(string& username, string& password) {
             // wait for user to press any key to redo (or ESC)
             int buffer = _getch();
 
-            if (buffer == KEY_ESC)
+            if (buffer == KEY_ESC) {
+                clearScreen();
                 return false;
+            }
 
             continue;
         }
@@ -390,8 +404,10 @@ bool USERNAME_CONTROL(string& username, string& password) {
             // wait for user to press any key to redo (or ESC)
             int buffer = _getch();
 
-            if (buffer == KEY_ESC)
+            if (buffer == KEY_ESC) {
+                clearScreen();
                 return false;
+            }
 
             continue;
         }
@@ -401,7 +417,6 @@ bool USERNAME_CONTROL(string& username, string& password) {
     }
 
     hideCursor();
-
     system("cls");
 
     // start game

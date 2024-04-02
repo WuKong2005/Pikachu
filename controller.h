@@ -62,14 +62,6 @@ int getInputKey();
 // delete the current Arrow
 void removeArrow();
 
-// hide the Cursor in Console
-void hideCursor();
-// show the cursor
-void showCursor();
-
-// hide the Scroll bars
-void hideScrollBars();
-
 // set Cursor to coordinates (x, y)
 void setCursor(short x, short y);
 
@@ -83,3 +75,21 @@ void playSound(int type, bool stop = false);
 bool isMp3Playing(wstring pathFile);
 
 void toggleMusic(int type);
+
+
+// hide the Cursor in Console
+void hideCursor();
+// show the cursor
+void showCursor();
+
+// hide the Scroll bars
+void hideScrollBars();
+
+// setup the console
+void setAndCenterWindow(short width, short height);
+
+// disable mouse
+void disableMouseInput();
+
+// setup screen buffer
+void SetScreenBufferSize(short width, short height);
