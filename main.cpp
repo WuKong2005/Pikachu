@@ -13,7 +13,7 @@ int main() {
     // system("pause");
     // playSound(MENU, true);
     // system("pause");
-
+    Sleep(1000);
     SetConsoleOutputCP(437);
     system("cls");
     game g(EASY);

@@ -411,7 +411,9 @@ void game::select() {
         return;
     }
 
+    bool success = false;
     if (map.checkMatch(currentSelect, currentPos, applyMagicMatching)) {
+        success = true;
         playSound(VALID_MOVE);
         vector<pair<int, int>> path = map.getPath(currentSelect, currentPos);
         drawPath(path, true);
@@ -446,6 +448,14 @@ void game::select() {
         map.assignCell(tempCell.first, tempCell.second);
         drawCell(tempCell.first, tempCell.second);
         make_pair(make_pair(0, 0), '$');
+    }
+
+    if (success && !map.automaticCheck()) {
+        // notification
+        map.shuffleBoard();
+        clearScreen();
+        SetConsoleOutputCP(437);
+        drawInterface();
     }
 } 
 

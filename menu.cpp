@@ -320,13 +320,20 @@ string USERNAME_CONTROL() {
             // wait for user to press any key to redo (or ESC)
             while (!_kbhit())
                 continue;
-            // else if (input == ';') 
-            //     continue;
         }
         if (User.length() > 30) {
             SetConsoleCursorPosition(console, warningBlock);
             cout << TEXT_COLOR[RED];
             cout << "THE LENGTH OF USERNAME IS OVER THAN 30 CHARACTERS !!!";
+
+            // wait for user to press any key to redo (or ESC)
+            while (!_kbhit())
+                continue;
+        }
+        if (User.find(';') != string::npos) {
+            SetConsoleCursorPosition(console, warningBlock);
+            cout << TEXT_COLOR[RED];
+            cout << "INVALID CHARACTER FOUND !!!";
 
             // wait for user to press any key to redo (or ESC)
             while (!_kbhit())

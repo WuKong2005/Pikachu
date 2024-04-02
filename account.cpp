@@ -9,10 +9,16 @@ record::record(int __score, time_t __timePlayed) {
 }
 
 string record::getTimeFinished() {
-    string result = "";
-    result += to_string(timeFinished.tm_hour) + ':' + to_string(timeFinished.tm_min) + ':' + to_string(timeFinished.tm_sec);
-    result += '-';
-    result += to_string(timeFinished.tm_wday) + '/' + to_string(timeFinished.tm_mon + 1) + '/' + to_string(timeFinished.tm_year + 1900);
+    stringstream ss;
+    ss << setw(2) << setfill('0') << timeFinished.tm_hour << ':';
+    ss << setw(2) << setfill('0') << timeFinished.tm_min << ':';
+    ss << setw(2) << setfill('0') << timeFinished.tm_sec << '-';
+    ss << setw(2) << setfill('0') << timeFinished.tm_wday << '/';
+    ss << setw(2) << setfill('0') << (timeFinished.tm_mon + 1) << '/';
+    ss << setw(2) << setfill('0') << (timeFinished.tm_year + 1900);
+
+    string result;
+    ss >> result;
     return result;
 }
 
@@ -23,4 +29,24 @@ account::account() {
 
 string account::accountInfo(record &resultGame) {
     return username + ';' + to_string(resultGame.score) + ';' + to_string(resultGame.timePlayed) + ';' + resultGame.getTimeFinished();
+}
+
+int getIndex(char x) {
+    if ('0' <= x && x <= '9')
+        return (int)x - '0';
+    else if ('a' <= x && x <= 'z')
+        return 10 + (int)x - 'a';
+    else if ('A' <= x && x <= 'Z')
+        return 10 + 26 + (int)x - 'A';
+}
+
+string encrypt(string password) {
+    long long const MOD = 175126384190389;
+    int const BASE = 67;
+
+    long long result = 0;
+    for (char ch: password) {
+        result = (1LL * result * BASE + getIndex(ch) + 1) % MOD;
+    }
+    return to_string(result);
 }

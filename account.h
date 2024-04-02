@@ -4,6 +4,8 @@
 #include <fstream>
 #include <ctime>
 #include <vector>
+#include <sstream>
+#include <iomanip>
 
 using namespace std;
 
@@ -26,3 +28,5 @@ struct account {
     account();
     string accountInfo(record &resultGame);
 };
+
+string encrypt(string password);
