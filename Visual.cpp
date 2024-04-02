@@ -93,6 +93,7 @@ void printLoadGame() {
     or Ascii code of some extra characters
 */
 void printLeaderboard() {
+    clearScreen();
     HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleOutputCP(437);
 
@@ -258,17 +259,17 @@ void printUsername() {
 }
 
 /*
-	 --------------------------
-    |     POKEMON MATCHING     |
-	|                          |
-	| SCORE:                   |
-	| HINT:                    |
-    | MAGIC MOVE:              |
-    |                          |
-     -------------------------- 
-    |                          |
-    |                          |
-    |                          |
+	 ---------------------------
+    |     POKEMON MATCHING      |
+	|                           |
+	| SCORE:                    |
+	| HINT:                     |
+    | MAGIC MOVE:               |
+    | TYPE:                     |
+     --------------------------- 
+    |                           |
+    |                           |
+    |                           |
      --------------------------
 */
 // print the infomation when playing game
@@ -279,30 +280,30 @@ void printInfoInGame(short posX, short posY) {
     
 //draw the frame
     string side;
-    side.append(26, char(196));
+    side.append(28, char(196));
 
     // draw top side
     setCursor(posX, posY);
     cout << char(218) << side << char(191);
     // draw middle side
-    setCursor(posX, posY + 7);
+    setCursor(posX, posY + 8);
     cout << char(195) << side << char(180);
     // draw bottom side
-    setCursor(posX, posY + 11);
+    setCursor(posX, posY + 12);
     cout << char(192) << side << char(217);
 
     // draw the remaining 2 sides
-    for (int row = 1; row <= 10; ++row) {
-        if (row == 7)
+    for (int row = 1; row <= 11; ++row) {
+        if (row == 8)
             continue;
         setCursor(posX, posY + row);
         cout << char(179);
-        setCursor(posX + 27, posY + row);
+        setCursor(posX + 29, posY + row);
         cout << char(179);
     }
 
 // print content
-    setCursor(posX + 6, posY + 1);
+    setCursor(posX + 7, posY + 1);
     cout << "POKEMON MATCHING";
     setCursor(posX + 2, posY + 3);
     cout << "SCORE: ";
@@ -310,6 +311,8 @@ void printInfoInGame(short posX, short posY) {
     cout << "HINT: ";
     setCursor(posX + 2, posY + 5);
     cout << "MAGIC MOVE: ";
+    setCursor(posX + 2, posY + 6);
+    cout << "TYPE: ";
 }
 
 /*
@@ -317,7 +320,7 @@ void printInfoInGame(short posX, short posY) {
     |         HELP MENU         |
     |                           |
     | MOVE: WASD or arrow keys  |
-    | ENTER: select or unselect |
+    | ENTER: select or deselect |
     | H: Get hint               |
     | M: Toggle music           |
     | P: Save game              |
@@ -328,7 +331,7 @@ void printInfoInGame(short posX, short posY) {
 */
 void printHelpInGame(short posX, short posY) {
     string side;
-    side.append(27, char(196));
+    side.append(28, char(196));
 
     // draw top side
     setCursor(posX, posY);
@@ -340,7 +343,7 @@ void printHelpInGame(short posX, short posY) {
     for (int row = 1; row < 11; ++row) {
         setCursor(posX, posY + row);
         cout << char(179);
-        setCursor(posX + 28, posY + row);
+        setCursor(posX + 29, posY + row);
         cout << char(179);
     }
 
@@ -350,7 +353,7 @@ void printHelpInGame(short posX, short posY) {
     setCursor(posX + 2, posY + 3);
     cout << "MOVE: WASD or arrow keys";
     setCursor(posX + 2, posY + 4);
-    cout << "ENTER: select or unselect";
+    cout << "ENTER: select or deselect";
     setCursor(posX + 2, posY + 5);
     cout << "H: Get hint";
     setCursor(posX + 2, posY + 6);

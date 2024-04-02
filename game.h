@@ -61,12 +61,14 @@ struct game {
     void loadGame();
 
     void startGame(); // Start the game
-    void finishGame(); // Finish the game
+    bool finishGame(); // Finish the game
 
     void getBackground();
-    void renderScore(int score);
-    void renderHint(int hint);
-    void renderMagic(int magic);
+
+    void updateInfo();
+    void renderScore();
+    void renderHint();
+    void renderMagic();
     void renderTime();
     void renderNotificate(string noti);
 };
