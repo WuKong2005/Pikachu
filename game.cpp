@@ -786,8 +786,6 @@ void game::startGame() {
             highlightCell(currentSelect.first, currentSelect.second, BACKGROUND_COLOR[YELLOW]);
         }
         if (finishGame()) {
-            Sleep(8000);
-            LEADERBOARD_CONTROL();
             isPlaying = false;
         }
     }
@@ -799,12 +797,14 @@ bool game::finishGame() {
         playSound(WIN);
         saveScore();
         renderNotificate("YOU WIN!!!");
+        LEADERBOARD_CONTROL();
         return true;
     }
     if (getCurrentTime() < 0) {
         playSound(diff + 1, true);
         playSound(LOSE);
         renderNotificate("YOU LOSE!!!");
+        Sleep(4000);
         return true;
     }
     

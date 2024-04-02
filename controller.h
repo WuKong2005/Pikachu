@@ -80,4 +80,6 @@ void clearScreen();
 
 void playSound(int type, bool stop = false);
 
+bool isMp3Playing(wstring pathFile);
+
 void toggleMusic(int type);
