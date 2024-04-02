@@ -295,7 +295,7 @@ string USERNAME_CONTROL() {
     // get console and some cursor information
     HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
     COORD currentCursor = ARROW_POS_FIRST_BLOCK[USERNAME];
-    COORD warningBlock = {29, 15};
+    COORD warningBlock = {29, 20};
 
     string User = ""; // stored the USERNAME
 

@@ -37,15 +37,7 @@ game::game(int difficult) {
     upperLeftCorner = map.boardPos[difficult];
     currentPos = {1, 1};
     
-    ifstream fin;
-    int height = sizeROW[difficult] * (HEIGHT_CELL - 1) + 1 + 2 * (BUFFER_HEIGHT_CELL - 1);
-    background = new string [height];
-
-    fin.open(backGroundImage[difficult].c_str());
-    int count = 0;
-    while (count < height && getline(fin, background[count]))
-        count++;
-    fin.close();
+    getBackground();
 }
 
 int game::timeDuration() {
@@ -762,7 +754,7 @@ void game:: getBackground() {
     fin.open(backGroundImage[diff].c_str());
     int count = 0;
     while (count < height && getline(fin, background[count])) {
-        // cerr << background[count] << endl;
+        cerr << background[count] << endl;
         if (background[count].length() < width) {
             int curLength = background[count].length();
             background[count].append(width - curLength, ' ');

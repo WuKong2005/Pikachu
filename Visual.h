@@ -82,11 +82,12 @@ const COORD FIRST_BLOCK[5] {
 };
 
 // distance between each block of each Visual
-const int distanceBlock[4] = {
+const int distanceBlock[5] = {
     3, // MAIN_MENU
     4, // PLAY_GAME
     3, // GAME_MODE
-    3 // LOAD_GAME
+    3, // LOAD_GAME
+	3 // USERNAME
 };
 
 // number of block of each Visual
@@ -95,7 +96,7 @@ const int numBlock[5] = {
     3, // PLAY_GAME
     4, // GAME_MODE
     4, // LOAD_GAME
-	1 // USERNAME
+	2 // USERNAME
 };
 
 const int WidthBlock[5] = {
@@ -406,13 +407,17 @@ const string Visual[7] = {
                     
                     
                     
-                    PLEASE ENTER YOUR USERNAME (AT LEAST 5 AND AT MOST 30 CHARACTERS)
+                PLEASE ENTER YOUR USERNAME AND PASSWORD (AT LEAST 5 AND AT MOST 30 CHARACTERS)
+					PASSWORD MUST CONTAIN ONLY ALPHABETS AND DIGITS
 
-                                   --------------------------------
-                        USERNAME: |                                |
-                                   -------------------------------- 
-
-                                IF YOU WANNA GO BACK, PRESS ESC KEY
+					   --------------------------------
+				USERNAME: |                                |
+			    	       	   --------------------------------
+			        	   --------------------------------
+				PASSWORD: |                                |
+                    	   		   -------------------------------- 
+                        
+					IF YOU WANNA GO BACK, PRESS ESC KEY
     )",
 
 	// LEADERBOARD

@@ -18,7 +18,7 @@ const COORD ARROW_POS_FIRST_BLOCK[5] = {
     {52, 20}, // PLAY_GAME
     {52, 20}, // GAME_MODE
     {52, 20}, // LOAD_GAME
-    {36, 9} // USERNAME
+    {44, 10} // USERNAME
 };
 
 // enumerate the difficulty (use for row of LEADERBOARD)

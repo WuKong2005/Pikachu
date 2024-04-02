@@ -250,7 +250,7 @@ void printHelp() {
 void printUsername() {
     cout << TEXT_BLACK;
     cout << Visual[USERNAME];
-    printFrameBlock(USERNAME);
+    // printFrameBlock(USERNAME);
 }
 
 /*
