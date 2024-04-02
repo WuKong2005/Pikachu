@@ -283,7 +283,7 @@ void HELP_CONTROL() {
     system("cls");
 }
 
-bool USERNAME_CONTROL(string& username, string& password) {
+bool USERNAME_CONTROL(string &username, string &password) {
     // get console and some cursor information
     HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
     
@@ -311,8 +311,10 @@ bool USERNAME_CONTROL(string& username, string& password) {
             // wait for user to press any key to redo (or ESC)
             int buffer = _getch();
 
-            if (buffer == KEY_ESC)
+            if (buffer == KEY_ESC) {
+                system("cls");
                 return false;
+            }
                 
             continue;
         }
@@ -324,8 +326,10 @@ bool USERNAME_CONTROL(string& username, string& password) {
             // wait for user to press any key to redo (or ESC)
             int buffer = _getch();
 
-            if (buffer == KEY_ESC)
+            if (buffer == KEY_ESC) {
+                system("cls");
                 return false;
+            }
 
             continue;
         }
@@ -337,8 +341,10 @@ bool USERNAME_CONTROL(string& username, string& password) {
             // wait for user to press any key to redo (or ESC)
             int buffer = _getch();
 
-            if (buffer == KEY_ESC)
+            if (buffer == KEY_ESC) {
+                system("cls");
                 return false;
+            }
 
             continue;
         }
@@ -358,8 +364,10 @@ bool USERNAME_CONTROL(string& username, string& password) {
             // wait for user to press any key to redo (or ESC)
             int buffer = _getch();
 
-            if (buffer == KEY_ESC)
+            if (buffer == KEY_ESC){
+                system("cls");
                 return false;
+            }
                 
             continue;
         }
@@ -371,8 +379,10 @@ bool USERNAME_CONTROL(string& username, string& password) {
             // wait for user to press any key to redo (or ESC)
             int buffer = _getch();
 
-            if (buffer == KEY_ESC)
+            if (buffer == KEY_ESC){
+                system("cls");
                 return false;
+            }
 
             continue;
         }
@@ -390,9 +400,11 @@ bool USERNAME_CONTROL(string& username, string& password) {
             // wait for user to press any key to redo (or ESC)
             int buffer = _getch();
 
-            if (buffer == KEY_ESC)
+            if (buffer == KEY_ESC) {
+                system("cls");
                 return false;
-
+            }
+                
             continue;
         }
 
