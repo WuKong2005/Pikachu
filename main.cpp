@@ -4,29 +4,9 @@
 
 int main() {
     srand(time(NULL));
-    // SetConsoleScreenBufferSize(console, )
-    // initializeProgram();
-    // SetConsoleOutputCP(65001);
-    // printLogo();
-    // MAIN_MENU_CONTROL();
-    // playSound(MENU);
-
-    // printUsername();
-    // system("pause");
-    
-
-    // SetConsoleOutputCP(437);
-    // game g(HARD);
-    // system("pause");
-    // Sleep(1000);
-    // g.startGame();
-    SetConsoleOutputCP(437);
-    game g(EASY);
-    // game g;
-    // cerr << g.verifySaveFile() << '\n';
-    // g.loadGame();
-    system("pause");
-    Sleep(1000);
-    g.startGame();
+    initializeProgram();
+    SetConsoleOutputCP(65001);
+    printLogo();
+    MAIN_MENU_CONTROL();
     return 0;
 }

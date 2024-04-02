@@ -146,10 +146,15 @@ void GAME_MODE_CONTROL() {
             if (posBlock <= HARD) {
                 string username, password;
                 if (USERNAME_CONTROL(username, password)) {
-                    //game start
-                        
-                    //
+                    // cerr << "account valid\n";
+                    SetConsoleOutputCP(437);
+                    playSound(MENU, true);
+                    game newGame(posBlock);
+                    newGame.player.username = username;
+                    newGame.player.password = encrypt(password);
+                    newGame.startGame();
                 }
+                playSound(MENU);
                 // return GAME_MODE after escape USERNAME
                 printGameMode();
                 // Set up the cursor in PLAY_GAME - block EASY

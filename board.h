@@ -28,7 +28,7 @@ int const ALPHABET = 26;
 //Easy; Medium; Hard - Easy peasy; Medium is premium; Things may be hard, but I'm harder
 int const sizeROW[] = {6, 6, 7};
 int const sizeCOL[] = {7, 10, 12};
-int const limTime[] = {120, 360, 600};
+int const limTime[] = {240, 420, 600};
 
 //Gamemode
 enum DIFFICULT {
