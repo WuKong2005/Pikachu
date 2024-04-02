@@ -1,7 +1,13 @@
 #include "game.h"
 
 game::game() {
-    
+    upperLeftCorner = {7, 4};
+    currentPos = {1, 1};
+    currentSelect = {0, 0};
+    timeUsed = numLeft = score = useHint = useMagicMatching = useHiddenCell = applyMagicMatching = applyHiddenCell = isPlaying = 0;
+    diff = -1;
+    tempCell = make_pair(make_pair(0, 0), '$');
+    background = NULL;
 }
 
 game::~game() {
@@ -19,17 +25,27 @@ game::game(int difficult) {
     numLeft = map.ROW * map.COL;
     diff = difficult;
     score = 0;
-    useMagicMatching = useHiddenCell = false;
+    useHint = 3;
+    int total = diff * 2 + 1;
+    // useMagicMatching = total * (rand() % 2);
+    useMagicMatching = total;
+    useHiddenCell = total - useMagicMatching;
     isPlaying = true;
+    applyMagicMatching = applyHiddenCell = false;
+    tempCell = make_pair(make_pair(0, 0), '$');
     
     upperLeftCorner = map.boardPos[difficult];
     currentPos = {1, 1};
+    
+    ifstream fin;
+    int height = sizeROW[difficult] * (HEIGHT_CELL - 1) + 1 + 2 * (BUFFER_HEIGHT_CELL - 1);
+    background = new string [height];
 
-    getBackground();
-}
-
-game::game(string pathSaveFile) {
-    loadGame();
+    fin.open(backGroundImage[difficult].c_str());
+    int count = 0;
+    while (count < height && getline(fin, background[count]))
+        count++;
+    fin.close();
 }
 
 int game::timeDuration() {
@@ -68,7 +84,6 @@ void game::drawInterface() {
 
     cout << TEXT_BLACK;
     highlightCell(1, 1, BACKGROUND_COLOR[CYAN]);
-    
 }
 
 void game::drawBoard() {
@@ -115,12 +130,19 @@ void game::drawBoard() {
     }
 
 // draw board
-    for (int row = 1; row <= map.ROW; ++row)
-        for (int col = 1; col <= map.COL; ++col)
+    for (int row = 1; row <= map.ROW; ++row) {
+        for (int col = 1; col <= map.COL; ++col) {
             if (map.grid[row][col] != '$') {
                 drawCell({row, col}, map.grid[row][col]); // direction access
                 Sleep(3);
             }
+            else {
+                removeCell({row, col});
+                Sleep(3);
+            }
+        } 
+    }
+        
     cout << TEXT_BLACK;
 }
 
@@ -353,8 +375,10 @@ void game::highlightCell(int row, int col, string color) {
     else // if Cell is deleted --> draw Background
     {
         for (int rowCell = 1; rowCell <= HEIGHT_CELL - 2; ++rowCell) {
-            for (int colCell = 1; colCell <= WIDTH_CELL - 2; ++colCell)
+            for (int colCell = 1; colCell <= WIDTH_CELL - 2; ++colCell) {
                 cout << background[(HEIGHT_CELL - 1) * (row - 1) + (BUFFER_HEIGHT_CELL - 1) + rowCell][(WIDTH_CELL - 1) * (col - 1) + (BUFFER_WIDTH_CELL - 1) + colCell];
+            }
+                
             posY++;
             setCursor(posX, posY);
         }
@@ -367,16 +391,31 @@ void game::unHighlightCell(int row, int col) {
 }
 
 void game::select() {
+    if (map.grid[currentPos.first][currentPos.second] == '$') {
+        return;
+    }
     playSound(CHOOSE);
     if (currentSelect == make_pair(0, 0)) {
-        currentSelect = currentPos;
-        highlightCell(currentPos.first, currentPos.second, BACKGROUND_COLOR[YELLOW]);
+        if (applyHiddenCell) {
+            tempCell = make_pair(currentPos, map.getChar(currentPos));
+            applyHiddenCell = false;
+
+            map.deleteCell(currentPos);
+            removeCell(currentPos);
+        }
+        else {
+            currentSelect = currentPos;
+            highlightCell(currentPos.first, currentPos.second, BACKGROUND_COLOR[YELLOW]);
+        }
         return;
     }
     if (currentSelect == currentPos) {
         unHighlightCell(currentPos.first, currentPos.second);
+        currentSelect = {0, 0};
+        return;
     }
-    else if (map.checkMatch(currentSelect, currentPos)) {
+
+    if (map.checkMatch(currentSelect, currentPos, applyMagicMatching)) {
         playSound(VALID_MOVE);
         vector<pair<int, int>> path = map.getPath(currentSelect, currentPos);
         drawPath(path, true);
@@ -384,7 +423,8 @@ void game::select() {
         highlightCell(currentSelect.first, currentSelect.second, BACKGROUND_COLOR[GREEN]);
         
         score += path.size() - 1;
-        Sleep(89);
+        // drawPath(path, true);
+        Sleep(100);
 
         map.deleteCell(currentSelect);
         map.deleteCell(currentPos);
@@ -398,16 +438,70 @@ void game::select() {
         playSound(INVALID_MOVE);
         highlightCell(currentPos.first, currentPos.second, BACKGROUND_COLOR[RED]);
         highlightCell(currentSelect.first, currentSelect.second, BACKGROUND_COLOR[RED]);
-        Sleep(89);
+        Sleep(100);
 
         highlightCell(currentPos.first, currentPos.second, BACKGROUND_COLOR[CYAN]);
         unHighlightCell(currentSelect.first, currentSelect.second);
     }
+
     currentSelect = {0, 0};
+    applyMagicMatching = false;
+    if (tempCell.second != '$') {
+        map.assignCell(tempCell.first, tempCell.second);
+        drawCell(tempCell.first, tempCell.second);
+        make_pair(make_pair(0, 0), '$');
+    }
 } 
 
 void game::getRespond(pair<int, int> nextSelect) {
 
+}
+
+bool game::moveSuggestion() {
+    if (useHint == 0)
+        return false;
+
+    --useHint;
+    score -= 2;
+    
+    assert(map.automaticCheck());
+    array<int, 4> suggestion = map.suggestMove();
+    pair<int, int> startCell = {suggestion[0], suggestion[1]};
+    pair<int, int> endCell = {suggestion[2], suggestion[3]};
+    highlightCell(suggestion[0], suggestion[1], BACKGROUND_COLOR[MAGENTA]);
+    highlightCell(suggestion[2], suggestion[3], BACKGROUND_COLOR[MAGENTA]);
+
+    return true;
+}
+
+bool game::magicMove() {
+    assert(useHiddenCell * useMagicMatching == 0);
+    if (!useHiddenCell && !useMagicMatching)
+        return false;
+
+    if (useHiddenCell)
+        hiddenCell();
+    else
+        magicMatch();
+    return true;
+}
+
+void game::hiddenCell() {
+    --useHiddenCell;
+    applyHiddenCell = true;
+}
+void game::magicMatch() {
+    --useMagicMatching;
+    applyMagicMatching = true;
+}
+
+void game::helpMenu() {
+    clearScreen();
+    Sleep(1000);
+    HELP_CONTROL();
+    Sleep(1000);
+    SetConsoleOutputCP(437);
+    drawInterface();
 }
 
 void game::saveScore() {
@@ -465,7 +559,6 @@ void game::saveScore() {
     out.close();
 }
 
-
 void game::saveGame() {
     ofstream out;
     out.open("record/savegame.txt");
@@ -476,13 +569,14 @@ void game::saveGame() {
     ifstream inp;
     inp.open("record/board.txt");
 
-    out << player.username << ' ' << player.password << ' ' << score << ' ' << timeUsed << ' ' << useMagicMatching << ' ' << useHiddenCell << ' ';
-    string val(0);
+    out << player.username << ' ' << player.password << ' ' << score << ' ' << timeUsed + timeDuration() << ' ' << useHint << ' ' << useMagicMatching << ' ' << useHiddenCell << ' ';
+    string val;
     while(true) {
         inp >> val;
         if (val.empty()) 
             break;
         out << val << ' ';
+        val.clear();
     }
 
     inp.close();
@@ -495,18 +589,22 @@ bool game::verifySaveFile() {
     if (!inp.is_open())
         return false;
     
-    string __score, __timeUsed, __useMagicMatching, __useHiddenCell;
+    string __score, __timeUsed, __useHint, __useMagicMatching, __useHiddenCell;
     
-    inp >> player.username >> player.password >> __score >> __timeUsed >> __useMagicMatching >> __useHiddenCell;
-    if (player.username.empty() || player.username.empty() || __timeUsed.empty() || __useMagicMatching.empty() || __useHiddenCell.empty()) {
+    inp >> player.username >> player.password >> __score >> __timeUsed >> __useHint >> __useMagicMatching >> __useHiddenCell;
+    if (player.username.empty() || player.username.empty() || __timeUsed.empty() || __useHint.empty() || __useMagicMatching.empty() || __useHiddenCell.empty()) {
         inp.close();
         return false;
     }
-    if (__useMagicMatching.size() > 1 || (__useMagicMatching[0] != '0' && __useMagicMatching[0] != '1')) {
+    if (__useHint.size() > 1 || (__useHint[0] > '3' || __useHint[0] < '0')) {
         inp.close();
         return false;
     }
-    if (__useHiddenCell.size() > 1 || (__useHiddenCell[0] != '0' && __useHiddenCell[0] != '1')) {
+    if (__useMagicMatching.size() > 1 || (__useMagicMatching[0] > '5' || __useMagicMatching[0] < '0')) {
+        inp.close();
+        return false;
+    }
+    if (__useHiddenCell.size() > 1 || (__useHiddenCell[0] > '5' || __useHiddenCell[0] < '0')) {
         inp.close();
         return false;
     }
@@ -522,16 +620,21 @@ bool game::verifySaveFile() {
             return false;
         }
     }
+    if (stod(__useMagicMatching) * stoi(__useHiddenCell) > 0) {
+        inp.close();
+        return false;
+    }
 
     ofstream out;
     out.open("record/board.txt");
 
-    string val(0);
+    string val;
     while(true) {
         inp >> val;
         if (val.empty())
             break;
         out << val << ' ';
+        val.clear();
     }
 
     inp.close();
@@ -547,17 +650,17 @@ void game::loadGame() {
     if (!inp.is_open())
         return;
 
-    inp >> player.username >> player.password >> score >> timeUsed >> useMagicMatching >> useHiddenCell;
-
+    inp >> player.username >> player.password >> score >> timeUsed >> useHint >> useMagicMatching >> useHiddenCell;
     ofstream out;
     out.open("record/board.txt");
 
-    string val(0);
+    string val;
     while(true) {
         inp >> val;
         if (val.empty())
             break;
         out << val << ' ';
+        val.clear();
     }
 
     inp.close();
@@ -566,19 +669,34 @@ void game::loadGame() {
     pair<string*, int> buffer = map.readBoard("record/board.txt", false);
     map.loadBoard(buffer);
     diff = buffer.second;
+    isPlaying = true;
+
+    for (int r = 1; r <= map.ROW; r++)
+        for (int c = 1; c <= map.COL; c++)
+            numLeft += (map.grid[r][c] != '$');
+
+    ifstream fin;
+    int height = sizeROW[diff] * (HEIGHT_CELL - 1) + 1 + 2 * (BUFFER_HEIGHT_CELL - 1);
+    background = new string [height];
+
+    fin.open(backGroundImage[diff].c_str());
+    int count = 0;
+    while (count < height && getline(fin, background[count]))
+        count++;
+    fin.close();
 }
 
 void game::startGame() {
     clearScreen();
     hideCursor();
     timeStart = time(0);
+    playSound(diff + 1);
 
     drawInterface();
 
     while(isPlaying) {
         int input = getInputKey();
-        switch (input)
-        {
+        switch (input) {
             case ESC:
                 isPlaying = false;
                 break;
@@ -587,6 +705,21 @@ void game::startGame() {
                 break;
             case ENTER:
                 select();
+                break;
+            case GET_HINT:
+                moveSuggestion();
+                break;
+            case TOGGLE_MUSIC:
+                toggleMusic(diff + 1);
+                break;
+            case SAVE_GAME:
+                saveGame();
+                break;
+            case MAGIC_MOVE:
+                magicMove();
+                break;
+            case HELP_MENU:
+                helpMenu();
                 break;
             default:
                 break;
@@ -604,6 +737,7 @@ void game::startGame() {
 }
 
 void game::finishGame() {
+    playSound(diff + 1, true);
     playSound(WIN);
     saveScore();
 }

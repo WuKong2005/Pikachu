@@ -17,18 +17,17 @@ struct game {
     board map;
     string* background;
     pair<int, int> currentPos, currentSelect;
-    int timeUsed, numLeft, diff, score;
-    bool useMagicMatching, useHiddenCell, isPlaying;
+    int timeUsed, numLeft, diff, score, useHint, useMagicMatching, useHiddenCell;
+    bool isPlaying, applyMagicMatching, applyHiddenCell;
+    pair<pair<int, int>, char> tempCell;
     COORD upperLeftCorner;
     account player;
     time_t timeStart;
 
     game();
-
     ~game(); 
     game(int difficult); // Start a new game based on choosen difficult
-    game(string pathSaveFile); // Load save file
-
+    
     int timeDuration();
     int getCurrentTime();
 
@@ -50,6 +49,11 @@ struct game {
     
     void select(); // Select this cell or unselect it (if it is already selected)
     void getRespond(pair<int, int> nextSelect); // Determine if this move is valid, and respond to that decision
+    bool moveSuggestion();
+    bool magicMove();
+    void hiddenCell();
+    void magicMatch();
+    void helpMenu();
 
     void saveScore();
     void saveGame();
