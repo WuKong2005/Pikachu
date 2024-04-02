@@ -1,5 +1,7 @@
 #include "game.h"
 
+bool randomMagicMove = 0;
+
 game::game() {
     upperLeftCorner = {7, 4};
     currentPos = {1, 1};
@@ -27,7 +29,8 @@ game::game(int difficult) {
     score = 0;
     useHint = 3;
     int total = diff * 2 + 1;
-    useMagicMatching = total * (rand() % 2);
+    randomMagicMove = rand() % 2;
+    useMagicMatching = total * randomMagicMove;
     useHiddenCell = total - useMagicMatching;
     isPlaying = true;
     applyMagicMatching = applyHiddenCell = false;
@@ -958,7 +961,7 @@ void game::renderMagic() {
     cout << TEXT_BLACK << "             ";
 
     setCursor(infor_PosX + 14, infor_PosY + 5);
-    if (useHiddenCell) {
+    if (!randomMagicMove) {
         cout << "HIDDEN CELL";
         setCursor(infor_PosX + 14, infor_PosY + 6);
         cout << useHiddenCell;
