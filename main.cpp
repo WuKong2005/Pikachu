@@ -11,10 +11,9 @@ int main() {
     // MAIN_MENU_CONTROL();
     // playSound(MENU);
 
-    printUsername();
-    system("pause");
+    // printUsername();
+    // system("pause");
     
-
 
     // SetConsoleOutputCP(437);
     // game g(HARD);
@@ -22,7 +21,7 @@ int main() {
     // Sleep(1000);
     // g.startGame();
     SetConsoleOutputCP(437);
-    game g(HARD);
+    game g(EASY);
     // game g;
     // cerr << g.verifySaveFile() << '\n';
     // g.loadGame();

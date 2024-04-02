@@ -339,7 +339,7 @@ bool USERNAME_CONTROL(string& username, string& password) {
 
         // if USERNAME is valid, move to PASSWORD
         currentCursor.Y += 3;
-        setConsoleCursorPosition(console, currentCursor);
+        SetConsoleCursorPosition(console, currentCursor);
 
         getline(cin, password);
 

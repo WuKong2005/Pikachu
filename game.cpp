@@ -27,8 +27,7 @@ game::game(int difficult) {
     score = 0;
     useHint = 3;
     int total = diff * 2 + 1;
-    // useMagicMatching = total * (rand() % 2);
-    useMagicMatching = 0;
+    useMagicMatching = total * (rand() % 2);
     useHiddenCell = total - useMagicMatching;
     isPlaying = true;
     applyMagicMatching = applyHiddenCell = false;
@@ -73,6 +72,11 @@ void game::drawInterface() {
         cout << "HARD";
     setCursor(90 + map.boardPos[diff].X, 1);
     cout << "TIME REMAIN: ";
+
+    renderScore();
+    renderHint();
+    renderMagic();
+    renderTime();
 
     cout << TEXT_BLACK;
 }
@@ -426,6 +430,28 @@ void game::select() {
         drawPath(path, false);
 
         numLeft -= 2;
+
+        int typeMatch = map.getTypePath(path);
+        switch (typeMatch)
+        {
+            case I_MATCHING:
+                renderNotificate("I MATCHING!!!");
+                break;
+            case L_MATCHING:
+                renderNotificate("L MATCHING!!!");
+                break;
+            case Z_MATCHING:
+                renderNotificate("Z MATCHING!!!");
+                break;
+            case U_MATCHING:
+                renderNotificate("U MATCHING!!!");
+                break;
+            case MAGIC_MATCHING:
+                renderNotificate("MAGIC MATCHING!!!");
+                break;
+            default:
+                break;
+        }
     }
     else {
         playSound(INVALID_MOVE);
@@ -435,6 +461,8 @@ void game::select() {
 
         highlightCell(currentPos.first, currentPos.second, BACKGROUND_COLOR[CYAN]);
         unHighlightCell(currentSelect.first, currentSelect.second);
+
+        renderNotificate("WRONG MOVE!!!");
     }
 
     currentSelect = {0, 0};
@@ -460,11 +488,19 @@ void game::getRespond(pair<int, int> nextSelect) {
 }
 
 bool game::moveSuggestion() {
-    if (useHint == 0)
+    if (useHint == 0) {
+        renderNotificate("NO MORE HINT!!!");
         return false;
+    }
+    if (applyMagicMatching || applyHiddenCell || ((tempCell.second != '$'))) {
+        renderNotificate("HINT NOT ALLOWED!!!");
+        return false;
+    }
 
     --useHint;
     score -= 2;
+    renderNotificate("HINT!!!");
+    renderHint();
     
     assert(map.automaticCheck());
     array<int, 4> suggestion = map.suggestMove();
@@ -478,9 +514,11 @@ bool game::moveSuggestion() {
 
 bool game::magicMove() {
     assert(useHiddenCell * useMagicMatching == 0);
-    if (!useHiddenCell && !useMagicMatching)
+    if (!useHiddenCell && !useMagicMatching) {
+        renderNotificate("NO MORE MAGIC!!!");
         return false;
-
+    }
+    
     if (useHiddenCell)
         hiddenCell();
     else
@@ -489,10 +527,20 @@ bool game::magicMove() {
 }
 
 void game::hiddenCell() {
+    if (applyHiddenCell || (tempCell.second != '$')) {
+        renderNotificate("ALREADY USE!!!");
+        return;
+    }
+    renderNotificate("HIDDEN CELL!!!");
     --useHiddenCell;
     applyHiddenCell = true;
 }
 void game::magicMatch() {
+    if (applyMagicMatching) {
+        renderNotificate("ALREADY USE!!!");
+        return;
+    }
+    renderNotificate("MAGIC MATCHING");
     --useMagicMatching;
     applyMagicMatching = true;
 }
@@ -583,6 +631,8 @@ void game::saveGame() {
 
     inp.close();
     out.close();
+
+    renderNotificate("GAME SAVED!!!");
 }
 
 bool game::verifySaveFile() {
@@ -695,9 +745,17 @@ void game::startGame() {
     while(isPlaying) {
         int input = getInputKey();
         switch (input) {
-            case ESC:
-                isPlaying = false;
+            case ESC: 
+            {
+                renderNotificate("PRESS ESC AGAIN TO LEAVE");
+                if (getInputKey() == ESC) {
+                    isPlaying = false;
+                }
+                else {
+                    renderNotificate("                        ");
+                }
                 break;
+            }
             case DOWN : case RIGHT : case UP : case LEFT: 
                 moveCell(input);
                 break;
@@ -723,24 +781,37 @@ void game::startGame() {
                 break;
         }
         
+        updateInfo();
         if (currentSelect.first != 0 && currentSelect.second != 0) {
             highlightCell(currentSelect.first, currentSelect.second, BACKGROUND_COLOR[YELLOW]);
         }
-        if (numLeft == 0) {
-            finishGame();
+        if (finishGame()) {
             Sleep(8000);
+            LEADERBOARD_CONTROL();
             isPlaying = false;
         }
     }
 }
 
-void game::finishGame() {
-    playSound(diff + 1, true);
-    playSound(WIN);
-    saveScore();
+bool game::finishGame() {
+    if (numLeft == 0 && getCurrentTime() >= 0) {
+        playSound(diff + 1, true);
+        playSound(WIN);
+        saveScore();
+        renderNotificate("YOU WIN!!!");
+        return true;
+    }
+    if (getCurrentTime() < 0) {
+        playSound(diff + 1, true);
+        playSound(LOSE);
+        renderNotificate("YOU LOSE!!!");
+        return true;
+    }
+    
+    return false;
 }
 
-void game:: getBackground() {
+void game::getBackground() {
     ifstream fin;
     background = NULL;
     int height = sizeROW[diff] * (HEIGHT_CELL - 1) + 1 + 2 * (BUFFER_HEIGHT_CELL - 1);
@@ -772,34 +843,56 @@ void game:: getBackground() {
     fin.close();
 }
 
-void game::renderScore(int score) {
+void game::updateInfo() {
+    renderScore();
+    renderTime();
+    renderHint();
+    renderMagic();
+}
+
+void game::renderScore() {
     short infor_PosX = (upperLeftCorner.X + map.COL * (WIDTH_CELL - 1) + 1 + 2 * BUFFER_WIDTH_CELL) + (diff == HARD ? 4 : 6);
     short infor_PosY = upperLeftCorner.Y;
     setCursor(infor_PosX + 14, infor_PosY + 3);
-
+    cout << TEXT_BLACK << "      ";
+    setCursor(infor_PosX + 14, infor_PosY + 3);
     cout << score;
 
     // setCursor(upperLeftCorner.X + BUFFER_WIDTH_CELL + (map.COL - 1) * (WIDTH_CELL - 1) + 1,
     //           upperLeftCorner.Y + BUFFER_HEIGHT_CELL + (map.ROW - 1) * (HEIGHT_CELL - 1) + 1);
 }
 
-void game::renderHint(int hint) {
+void game::renderHint() {
     short infor_PosX = (upperLeftCorner.X + map.COL * (WIDTH_CELL - 1) + 1 + 2 * BUFFER_WIDTH_CELL) + (diff == HARD ? 4 : 6);
     short infor_PosY = upperLeftCorner.Y;
     setCursor(infor_PosX + 14, infor_PosY + 4);
-
-    cout << hint;
+    cout << TEXT_BLACK << "      ";
+    setCursor(infor_PosX + 14, infor_PosY + 4);
+    cout << useHint;
 }
 
-void game::renderMagic(int magic) {
+void game::renderMagic() {
     short infor_PosX = (upperLeftCorner.X + map.COL * (WIDTH_CELL - 1) + 1 + 2 * BUFFER_WIDTH_CELL) + (diff == HARD ? 4 : 6);
     short infor_PosY = upperLeftCorner.Y;
-    setCursor(infor_PosX + 14, infor_PosY + 4);
+    setCursor(infor_PosX + 14, infor_PosY + 5);
+    cout << TEXT_BLACK << "             ";
 
-    cout << score;
+    setCursor(infor_PosX + 14, infor_PosY + 5);
+    if (useHiddenCell) {
+        cout << "HIDDEN CELL";
+        setCursor(infor_PosX + 14, infor_PosY + 6);
+        cout << useHiddenCell;
+    }
+    else {
+        cout << "MAGIC MATCHING";
+        setCursor(infor_PosX + 14, infor_PosY + 6);
+        cout << useMagicMatching;
+    }
 }
 
 void game::renderTime() {
+    setCursor(103 + map.boardPos[diff].X, 1);
+    cout << TEXT_BLACK << "    ";
     setCursor(103 + map.boardPos[diff].X, 1);
     cout << getCurrentTime();
 }
@@ -807,6 +900,8 @@ void game::renderTime() {
 void game::renderNotificate(string noti) {
     short infor_PosX = (upperLeftCorner.X + map.COL * (WIDTH_CELL - 1) + 1 + 2 * BUFFER_WIDTH_CELL) + (diff == HARD ? 4 : 6);
     short infor_PosY = upperLeftCorner.Y;
-    setCursor(infor_PosX + 1, infor_PosY + 7);
+    setCursor(infor_PosX + 3, infor_PosY + 10);
+    cout << TEXT_BLACK << "                    ";
+    setCursor(infor_PosX + 3, infor_PosY + 10);
     cout << TEXT_COLOR[RED] << noti << TEXT_BLACK;
 }
