@@ -1,4 +1,4 @@
-g++ main.cpp menu.cpp Visual.cpp controller.cpp game.cpp board.cpp account.cpp -o pikachu.exe -lwinmm
+g++ main.cpp menu.cpp Visual.cpp controller.cpp game.cpp board.cpp account.cpp -o pikachu.exe -lwinmm -static
 
 @echo off
 > nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
