@@ -1,25 +1,11 @@
-#include "game.h"
+#include "game_extra.h"
 
-bool randomMagicMove = 0;
-
-game::game() {
-    upperLeftCorner = {7, 4};
-    currentPos = {1, 1};
-    currentSelect = {0, 0};
-    timeUsed = numLeft = score = useHint = useMagicMatching = useHiddenCell = applyMagicMatching = applyHiddenCell = isPlaying = 0;
-    diff = -1;
-    tempCell = make_pair(make_pair(0, 0), '$');
-    background = NULL;
-}
-
-game::~game() {
+game_extra::~game_extra() {
     if (!background)
         delete [] background;
 }
 
-game::game(int difficult) {
-    map.~board();
-    new (&map) board(difficult);
+game_extra::game_extra(int difficult = 2) {
     map.initializeBoard();
 
     currentSelect = {0, 0};
@@ -29,29 +15,26 @@ game::game(int difficult) {
     score = 0;
     useHint = 3;
     int total = diff * 2 + 1;
-    randomMagicMove = rand() % 2;
-    useMagicMatching = total * randomMagicMove;
-    useHiddenCell = total - useMagicMatching;
+    useMagicMatching = total;
     isPlaying = true;
-    applyMagicMatching = applyHiddenCell = false;
-    tempCell = make_pair(make_pair(0, 0), '$');
+    applyMagicMatching = false;
     
-    upperLeftCorner.X = (short)map.boardPos[difficult].first;
-    upperLeftCorner.Y = (short)map.boardPos[difficult].second;
+    upperLeftCorner.X = (short)map.boardPos.first;
+    upperLeftCorner.Y = (short)map.boardPos.second;
     currentPos = {1, 1};
     
     getBackground();
 }
 
-int game::timeDuration() {
+int game_extra::timeDuration() {
     return (int)difftime(time(0), timeStart);
 }
 
-int game::getCurrentTime() {
+int game_extra::getCurrentTime() {
     return limTime[diff] - (timeUsed + timeDuration());
 }
 
-void game::drawInterface() {
+void game_extra::drawInterface() {
     drawBoard(); 
 
     //print information in game at position about 4 (or 6) spaces away from the board frame
@@ -64,9 +47,9 @@ void game::drawInterface() {
                      upperLeftCorner.Y + 19);
 
     // print user information
-    setCursor(map.boardPos[diff].first, 1);
+    setCursor(map.boardPos.first, 1);
     cout << TEXT_COLOR[YELLOW] << "USERNAME: " << player.username;
-    setCursor(45 + map.boardPos[diff].first, 1);
+    setCursor(45 + map.boardPos.first, 1);
     cout << "DIFFICULTY: ";
     if (diff == EASY)
         cout << "EASY";
@@ -74,7 +57,7 @@ void game::drawInterface() {
         cout << "MEDIUM";
     else
         cout << "HARD";
-    setCursor(90 + map.boardPos[diff].first, 1);
+    setCursor(90 + map.boardPos.first, 1);
     cout << "TIME REMAIN: ";
 
     renderScore();
@@ -85,7 +68,7 @@ void game::drawInterface() {
     cout << TEXT_BLACK;
 }
 
-void game::drawBoard() {
+void game_extra::drawBoard() {
     SetConsoleCursorPosition(console, upperLeftCorner);
 
 // Animation draw the frame of board
@@ -145,7 +128,7 @@ void game::drawBoard() {
     cout << TEXT_BLACK;
 }
 
-void game::drawCell(pair<int, int> cell, char key) {
+void game_extra::drawCell(pair<int, int> cell, char key) {
     short posX = upperLeftCorner.X + (cell.second - 1) * (WIDTH_CELL - 1) + BUFFER_WIDTH_CELL;
     short posY = upperLeftCorner.Y + (cell.first - 1) * (HEIGHT_CELL - 1) + BUFFER_HEIGHT_CELL;
     COORD position = {posX, posY};
@@ -171,7 +154,7 @@ void game::drawCell(pair<int, int> cell, char key) {
     cout << TEXT_COLOR[WHITE] << key;
 }
 
-void game::removeCell(pair<int, int> cell) {
+void game_extra::removeCell(pair<int, int> cell) {
     if (cell.first < 1 || cell.second < 1 || cell.first > map.ROW || cell.second > map.COL||
         map.grid[cell.first][cell.second] != '$')
         return;
@@ -243,11 +226,11 @@ void game::removeCell(pair<int, int> cell) {
     unHighlightCell(cell.first, cell.second);
 }
 
-void game::drawGuide() {
+void game_extra::drawGuide() {
 
 }
 
-void game::drawPath(vector<pair<int, int>> path, bool draw) {
+void game_extra::drawPath(vector<pair<int, int>> path, bool draw) {
     assert(path.size() >= 2);
     int numCell = path.size();
     
@@ -270,7 +253,7 @@ void game::drawPath(vector<pair<int, int>> path, bool draw) {
     }
 }
 
-void game::drawLine(pair<int, int> startCell, pair<int, int> endCell, bool draw) {
+void game_extra::drawLine(pair<int, int> startCell, pair<int, int> endCell, bool draw) {
     if (startCell == endCell)
         return;
     if (startCell.first == endCell.first)
@@ -279,7 +262,7 @@ void game::drawLine(pair<int, int> startCell, pair<int, int> endCell, bool draw)
         drawVerticalLine(startCell.second, startCell.first, endCell.first, draw);
 }
 
-void game::drawVerticalLine(int col, int row1, int row2, bool draw) {
+void game_extra::drawVerticalLine(int col, int row1, int row2, bool draw) {
     if (row1 > row2)
         swap(row1, row2);
     short posX = upperLeftCorner.X + BUFFER_WIDTH_CELL + (col - 1) * (WIDTH_CELL - 1) + WIDTH_CELL / 2;
@@ -302,7 +285,7 @@ void game::drawVerticalLine(int col, int row1, int row2, bool draw) {
     cout << TEXT_BLACK;
 }
 
-void game::drawHorizontalLine(int row, int col1, int col2, bool draw) {
+void game_extra::drawHorizontalLine(int row, int col1, int col2, bool draw) {
     if (col1 > col2)
         swap(col1, col2);
     short posX1 = upperLeftCorner.X + BUFFER_WIDTH_CELL + (col1 - 1) * (WIDTH_CELL - 1) + WIDTH_CELL / 2;
@@ -326,7 +309,7 @@ void game::drawHorizontalLine(int row, int col1, int col2, bool draw) {
     cout << TEXT_BLACK;
 }
 
-void game::drawTurningPoint(int row, int col, int type, bool draw) {
+void game_extra::drawTurningPoint(int row, int col, int type, bool draw) {
     short posX = upperLeftCorner.X + BUFFER_WIDTH_CELL + (col - 1) * (WIDTH_CELL - 1) + WIDTH_CELL / 2;
     short posY = upperLeftCorner.Y + BUFFER_HEIGHT_CELL + (row - 1) * (HEIGHT_CELL - 1) + HEIGHT_CELL / 2;
     setCursor(posX, posY);
@@ -341,7 +324,7 @@ void game::drawTurningPoint(int row, int col, int type, bool draw) {
     cout << TEXT_BLACK;
 }
 
-void game::moveCell(int direction) {
+void game_extra::moveCell(int direction) {
     playSound(MOVE);
     unHighlightCell(currentPos.first, currentPos.second);
     currentPos.first = ((currentPos.first + dx[direction - 1] + map.ROW - 1) % map.ROW) + 1;
@@ -349,7 +332,7 @@ void game::moveCell(int direction) {
     highlightCell(currentPos.first, currentPos.second, BACKGROUND_COLOR[CYAN]);
 }
 
-void game::highlightCell(int row, int col, string color) {
+void game_extra::highlightCell(int row, int col, string color) {
     short posX = upperLeftCorner.X + BUFFER_WIDTH_CELL + (col - 1) * (WIDTH_CELL - 1) + 1;
     short posY = upperLeftCorner.Y + BUFFER_HEIGHT_CELL + (row - 1) * (HEIGHT_CELL - 1) + 1;
     setCursor(posX, posY);
@@ -385,27 +368,18 @@ void game::highlightCell(int row, int col, string color) {
     cout << BACKGROUND_COLOR[BLACK] << TEXT_BLACK;
 }
 
-void game::unHighlightCell(int row, int col) {
+void game_extra::unHighlightCell(int row, int col) {
     highlightCell(row, col, BACKGROUND_COLOR[BLACK]);
 }
 
-void game::select() {
+void game_extra::select() {
     if (map.grid[currentPos.first][currentPos.second] == '$') {
         return;
     }
     playSound(CHOOSE);
     if (currentSelect == make_pair(0, 0)) {
-        if (applyHiddenCell) {
-            tempCell = make_pair(currentPos, map.getChar(currentPos));
-            applyHiddenCell = false;
-
-            map.deleteCell(currentPos);
-            removeCell(currentPos);
-        }
-        else {
-            currentSelect = currentPos;
-            highlightCell(currentPos.first, currentPos.second, BACKGROUND_COLOR[YELLOW]);
-        }
+        currentSelect = currentPos;
+        highlightCell(currentPos.first, currentPos.second, BACKGROUND_COLOR[YELLOW]);
         return;
     }
     if (currentSelect == currentPos) {
@@ -427,12 +401,22 @@ void game::select() {
         // drawPath(path, true);
         Sleep(100);
 
-        map.deleteCell(currentSelect);
-        map.deleteCell(currentPos);
-        removeCell(currentPos);
-        removeCell(currentSelect);
+        map.deleteMatch(currentSelect, currentPos);
         drawPath(path, false);
+        unHighlightCell(currentSelect.first, currentSelect.second);
+        unHighlightCell(currentPos.first, currentPos.second);
 
+        for (int col = 1; col <= map.COL; col++) {
+            if (map.grid[currentSelect.first][col] != '$') 
+                drawCell({currentSelect.first, col}, map.grid[currentSelect.first][col]); // direction access
+            else 
+                removeCell({currentSelect.first, col});
+            if (map.grid[currentPos.first][col] != '$') 
+                drawCell({currentPos.first, col}, map.grid[currentPos.first][col]); // direction access
+            else 
+                removeCell({currentPos.first, col});
+        }
+        
         numLeft -= 2;
 
         int typeMatch = map.getTypePath(path);
@@ -471,12 +455,6 @@ void game::select() {
 
     currentSelect = {0, 0};
     applyMagicMatching = false;
-    if (tempCell.second != '$') {
-        map.assignCell(tempCell.first, tempCell.second);
-        drawCell(tempCell.first, tempCell.second);
-        unHighlightCell(tempCell.first.first, tempCell.first.second);
-        tempCell = make_pair(make_pair(0, 0), '$');
-    }
 
     if (success && numLeft > 0 && !map.automaticCheck()) {
         renderNotificate("NO VALID MOVE EXIST!!!");
@@ -489,16 +467,16 @@ void game::select() {
     }
 } 
 
-void game::getRespond(pair<int, int> nextSelect) {
+void game_extra::getRespond(pair<int, int> nextSelect) {
 
 }
 
-bool game::moveSuggestion() {
+bool game_extra::moveSuggestion() {
     if (useHint == 0) {
         renderNotificate("NO MORE HINT!!!");
         return false;
     }
-    if (applyMagicMatching || applyHiddenCell || ((tempCell.second != '$'))) {
+    if (applyMagicMatching) {
         renderNotificate("HINT NOT ALLOWED!!!");
         return false;
     }
@@ -518,30 +496,18 @@ bool game::moveSuggestion() {
     return true;
 }
 
-bool game::magicMove() {
-    assert(useHiddenCell * useMagicMatching == 0);
-    if (!useHiddenCell && !useMagicMatching) {
+bool game_extra::magicMove() {
+    if (!useMagicMatching) {
         renderNotificate("NO MORE MAGIC!!!");
         return false;
     }
-    
-    if (useHiddenCell)
-        hiddenCell();
-    else
+    else {
         magicMatch();
-    return true;
+        return true;
+    }
 }
 
-void game::hiddenCell() {
-    if (applyHiddenCell || (tempCell.second != '$')) {
-        renderNotificate("ALREADY USE!!!");
-        return;
-    }
-    renderNotificate("HIDDEN CELL!!!");
-    --useHiddenCell;
-    applyHiddenCell = true;
-}
-void game::magicMatch() {
+void game_extra::magicMatch() {
     if (applyMagicMatching) {
         renderNotificate("ALREADY USE!!!");
         return;
@@ -551,7 +517,7 @@ void game::magicMatch() {
     applyMagicMatching = true;
 }
 
-void game::helpMenu() {
+void game_extra::helpMenu() {
     clearScreen();
     Sleep(1000);
     HELP_CONTROL();
@@ -560,259 +526,11 @@ void game::helpMenu() {
     drawInterface();
 }
 
-void game::saveScore() {
-    assert(numLeft == 0);
-    ifstream inp;
-    inp.open(saveFilePath[diff].c_str());
-    if (!inp.is_open()) {
-        return;
-    }
-
-    record resultGame(score, timeUsed + timeDuration()); // swap them
-
-    vector<pair<int, string>> record;
-    string inputline;
-    while(true) {
-        getline(inp, inputline, '\n');
-        if (inputline.empty()) {
-            break;
-        }
-
-        int firstPos = inputline.find(';');
-        int secondPos = inputline.find(';', firstPos + 1);
-        int recordScore = stoi(inputline.substr(firstPos + 1, secondPos - firstPos - 1));
-        
-        record.emplace_back(recordScore, inputline);
-        inputline.clear();
-    }
-    inp.close();
-
-    pair<int, string> thisGame = make_pair(resultGame.score, player.accountInfo(resultGame));
-    bool add = false;
-    for (int i = 0; i < (int)record.size(); i++) {
-        if (thisGame.first > record[i].first) {
-            record.insert(record.begin() + i, thisGame);
-            add = true;
-            break;
-        }
-    }
-    if (!add)
-        record.push_back(thisGame);
-        
-    if (record.size() > MAX_PLAYER)
-        record.pop_back();
-    
-    ofstream out;
-    out.open(saveFilePath[diff].c_str());
-    if (!out.is_open()) {
-        return;
-    }
-
-    for (auto it: record) {
-        out << it.second << '\n';
-    }
-
-    out.close();
-}
-void game::saveGame() {
-    renderNotificate("SAVE AT SLOT 0, 1 OR 2?");
-    int option = getch();
-    if (option - (int)'0' >= 0 && option - (int)'0' < 3) {
-        saveGame(option - (int)'0');
-    }
-    else {
-        renderNotificate("INVALID SLOT INDEX");
-    }
+void game_extra::saveGame() {
+    renderNotificate("DISABLE!!!");
 }
 
-void game::saveGame(int slot) {
-    ofstream out;
-    out.open("record/savegame" + to_string(slot) + ".txt");
-    if (!out.is_open())
-        return;
-    
-    map.importBoard();
-    ifstream inp;
-    inp.open("record/board.txt");
-
-    out << player.username << ';' << player.password << ';' << score << ';' << timeUsed + timeDuration() << ';' << useHint << ';' << useMagicMatching << ';' << useHiddenCell << ';';
-    string val;
-    while(true) {
-        inp >> val;
-        if (val.empty()) 
-            break;
-        out << val << ' ';
-        val.clear();
-    }
-
-    inp.close();
-    out.close();
-
-    renderNotificate("GAME SAVED!!!");
-}
-
-bool game::verifySaveFile(int slot) {
-    ifstream inp;
-    inp.open("record/savegame" + to_string(slot) + ".txt");
-    if (!inp.is_open())
-        return false;
-    
-    string __score, __timeUsed, __useHint, __useMagicMatching, __useHiddenCell, infoBoard;
-    int index = 0;
-    string token;
-
-    while(true) {
-        getline(inp, token, ';');
-        if (token.empty()) 
-            break;
-        
-        switch (index)
-        {
-            case 0:
-                player.username = token;
-                break;
-            case 1:
-                player.password = token;
-                break;
-            case 2:
-                __score = token;
-                break;
-            case 3:
-                __timeUsed = token;
-                break;
-            case 4:
-                __useHint = token;
-                break;
-            case 5:
-                __useMagicMatching = token;
-                break;
-            case 6:
-                __useHiddenCell = token;
-                break;
-            case 7:
-                infoBoard = token;
-                break;
-            default:
-                break;
-        }
-
-        index++;
-        token.clear();
-    }
-    
-    if (player.username.empty() || player.password.empty() || __timeUsed.empty() || __useHint.empty() || __useMagicMatching.empty() || __useHiddenCell.empty()) {
-        inp.close();
-        return false;
-    }
-    if (__useHint.size() > 1 || (__useHint[0] > '3' || __useHint[0] < '0')) {
-        inp.close();
-        return false;
-    }
-    if (__useMagicMatching.size() > 1 || (__useMagicMatching[0] > '5' || __useMagicMatching[0] < '0')) {
-        inp.close();
-        return false;
-    }
-    if (__useHiddenCell.size() > 1 || (__useHiddenCell[0] > '5' || __useHiddenCell[0] < '0')) {
-        inp.close();
-        return false;
-    }
-    for (char digit: __timeUsed) {
-        if (digit < '0' || '9' < digit) {
-            inp.close();
-            return false;
-        }
-    }
-    for (char digit: __score) {
-        if (digit < '0' || '9' < digit) {
-            inp.close();
-            return false;
-        }
-    }
-    if (stod(__useMagicMatching) * stoi(__useHiddenCell) > 0) {
-        inp.close();
-        return false;
-    }
-
-    ofstream out;
-    out.open("record/board.txt");
-
-    out << infoBoard;
-
-    inp.close();
-    out.close();
-
-    board tmp;
-    return (tmp.readBoard("record/board.txt", true).second >= 0);
-}
-
-void game::loadGame(int slot) {
-    ifstream inp;
-    inp.open("record/savegame" + to_string(slot) + ".txt");
-    if (!inp.is_open())
-        return;
-    
-    int index = 0;
-    string token, infoBoard;
-
-    while(true) {
-        getline(inp, token, ';');
-        if (token.empty()) 
-            break;
-        
-        switch (index)
-        {
-            case 0:
-                player.username = token;
-                break;
-            case 1:
-                player.password = token;
-                break;
-            case 2:
-                score = stoi(token);
-                break;
-            case 3:
-                timeUsed = stoi(token);
-                break;
-            case 4:
-                useHint = stoi(token);
-                break;
-            case 5:
-                useMagicMatching = stoi(token);
-                break;
-            case 6:
-                useHiddenCell = stoi(token);
-                break;
-            case 7:
-                infoBoard = token;
-                break;
-            default:
-                break;
-        }
-
-        index++;
-        token.clear();
-    }
-
-    ofstream out;
-    out.open("record/board.txt");
-    out << infoBoard;
-
-    inp.close();
-    out.close();
-
-    pair<string*, int> buffer = map.readBoard("record/board.txt", false);
-    map.loadBoard(buffer);
-    diff = buffer.second;
-    isPlaying = true;
-
-    for (int r = 1; r <= map.ROW; r++)
-        for (int c = 1; c <= map.COL; c++)
-            numLeft += (map.grid[r][c] != '$');
-
-    getBackground();
-}
-
-void game::startGame() {
+void game_extra::startGame() {
     clearScreen();
     hideCursor();
     timeStart = time(0);
@@ -875,35 +593,33 @@ void game::startGame() {
     clearScreen();
 }
 
-bool game::finishGame() {
+bool game_extra::finishGame() {
     if (numLeft == 0 && getCurrentTime() >= 0) {
         playSound(diff + 1, true);
         playSound(WIN);
-        saveScore();
-        Sleep(3000);
         renderNotificate("YOU WIN!!!");
-        LEADERBOARD_CONTROL();
+        Sleep(8000);
         return true;
     }
     if (getCurrentTime() < 0) {
         playSound(diff + 1, true);
         playSound(LOSE);
         renderNotificate("YOU LOSE!!!");
-        Sleep(4000);
+        Sleep(8000);
         return true;
     }
     
     return false;
 }
 
-void game::getBackground() {
+void game_extra::getBackground() {
     ifstream fin;
     background = NULL;
     int height = sizeROW[diff] * (HEIGHT_CELL - 1) + 1 + 2 * (BUFFER_HEIGHT_CELL - 1);
     int width = sizeCOL[diff] * (WIDTH_CELL - 1) + 1 + 2 * (BUFFER_WIDTH_CELL - 1);
     background = new string [height] {};
 
-    fin.open(backGroundImage[diff].c_str());
+    fin.open(backGroundImageExtra);
 
     if (!fin.is_open()) {
         cerr << "error file";
@@ -928,14 +644,14 @@ void game::getBackground() {
     fin.close();
 }
 
-void game::updateInfo() {
+void game_extra::updateInfo() {
     renderScore();
     renderTime();
     renderHint();
     renderMagic();
 }
 
-void game::renderScore() {
+void game_extra::renderScore() {
     short infor_PosX = (upperLeftCorner.X + map.COL * (WIDTH_CELL - 1) + 1 + 2 * BUFFER_WIDTH_CELL) + (diff == HARD ? 4 : 6);
     short infor_PosY = upperLeftCorner.Y;
     setCursor(infor_PosX + 14, infor_PosY + 3);
@@ -947,7 +663,7 @@ void game::renderScore() {
     //           upperLeftCorner.Y + BUFFER_HEIGHT_CELL + (map.ROW - 1) * (HEIGHT_CELL - 1) + 1);
 }
 
-void game::renderHint() {
+void game_extra::renderHint() {
     short infor_PosX = (upperLeftCorner.X + map.COL * (WIDTH_CELL - 1) + 1 + 2 * BUFFER_WIDTH_CELL) + (diff == HARD ? 4 : 6);
     short infor_PosY = upperLeftCorner.Y;
     setCursor(infor_PosX + 14, infor_PosY + 4);
@@ -956,33 +672,26 @@ void game::renderHint() {
     cout << useHint;
 }
 
-void game::renderMagic() {
+void game_extra::renderMagic() {
     short infor_PosX = (upperLeftCorner.X + map.COL * (WIDTH_CELL - 1) + 1 + 2 * BUFFER_WIDTH_CELL) + (diff == HARD ? 4 : 6);
     short infor_PosY = upperLeftCorner.Y;
     setCursor(infor_PosX + 14, infor_PosY + 5);
     cout << TEXT_BLACK << "             ";
 
     setCursor(infor_PosX + 14, infor_PosY + 5);
-    if (!randomMagicMove) {
-        cout << "HIDDEN CELL";
-        setCursor(infor_PosX + 14, infor_PosY + 6);
-        cout << useHiddenCell;
-    }
-    else {
-        cout << "MAGIC MATCHING";
-        setCursor(infor_PosX + 14, infor_PosY + 6);
-        cout << useMagicMatching;
-    }
+    cout << "MAGIC MATCHING";
+    setCursor(infor_PosX + 14, infor_PosY + 6);
+    cout << useMagicMatching;
 }
 
-void game::renderTime() {
-    setCursor(103 + map.boardPos[diff].first, 1);
+void game_extra::renderTime() {
+    setCursor(103 + map.boardPos.first, 1);
     cout << TEXT_BLACK << "    ";
-    setCursor(103 + map.boardPos[diff].first, 1);
+    setCursor(103 + map.boardPos.first, 1);
     cout << getCurrentTime();
 }
 
-void game::renderNotificate(string noti) {
+void game_extra::renderNotificate(string noti) {
     short infor_PosX = (upperLeftCorner.X + map.COL * (WIDTH_CELL - 1) + 1 + 2 * BUFFER_WIDTH_CELL) + (diff == HARD ? 4 : 6);
     short infor_PosY = upperLeftCorner.Y;
     setCursor(infor_PosX + 3, infor_PosY + 10);

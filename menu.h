@@ -3,6 +3,7 @@
 #include "Visual.h"
 #include "controller.h"
 #include "game.h"
+#include "game_extra.h"
 #include <fstream>
 #include <windows.h>
 #include <iostream>

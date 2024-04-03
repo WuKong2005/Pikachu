@@ -113,7 +113,27 @@ void PLAY_GAME_CONTROL() {
                     break;
 
                 case 2: // EXTRA
-                    return;
+                {
+                    string username, password;
+                    if (USERNAME_CONTROL(username, password)) {
+                        // cerr << "account valid\n";
+                        SetConsoleOutputCP(437);
+                        playSound(MENU, true);
+                        game_extra newGame(2);
+                        newGame.player.username = username;
+                        newGame.player.password = encrypt(password);
+                        newGame.startGame();
+                    }
+                    playSound(MENU);
+                    // return GAME_MODE after escape USERNAME
+                    hideCursor();
+                    printPlayGame();
+
+                    preCursor.X = ARROW_POS_FIRST_BLOCK[PLAY_GAME].X;
+                    preCursor.Y = ARROW_POS_FIRST_BLOCK[PLAY_GAME].Y + distanceBlock * 2;
+                    printAtCursor(arrow, preCursor);
+                    break;
+                }
 
                 default: // GO BACK
                     return;

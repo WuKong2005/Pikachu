@@ -2,13 +2,11 @@
 
 #include <assert.h>
 
-using namespace std;
-
 struct node {
     char ch;
     node* nextNode;
 
-    node(): ch('$'), nextNode(NULL) {}
+    node();
 };
 
 struct linked_list {
@@ -16,7 +14,7 @@ struct linked_list {
     node* pTail;
     int size;
 
-    linked_list(): pHead(NULL), pTail(NULL), size(0) {}
+    linked_list();
     ~linked_list();
     void free();
 
@@ -38,14 +36,14 @@ struct node_2d {
     linked_list column;
     node_2d* nextCol;
 
-    node_2d(): column(), nextCol(NULL) {}
+    node_2d();
 };
 
 struct linked_list_2d {
     node_2d* pHeadCol;
     int size;
 
-    linked_list_2d(): pHeadCol(NULL), size(0) {}
+    linked_list_2d();
     ~linked_list_2d();
     void free();
 
@@ -61,5 +59,3 @@ struct linked_list_2d {
     void addCol(int index);
     void deleteCol(int index);
 };
-
-using board_extra = linked_list_2d;

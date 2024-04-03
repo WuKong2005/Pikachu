@@ -2,13 +2,10 @@
 
 #include <iostream>
 #include <algorithm>
-#include <conio.h>
 #include <cstdlib>
-#include <ctime>
 #include <fstream>
 #include <string>
 #include <vector>
-#include <Windows.h>
 #include <queue>
 #include <array>
 #include <assert.h>
@@ -75,7 +72,7 @@ struct board {
     int timeCheck = 0;
     array<int, 3>*** flood;
     array<int, 4> suggestPair;
-    COORD boardPos[3] = {{11, 5}, {6, 5} , {2, 5}}; 
+    pair<int, int> boardPos[3] = {{11, 5}, {6, 5} , {2, 5}}; 
 
     board();
     board(int difficult);
