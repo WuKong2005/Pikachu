@@ -139,7 +139,7 @@ void linked_list::deleteNode(int index) {
     --size;
 }
 
-node_2d::node_2d(): column(), nextCol(NULL) {}
+node_2d::node_2d(): row(), nextRow(NULL) {}
 
 linked_list_2d::linked_list_2d(): pHeadCol(NULL), size(0) {}
 linked_list_2d::~linked_list_2d() {
@@ -158,13 +158,13 @@ node_2d* linked_list_2d::getKthCol(int index) {
 
     node_2d* result = pHeadCol;
     for (int i = 1; i <= index; i++) 
-        result = result->nextCol;
+        result = result->nextRow;
     return result;
 }
 
 linked_list &linked_list_2d::operator[] (int index) {
     assert(0 <= index && index < size);
-    return getKthCol(index)->column;
+    return getKthCol(index)->row;
 }  
 
 int linked_list_2d::getSize() {
@@ -179,21 +179,21 @@ void linked_list_2d::initLen(int len) {
 void linked_list_2d::init2DArray(int m, int n) {
     for (int i = 0; i < m; i++) {
         addBegin();
-        pHeadCol->column.initLen(n);
+        pHeadCol->row.initLen(n);
     }
 }
 
 void linked_list_2d::addBegin() {
     node_2d* newCol = new node_2d();
-    newCol->nextCol = pHeadCol;
+    newCol->nextRow = pHeadCol;
     pHeadCol = newCol;
     ++size;
 }
 
 void linked_list_2d::deleteBegin() {
-    node_2d* nextCol = pHeadCol->nextCol;
+    node_2d* nextRow = pHeadCol->nextRow;
     delete pHeadCol;
-    pHeadCol = nextCol;
+    pHeadCol = nextRow;
     --size;
 }
 
@@ -208,8 +208,8 @@ void linked_list_2d::addCol(int index) {
 
     node_2d* prevCol = getKthCol(index - 1);
     node_2d* curCol = new node_2d();
-    curCol->nextCol = prevCol->nextCol;
-    prevCol->nextCol = curCol;
+    curCol->nextRow = prevCol->nextRow;
+    prevCol->nextRow = curCol;
     ++size;
 }
 
@@ -223,8 +223,8 @@ void linked_list_2d::deleteCol(int index) {
     }
 
     node_2d* prevNode = getKthCol(index - 1);
-    node_2d* curCol = prevNode->nextCol;
-    prevNode->nextCol = curCol->nextCol;
+    node_2d* curCol = prevNode->nextRow;
+    prevNode->nextRow = curCol->nextRow;
     delete curCol;
     --size;
 }

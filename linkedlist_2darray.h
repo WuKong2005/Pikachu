@@ -1,6 +1,7 @@
 #pragma once
 
 #include <assert.h>
+#include <iostream>
 
 struct node {
     char ch;
@@ -33,8 +34,8 @@ struct linked_list {
 };
 
 struct node_2d {
-    linked_list column;
-    node_2d* nextCol;
+    linked_list row;
+    node_2d* nextRow;
 
     node_2d();
 };

@@ -243,10 +243,6 @@ void game::removeCell(pair<int, int> cell) {
     unHighlightCell(cell.first, cell.second);
 }
 
-void game::drawGuide() {
-
-}
-
 void game::drawPath(vector<pair<int, int>> path, bool draw) {
     assert(path.size() >= 2);
     int numCell = path.size();

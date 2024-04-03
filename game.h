@@ -29,30 +29,47 @@ struct game {
     game(int difficult); // Start a new game based on choosen difficult
     
     int timeDuration();
-    int getCurrentTime();
-
-    void drawInterface(); // Draw everything 
-    void drawBoard(); // Draw the board and its boundary
-    void drawCell(pair<int, int> cell, char key); // Draw each cell from the board
-    void removeCell(pair<int, int> cell); // delete a cell
-    void drawGuide(); // Draw text box of guide, help, etc
-
-    void drawPath(vector<pair<int, int>> path, bool draw); // Draw the path between 2 cells
-    void drawLine(pair<int, int> startCell, pair<int, int> endCell, bool draw); // Draw or delete the straight line between 2 cells
-    void drawVerticalLine(int col, int row1, int row2, bool draw); // Draw or delete a vertical line
-    void drawHorizontalLine(int row, int col1, int col2, bool draw); // Draw or delete a horizontal line
-    void drawTurningPoint(int row, int col, int type, bool draw); // Draw or delete a turning point
-
-    void moveCell(int direction); // Move the current cursor in this board in a direction
-    void highlightCell(int row, int col, string color); // Highlight a cell
-    void unHighlightCell(int row, int col); // Unhighlight a cell
+    int getCurrentTime();   
     
-    void select(); // Select this cell or unselect it (if it is already selected)
-    void getRespond(pair<int, int> nextSelect); // Determine if this move is valid, and respond to that decision
+    // Draw everything 
+    void drawInterface();
+    // Draw the board and its boundary
+    void drawBoard();
+    // Draw each cell from the board
+    void drawCell(pair<int, int> cell, char key);
+    // delete a cell
+    void removeCell(pair<int, int> cell);
+    // Draw the path between 2 cells
+    void drawPath(vector<pair<int, int>> path, bool draw); 
+    // Draw or delete the straight line between 2 cells
+    void drawLine(pair<int, int> startCell, pair<int, int> endCell, bool draw); 
+    // Draw or delete a vertical line
+    void drawVerticalLine(int col, int row1, int row2, bool draw); 
+    // Draw or delete a horizontal line
+    void drawHorizontalLine(int row, int col1, int col2, bool draw);
+    // Draw or delete a turning point
+    void drawTurningPoint(int row, int col, int type, bool draw); 
+
+    // Move the current cursor in this board in a direction
+    void moveCell(int direction); 
+    // Highlight a cell
+    void highlightCell(int row, int col, string color); 
+    // Unhighlight a cell
+    void unHighlightCell(int row, int col); 
+    // Select this cell or unselect it (if it is already selected)
+    void select(); 
+    // Determine if this move is valid, and respond to that decision
+    void getRespond(pair<int, int> nextSelect); 
+
+    // Get hint
     bool moveSuggestion();
+    // 
     bool magicMove();
+    // hidden cell feature
     void hiddenCell();
+    // magic matching feature
     void magicMatch();
+    // Open help menu when playing game
     void helpMenu();
 
     void saveScore();
