@@ -8,20 +8,31 @@
 
 using namespace std;
 
+// width of a cell
 int const WIDTH_CELL = 9;
+// height of a cell
 int const HEIGHT_CELL = 5;
+// the horizontal distance between the outline of board and main board
 int const BUFFER_WIDTH_CELL = 7;
+// the vertical distance between the outline of board and main board
 int const BUFFER_HEIGHT_CELL = 3;
 
 struct game {
+    // manager the board game
     board map;
+    // store background (size = (height of outline - 1) * (width of outline - 1))
     string* background;
+    // store the position of cell, first - row and second - col
     pair<int, int> currentPos, currentSelect;
     int timeUsed, numLeft, diff, score, useHint, useMagicMatching, useHiddenCell;
+    // check the game state / whether special moves are applied
     bool isPlaying, applyMagicMatching, applyHiddenCell;
     pair<pair<int, int>, char> tempCell;
+    // store the position of upperLeftCorner of the outline of the board
     COORD upperLeftCorner;
+    // manager the user account
     account player;
+    // record the start time
     time_t timeStart;
 
     game();
@@ -69,6 +80,7 @@ struct game {
     void hiddenCell();
     // magic matching feature
     void magicMatch();
+
     // Open help menu when playing game
     void helpMenu();
 
@@ -78,16 +90,19 @@ struct game {
     bool verifySaveFile(int slot);
     void loadGame(int slot);
 
-    void startGame(); // Start the game
-    bool finishGame(); // Finish the game
+    void startGame();
+    bool finishGame();
 
     void getBackground();
 
+    // update the information (score, number of hints, ...) when user are playing
     void updateInfo();
+    
     void renderScore();
     void renderHint();
     void renderMagic();
     void renderTime();
+    // render notification below the information board
     void renderNotificate(string noti);
 };
 

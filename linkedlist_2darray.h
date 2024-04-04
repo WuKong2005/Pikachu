@@ -20,10 +20,14 @@ struct linked_list {
     ~linked_list();
     void free();
 
+    // get the k'th node of list
     node* getKthNode(int index);
+    // overload operator [] to get the content of k'th node
     char &operator[] (int index);
 
+    // get size of list
     int getSize();
+    // init the len of list
     void initLen(int len);
 
     void addBegin(char ch);
@@ -42,14 +46,14 @@ struct node_2d {
 };
 
 struct linked_list_2d {
-    node_2d* pHeadCol;
+    node_2d* pHeadRow;
     int size;
 
     linked_list_2d();
     ~linked_list_2d();
     void free();
 
-    node_2d* getKthCol(int index);
+    node_2d* getKthRow(int index);
     linked_list &operator[] (int index);
 
     int getSize();
@@ -58,6 +62,6 @@ struct linked_list_2d {
 
     void addBegin();
     void deleteBegin();
-    void addCol(int index);
-    void deleteCol(int index);
+    void addRow(int index);
+    void deleteRow(int index);
 };

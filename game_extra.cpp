@@ -243,11 +243,11 @@ void game_extra::drawPath(vector<pair<int, int>> path, bool draw) {
     
     for (int i = 0; i < numCell - 2; ++i) {
         if ((vec[i].first > 0 && vec[i + 1].second > 0) || (vec[i].second < 0 && vec[i + 1].first < 0))
-            drawTurningPoint(path[i + 1].first, path[i + 1].second, LEFT_DOWN, draw);
+            drawTurningPoint(path[i + 1].first, path[i + 1].second, DOWN_LEFT, draw);
         else if ((vec[i].first > 0 && vec[i + 1].second < 0) || (vec[i].second > 0 && vec[i + 1].first < 0))
             drawTurningPoint(path[i + 1].first, path[i + 1].second, DOWN_RIGHT, draw);
         else if ((vec[i].first < 0 && vec[i + 1].second > 0) || (vec[i].second < 0 && vec[i + 1].first > 0))
-            drawTurningPoint(path[i + 1].first, path[i + 1].second, LEFT_UP, draw);
+            drawTurningPoint(path[i + 1].first, path[i + 1].second, UP_LEFT, draw);
         else
             drawTurningPoint(path[i + 1].first, path[i + 1].second, UP_RIGHT, draw);
     }

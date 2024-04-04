@@ -119,6 +119,7 @@ void printLoadGame();
 void printLeaderboard();
 void printHelp();
 void printUsername();
+
 void printInfoInGame(short posX, short posY);
 void printHelpInGame(short posX, short posY);
 void printFrameBlock(int Visual);

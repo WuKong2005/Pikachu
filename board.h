@@ -31,9 +31,9 @@ enum corner {
 
 enum turningCorner {
     DOWN_RIGHT,
-    LEFT_DOWN,
+    DOWN_LEFT,
     UP_RIGHT,
-    LEFT_UP
+    UP_LEFT
 };
 
 //Type of matching
